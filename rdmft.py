@@ -98,11 +98,9 @@ qubit_converter = QubitConverter(mapper=JordanWignerMapper())
 qubit_op = qubit_converter.convert(main_op,num_particles=num_particles)
 print("qubit_op=",qubit_op)
 
-
-
 # setup the initial state for the ansatz
-entangler_map = [(0, 1), (1, 2), (2, 0)]
-ansatz = TwoLocal(4,rotation_blocks = ['rx', 'ry'], entanglement_blocks = 'cz',entanglement=entangler_map, reps=2, parameter_prefix = 'y')
+#entangler_map = [(0, 1), (1, 2), (2, 0)]
+ansatz = TwoLocal(4,rotation_blocks = ['rx', 'ry'], entanglement_blocks = 'cz',entanglement='linear', reps=2, parameter_prefix = 'y')
 
 print(ansatz)
 
