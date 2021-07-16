@@ -117,7 +117,7 @@ def qcs_for_op(m,qubit_converter,qc):
 
             sg=[]
             for i in range(len(op.primitive)):
-                print(op.primitive[i])
+                #print(op.primitive[i])
                 if str(op.primitive[i])=='Z':
                     sg.append("Z")            
                 elif str(op.primitive[i])=='X':
@@ -138,14 +138,14 @@ def qcs_for_op(m,qubit_converter,qc):
             qcs.append(q)
         else:
             const+=op.coeff
-    return [ops,qcs,mesq,coeff,const]
+    return {"ops":ops,"qcs":qcs,"mesq":mesq,"coeff":coeff,"const":const}
 
 
 
 dotenv.load_dotenv()
 apikey=os.getenv("QISKIT_APIKEY")
 
-tsim=True
+tsim=False
 L=2
 shots=1024
 seed=424242
@@ -184,9 +184,9 @@ q = QuantumRegister(2*L)
 c = ClassicalRegister(1)
 qc=QuantumCircuit(q,c)
 qc=qc.compose(ansatz)
+qc=qc.decompose()
 
 
-qc=qc.bind_parameters(initial_point).decompose()
 print("variational state:")
 print(qc)
 
@@ -197,43 +197,16 @@ qubits=[]
 for q in range(2*L):
     qubits.append(q)
 
-m=FermionicOp("+_0",register_length=2*L) @ FermionicOp("-_3",register_length=2*L)
-m=m+~m
-#m=FermionicOp("+_0",register_length=2*L) @ FermionicOp("-_0",register_length=2*L)@FermionicOp("+_1",register_length=2*L) @ FermionicOp("-_1",register_length=2*L)
+up=0
+dn=1
 
-[ops,qcs,mesq,coeff,const]=qcs_for_op(m,qubit_converter,qc)
+c_ops=[]
+for i in range(L):
+    co=[]
+    for j in range(2):
+        co.append(FermionicOp("+_"+str(2*i+j),register_length=2*L))
+    c_ops.append(co)
 
-
-for i in range(len(qcs)):
-    print("op=",ops[i],", measuring qubit",mesq[i],", coeff=",coeff[i])
-    print(qcs[i])
-
-#measure everything
-#check with exact value from expectation value of hermitian operator
-if tsim:
-    qc.save_expectation_value(qubit_converter.convert(m),[0,1,2,3])
-    result=backend.run(qc).result()
-    exp = result.data()['expectation_value']
-    print("<psi|Op|psi>=",exp)
-
-
-#tqcs=transpile(qcs,backend,seed_transpiler=seed,optimization_level=3)
-#qobj = assemble(tqcs,backend)
-
-jobs=execute(qcs,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
-print("waiting for job to finish: ",jobs.job_id())
-jobs.wait_for_final_state()
-print("job finished: ",jobs.job_id())
-
-if jobs.done():
-    res=jobs.result().results
-    print(res)
-    a=const
-    for i in range(len(res)):
-        print(ops[i]," --> ",res[i].data.counts)
-        v=-2*res[i].data.counts['0x1']/shots+1
-        a=a+v*coeff[i]
-    print("a=",a)
 
 
 #GS of Hubbard chain
@@ -246,18 +219,127 @@ print("D=",D)
 print("W=",W)
 
 #build interaction operator 
-c_ops=[]
 interact=0
 for i in range(L):
-    interact+=~c_ops[i][0] @ c_ops[i][0]@~c_ops[i][1] @ c_ops[i][1]
+    interact+=U*(~c_ops[i][up] @ c_ops[i][up]@~c_ops[i][dn] @ c_ops[i][dn])
 print(interact)
 
-#build 1-RDM qubit op
-RDM=0
+qc_interact=qcs_for_op(interact,qubit_converter,qc)
+for i in range(len(qc_interact['qcs'])):
+    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
+    print(qc_interact['qcs'][i])
 
-#build ee-interaction qubit op
+#build list of constraints
+constraints=[]
+for i in range(L):
+    for si in range(2):
+        for j in range(L):
+            for sj in range(2):
+                if i>j:
+                    continue
+                #real part
+                c={}
+                c['observable']='1RDM'
+                c['type']='real'
+                c['i']=i
+                c['j']=j
+                c['si']=si
+                c['sj']=sj
+                m=c_ops[i][si]@ ~ c_ops[j][sj]
+                c['op']=0.5*(m+~m)
+                c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
+                c['cval']=0.5*(D[2*i+si,2*j+sj]+np.conjugate(D[2*i+si,2*j+sj])).real
+                constraints.append(c)
+                if i!=j:
+                    c={}
+                    c['observable']='1RDM'
+                    c['type']='imag'
+                    c['i']=i
+                    c['j']=j
+                    c['si']=si
+                    c['sj']=sj
+                    m=c_ops[i][si]@ ~ c_ops[j][sj]
+                    c['op']=0.5/1j*(m-~m)
+                    c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
+                    c['cval']=(0.5/1j*(D[2*i+si,2*j+sj]-np.conjugate(D[2*i+si,2*j+sj]))).real
+                    constraints.append(c)
+
+print("number of constraints=",len(constraints))
+
+c_qc=np.zeros(len(constraints))
+c_exact=np.zeros(len(constraints))
+W_qc=0
+W_exact=0
+
+qcs=[]
+#programs for constraints
+
+for i in range(len(constraints)):
+    print(constraints[i])
+    #evaluate constraint
+    state=qc.bind_parameters(initial_point).decompose()
+    if tsim:
+        #check with exact value from expectation value of hermitian operator
+        state.save_expectation_value(qubit_converter.convert(constraints[i]['op']),qubits)
+        result=backend.run(state).result()
+        exp = result.data()['expectation_value']
+        c_exact[i]=exp
+    for q in constraints[i]['qcs']['qcs']:
+        q=q.bind_parameters(initial_point).decompose()
+        qcs.append(q)
+
+#programs for interaction        
+if tsim:
+    #check with exact value from expectation value of hermitian operator
+    state=qc.bind_parameters(initial_point).decompose()
+    state.save_expectation_value(qubit_converter.convert(interact),qubits)
+    result=backend.run(state).result()
+    exp = result.data()['expectation_value']
+    W_exact=exp
+for q in qc_interact['qcs']:
+    q=q.bind_parameters(initial_point).decompose()
+    qcs.append(q)
+        
+
+print("quantum programs=",len(qcs))        
+
+#measure all constraints
+jobs=execute(qcs,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+if not tsim or True:
+    print("waiting for job to finish: ",jobs.job_id())
+    jobs.wait_for_final_state()
+    print("job finished: ",jobs.job_id())
 
 
-#read in density matrix
+if jobs.done():
+    res=jobs.result().results
+    I=0
+    #build constraint values from results
+    for ic in range(len(constraints)):
+        a=constraints[ic]['qcs']['const']
+        for i in range(len(constraints[ic]['qcs']['qcs'])):
+            v=-2*res[I].data.counts['0x1']/shots+1
+            I=I+1
+            a=a+v*constraints[ic]['qcs']['coeff'][i]
+        c_qc[ic]=a
+    #build interaction expectation value from result
+    a=qc_interact['const']
+    for i in range(len(qc_interact['qcs'])):
+        v=-2*res[I].data.counts['0x1']/shots+1
+        I=I+1
+        a=a+v*qc_interact['coeff'][i]
+    W_qc=a
+
+print("W_exact=",W_exact)
+print("W_qc=",W_qc)
+for i in range(len(constraints)):
+    print("c",constraints[i]['observable'],constraints[i]['type'],constraints[i]['i'],constraints[i]['si'],constraints[i]['j'],constraints[i]['sj'],"exact=",c_exact[i],"qc=",c_qc[i],"c=",constraints[i]['cval'])
+
 
 #augmented Lagrangian
+#for oiter in range(100):
+    #unconstrainted steps
+#    for iiter in range(100):
+        #spsa step
+    #multiplier and penalty update
+
