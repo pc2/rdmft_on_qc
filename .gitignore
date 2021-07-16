@@ -1,2 +1,4 @@
 .env
 *.swp
+.mpsfolder/
+__pycache__/

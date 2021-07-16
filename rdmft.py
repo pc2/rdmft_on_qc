@@ -1,5 +1,8 @@
 import os
 import copy
+import math
+import sys
+import groundstate
 try:
     import numpy as np
 except ImportError:
@@ -86,6 +89,12 @@ except ImportError:
     print("installed sympy. Please restart.")
     quit()
 
+try:
+    from dmrgpy import fermionchain
+except ImportError:
+    print("please install https://github.com/joselado/dmrgpy")
+    quit()
+
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
 
@@ -136,30 +145,12 @@ def qcs_for_op(m,qubit_converter,qc):
 dotenv.load_dotenv()
 apikey=os.getenv("QISKIT_APIKEY")
 
-tsim=False
+tsim=True
 L=2
 shots=1024
 seed=424242
 
-#VQE in qiskit from https://github.com/Qiskit/qiskit-nature/
 np.random.seed(seed)
-
-# Use PySCF, a classical computational chemistry software
-# package, to compute the one-body and two-body integrals in
-# electronic-orbital basis, necessary to form the Fermionic operator
-
-#molecule = Molecule(geometry=[['H', [0., 0., 0.]],['H', [0., 0., 0.735]]],charge=0, multiplicity=1)
-#driver = PySCFDriver(molecule=molecule,unit=UnitsType.ANGSTROM,basis='sto3g')
-#problem = ElectronicStructureProblem(driver)
-
-# generate the second-quantized operators
-#second_q_ops = problem.second_q_ops()
-#print("second_q_ops=",second_q_ops)
-
-#main_op = second_q_ops[0]
-
-#num_particles = (problem.molecule_data_transformed.num_alpha,problem.molecule_data_transformed.num_beta)
-#num_spin_orbitals = 2 * problem.molecule_data.num_molecular_orbitals
 
 #qubit_converter = QubitConverter(mapper=ParityMapper())
 #qubit_converter = QubitConverter(mapper=JordanWignerMapper())
@@ -171,8 +162,6 @@ ansatz = TwoLocal(4,rotation_blocks = ['rx', 'ry'], entanglement_blocks = 'cz',e
 
 print(ansatz)
 
-ansatz.draw(output='text',filename="ansatz.txt")
-ansatz.draw(output='mpl',filename="ansatz.png")
 
 
 # set the backend for the quantum computation
@@ -190,21 +179,19 @@ optimizer = SPSA(maxiter=100)
 print(optimizer.print_options())
 initial_point = np.random.random(ansatz.num_parameters)
 
-if tsim and False:
-    # setup and run VQE
-    algorithm = VQE(ansatz=ansatz,optimizer=optimizer,quantum_instance=backend,initial_point=initial_point)
-    calc = GroundStateEigensolver(qubit_converter, algorithm)
-    res = calc.solve(problem)
-    print(res)
-
-#
+#define registers
 q = QuantumRegister(2*L)
 c = ClassicalRegister(1)
 qc=QuantumCircuit(q,c)
 qc=qc.compose(ansatz)
 
+
 qc=qc.bind_parameters(initial_point).decompose()
+print("variational state:")
 print(qc)
+
+qc.draw(output='text',filename="ansatz.txt")
+qc.draw(output='mpl',filename="ansatz.png")
 
 qubits=[]
 for q in range(2*L):
@@ -249,28 +236,17 @@ if jobs.done():
     print("a=",a)
 
 
+#GS of Hubbard chain
+t=-1.0
+U=1.0
+mu=-0.5*U
+[E,D,W]=groundstate.hubbard_chain(L,t,U,mu,mode="ED")
+print("E=",E)
+print("D=",D)
+print("W=",W)
 
-exit()
-
-
-#build Hubbard model
+#build interaction operator 
 c_ops=[]
-L=4
-for i in range(L):
-    c_site=[]
-    for s in range(2):
-        c_site.append(FermionicOp("-_"+str(2*i+s),register_length=2*L))
-    c_ops.append(c_site)
-
-print(c_ops)
-
-hopping=0 #*FermionicOp("I_0",register_length=2*L)
-for i in range(L-1):
-    for s in range(2):
-        hopping+=~c_ops[i][s] @ c_ops[i+1][s]
-hopping+=~hopping
-print(hopping)
-
 interact=0
 for i in range(L):
     interact+=~c_ops[i][0] @ c_ops[i][0]@~c_ops[i][1] @ c_ops[i][1]
