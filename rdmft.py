@@ -8,6 +8,16 @@ except ImportError:
     print("installed numpy. Please restart.")
     quit()
 
+
+try:
+    import dotenv
+except ImportError:
+    print("installing python-dotenv...")
+    os.system("pip3 install python-dotenv")
+    print("installed python-dotenv. Please restart.")
+    quit()
+
+
 try:
     import matplotlib.pyplot as plt
 except ImportError:
@@ -51,7 +61,7 @@ try:
     from qiskit_nature.problems.second_quantization import ElectronicStructureProblem
     from qiskit_nature.problems.second_quantization.electronic import ElectronicStructureProblem
     from qiskit_nature.converters.second_quantization import QubitConverter
-    from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper    
+    from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper    
     from qiskit_nature.operators.second_quantization import FermionicOp
     
 except ImportError  as error:
@@ -79,14 +89,60 @@ except ImportError:
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
 
+def qcs_for_op(m,qubit_converter,qc):
+    m_op = qubit_converter.convert(m) #,num_particles=num_particles)
+    ops=[]
+    qcs=[]
+    mesq=[]
+    coeff=[]
+    const=0
 
-tsim=True
+    #build measuring programs here
+    p=m_op.to_pauli_op()
+    for op in p:
+        if op.to_circuit().depth()>0:
+            coeff.append(op.coeff)
+            ops.append(op)
+            #map to only sigma_z
+            q=copy.deepcopy(qc)
+
+            sg=[]
+            for i in range(len(op.primitive)):
+                print(op.primitive[i])
+                if str(op.primitive[i])=='Z':
+                    sg.append("Z")            
+                elif str(op.primitive[i])=='X':
+                    q.h(i)
+                    sg.append("Z")            
+                elif str(op.primitive[i])=='Y':
+                    q.sdg(i)
+                    q.h(i)
+                    sg.append("Z")            
+                else:
+                    sg.append("I")            
+            #map multiple sigma_z to single sigma_z
+            zs=[i for i,x in enumerate(sg) if x=='Z']
+            mesq.append(zs[0])
+            for i in range(1,len(zs)):
+                q.cx(zs[i],zs[0])
+            q.measure(zs[0],0)
+            qcs.append(q)
+        else:
+            const+=op.coeff
+    return [ops,qcs,mesq,coeff,const]
+
+
+
+dotenv.load_dotenv()
+apikey=os.getenv("QISKIT_APIKEY")
+
+tsim=False
 L=2
-shots=65536
-
+shots=1024
+seed=424242
 
 #VQE in qiskit from https://github.com/Qiskit/qiskit-nature/
-np.random.seed(999999)
+np.random.seed(seed)
 
 # Use PySCF, a classical computational chemistry software
 # package, to compute the one-body and two-body integrals in
@@ -105,10 +161,9 @@ np.random.seed(999999)
 #num_particles = (problem.molecule_data_transformed.num_alpha,problem.molecule_data_transformed.num_beta)
 #num_spin_orbitals = 2 * problem.molecule_data.num_molecular_orbitals
 
-#qubit_converter = QubitConverter(mapper=ParityMapper(), two_qubit_reduction=True)
-qubit_converter = QubitConverter(mapper=JordanWignerMapper())
-#qubit_op = qubit_converter.convert(main_op)
-#print("qubit_op=",qubit_op)
+#qubit_converter = QubitConverter(mapper=ParityMapper())
+#qubit_converter = QubitConverter(mapper=JordanWignerMapper())
+qubit_converter = QubitConverter(mapper=BravyiKitaevMapper())
 
 # setup the initial state for the ansatz
 #entangler_map = [(0, 1), (1, 2), (2, 0)]
@@ -124,7 +179,7 @@ ansatz.draw(output='mpl',filename="ansatz.png")
 backend = Aer.get_backend('aer_simulator_statevector')
 #backend = BasicAer.get_backend('qasm_simulator')
 if not tsim:
-    IBMQ.save_account("8872306d6645418eafdca564a35dccae66d5bcc37ff3c02f903d3e0fdffcd4bedb102871fd0747cc4f8a5995e45575d11351b845a64a6eb250e5c0c42ec9015d")
+    IBMQ.save_account(apikey,overwrite=True)
     provider = IBMQ.load_account()
     print(provider.backends(n_qubits=5, operational=True))
     backend = provider.backend.ibmq_quito
@@ -155,84 +210,38 @@ qubits=[]
 for q in range(2*L):
     qubits.append(q)
 
-m=FermionicOp("+_0",register_length=2*L) @ FermionicOp("-_2",register_length=2*L)
+m=FermionicOp("+_0",register_length=2*L) @ FermionicOp("-_3",register_length=2*L)
 m=m+~m
-
 #m=FermionicOp("+_0",register_length=2*L) @ FermionicOp("-_0",register_length=2*L)@FermionicOp("+_1",register_length=2*L) @ FermionicOp("-_1",register_length=2*L)
 
-m_op = qubit_converter.convert(m) #,num_particles=num_particles)
-print(m_op)
+[ops,qcs,mesq,coeff,const]=qcs_for_op(m,qubit_converter,qc)
 
-ops=[]
-qcs=[]
-mesq=[]
-coeff=[]
-
-#build measuring programs here
-p=m_op.to_pauli_op()
-for op in p:
-    #op=PauliOp(opi.primitive,1.0)
-    if op.to_circuit().depth()>0:
-        coeff.append(op.coeff)
-#        print("op=",op)
-        ops.append(op)
-        #map to only sigma_z
-        q=copy.deepcopy(qc)
-
-        sg=[]
-        for i in range(len(op.primitive)):
-            print(op.primitive[i])
-            if str(op.primitive[i])=='Z':
-                sg.append("Z")            
-            elif str(op.primitive[i])=='X':
-                q.h(i)
-                sg.append("Z")            
-            elif str(op.primitive[i])=='Y':
-                q.sdg(i)
-                q.h(i)
-                sg.append("Z")            
-            else:
-                sg.append("I")            
-#        print(q)
-#        print(sg)
-        
-        #map multiple sigma_z to single sigma_z
-        zs=[i for i,x in enumerate(sg) if x=='Z']
-#        print(zs)
-        mesq.append(zs[0])
-        for i in range(1,len(zs)):
-            q.cx(zs[i],zs[0])
-#        print(q)
-        q.measure(zs[0],0)
-        qcs.append(q)
 
 for i in range(len(qcs)):
     print("op=",ops[i],", measuring qubit",mesq[i],", coeff=",coeff[i])
     print(qcs[i])
 
 #measure everything
-qc.save_expectation_value(m_op,[0,1,2,3])
-result=backend.run(qc).result()
-exp = result.data()['expectation_value']
-print("The ideal expectation value is ",exp)
+#check with exact value from expectation value of hermitian operator
+if tsim:
+    qc.save_expectation_value(qubit_converter.convert(m),[0,1,2,3])
+    result=backend.run(qc).result()
+    exp = result.data()['expectation_value']
+    print("<psi|Op|psi>=",exp)
 
-jobs=execute(qcs,backend=backend,shots=shots)
 
-q = QuantumRegister(2*L)
-sz=QuantumCircuit(q)
-sz.z(0)
-qcs[0].save_expectation_value(sz,[0,1,2,3])
-result=backend.run(qcs[0]).result()
-print(result)
-exp = result.data()['expectation_value']
-print("The ideal expectation value is ",exp)
+#tqcs=transpile(qcs,backend,seed_transpiler=seed,optimization_level=3)
+#qobj = assemble(tqcs,backend)
 
-#jobs.submit()
+jobs=execute(qcs,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+print("waiting for job to finish: ",jobs.job_id())
+jobs.wait_for_final_state()
+print("job finished: ",jobs.job_id())
 
 if jobs.done():
     res=jobs.result().results
     print(res)
-    a=0
+    a=const
     for i in range(len(res)):
         print(ops[i]," --> ",res[i].data.counts)
         v=-2*res[i].data.counts['0x1']/shots+1
