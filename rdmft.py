@@ -3,6 +3,7 @@ import copy
 import math
 import sys
 import groundstate
+import aca
 try:
     import numpy as np
 except ImportError:
@@ -98,6 +99,7 @@ except ImportError:
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
 
+
 def qcs_for_op(m,qubit_converter,qc):
     m_op = qubit_converter.convert(m) #,num_particles=num_particles)
     ops=[]
@@ -141,20 +143,91 @@ def qcs_for_op(m,qubit_converter,qc):
     return {"ops":ops,"qcs":qcs,"mesq":mesq,"coeff":coeff,"const":const}
 
 
-
 dotenv.load_dotenv()
 apikey=os.getenv("QISKIT_APIKEY")
 
-tsim=False
-L=2
-shots=1024
-seed=424242
+tsim=True
+L=8 #number of sites
+Llocal=1 #number of sites in local approximation
+shots=1024 #number of shots for qc-meaurements
+seed=424242 #random seed
+
+
+
+
+
 
 np.random.seed(seed)
 
+
+
+#GS of Hubbard chain
+t=-1.0
+U=2.0
+mu=-0.5*U
+[E,D,W]=groundstate.hubbard_chain(L,t,U,mu,mode="DMRG")
+print("E=",E)
+print("D=",D)
+print("W=",W)
+
+#apply local approximation and ACA
+print("local approximation with ",Llocal,"sites")
+Wlocal=[]
+W=[]
+I=0
+for i in range(L):
+    if len(W)==Llocal:
+        Wlocal.append(W)
+        W=[]
+    W.append(I)
+    I=I+1
+Wlocal.append(W)
+
+print("local interactions on sites",Wlocal)
+
+for i in range(len(Wlocal)):
+    print("Functional for interaction on sites",Wlocal[i])
+    orbinteract=[]
+    
+    #set up functional to be solved
+
+    #reorder
+    orbinteract=[]
+    for j in Wlocal[i]:
+        orbinteract.append(2*j)
+        orbinteract.append(2*j+1)
+    aca.printmat(2*L,2*L,"D_in_"+str(i),D)
+
+    print("interacting orbitals:",orbinteract)
+
+    Dreordered=aca.aca_reorder(2*L,orbinteract,D)
+    aca.printmat(2*L,2*L,"D_reordered_"+str(i),Dreordered)
+
+    Daca=Dreordered.copy()
+    norb=2*L
+    ninteract=len(orbinteract)
+    for l in range(int(norb/ninteract-2)):
+        Dacain=np.zeros((norb-l*ninteract,norb-l*ninteract),dtype=np.complex_)
+        Dacain[::,::]=Daca[l*ninteract::,l*ninteract::]
+        Dacaout=aca.aca(norb-l*ninteract,len(orbinteract),Dacain)
+        Daca[l*ninteract::,l*ninteract::]=Dacaout
+        aca.printmat(2*L,2*L,"D_aca_"+str(l),Daca)
+
+#    Faca_local=hubbard_F(U,Wlocal,Daca)
+
+    print("WARNING: This is completely UNoptimized code, for larger number of orbitals please use the Fortan implementation.")
+
+    exit()
+
+exit()
+
+
+
+
+
 #qubit_converter = QubitConverter(mapper=ParityMapper())
-#qubit_converter = QubitConverter(mapper=JordanWignerMapper())
-qubit_converter = QubitConverter(mapper=BravyiKitaevMapper())
+quibit_converter = QubitConverter(mapper=JordanWignerMapper())
+#qubit_converter = QubitConverter(mapper=BravyiKitaevMapper())
 
 # setup the initial state for the ansatz
 #entangler_map = [(0, 1), (1, 2), (2, 0)]
@@ -206,18 +279,6 @@ for i in range(L):
     for j in range(2):
         co.append(FermionicOp("+_"+str(2*i+j),register_length=2*L))
     c_ops.append(co)
-
-
-
-#GS of Hubbard chain
-t=-1.0
-U=1.0
-mu=-0.5*U
-[E,D,W]=groundstate.hubbard_chain(L,t,U,mu,mode="ED")
-print("E=",E)
-print("D=",D)
-print("W=",W)
-
 #build interaction operator 
 interact=0
 for i in range(L):
