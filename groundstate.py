@@ -2,15 +2,16 @@ import math
 from dmrgpy import fermionchain
 import numpy as np
 
-def hubbard_chain(n,t,U,mu,mode="ED"):
+def hubbard_chain(n,t,U,mu,Lint,mode="ED"):
     fc = fermionchain.Spinful_Fermionic_Chain(n)
 
-    #dimer comparison results
-    E=-2*t*(math.sqrt(1+(U/(4*t))*(U/(4*t)))-U/(4*t))
-    theta=math.atan(math.sqrt(1+(U/(4*t))*(U/(4*t)))+U/(4*t))-math.pi/4
-    rho12=0.5*math.cos(2*theta)
-    print("E_dimer=",E)
-    print("rho12_dimer=",rho12)
+    if n==2 and Lint==2:
+        #dimer comparison results
+        E=-2*t*(math.sqrt(1+(U/(4*t))*(U/(4*t)))-U/(4*t))
+        theta=math.atan(math.sqrt(1+(U/(4*t))*(U/(4*t)))+U/(4*t))-math.pi/4
+        rho12=0.5*math.cos(2*theta)
+        print("E_dimer=",E)
+        print("rho12_dimer=",rho12)
 
     # first neighbor hopping
     h = 0
@@ -19,7 +20,7 @@ def hubbard_chain(n,t,U,mu,mode="ED"):
       h = h + t*fc.Cdagdn[i]*fc.Cdn[i+1]
     h = h + h.get_dagger() # Make Hermitian
     # Hubbard term
-    for i in range(n):
+    for i in range(Lint):
       h = h + U*fc.Nup[i]*fc.Ndn[i]
 
     # chemical potential
@@ -44,6 +45,7 @@ def hubbard_chain(n,t,U,mu,mode="ED"):
 
 
     # compute the 1RDM
+    #FIXME hermitian
     D=np.zeros((2*n,2*n),dtype=np.complex_)
     for i in range(n):
         for si in range(2):

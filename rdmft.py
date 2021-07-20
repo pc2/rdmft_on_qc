@@ -38,7 +38,7 @@ try:
     from qiskit import execute
     from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
     from qiskit.algorithms import VQE
-    from qiskit.algorithms.optimizers import L_BFGS_B,SPSA
+    from qiskit.algorithms.optimizers import L_BFGS_B,SPSA,COBYLA
     from qiskit.opflow.primitive_ops import PauliOp
     from qiskit.quantum_info import Pauli
 except ImportError:
@@ -160,10 +160,14 @@ config.sections()
 config.read(sys.argv[1])
 
 seed=int(config['rnd']['seed'])
-tsim=bool(config['QC']['tsim'])
+tsim=config.getboolean('QC','tsim')
+tcheck=config.getboolean('QC','tcheck')
 shots=int(config['QC']['shots'])
 systemtype=config['system']['type']
 L=int(config['system']['L'])
+Lint=int(config['system']['Lint'])
+if Lint==-1:
+    Lint=L
 Llocal=int(config['LocalApprox']['Llocal'])
 ilocal=int(config['LocalApprox']['ilocal'])
 np.random.seed(seed)
@@ -173,7 +177,7 @@ if systemtype=='hubbard_chain':
     U=float(config['system']['U'])
     t=float(config['system']['t'])
     mu=float(config['system']['mu'])
-    [E,D,W]=groundstate.hubbard_chain(L,t,U,mu,mode="DMRG")
+    [E,D,W]=groundstate.hubbard_chain(L,t,U,mu,Lint,mode="DMRG")
 else:
     print("system type not implemented")
     exit();
@@ -201,43 +205,46 @@ print("Functional for interaction on sites",Wlocal[ilocal])
 orbinteract=[]
 
 #set up functional to be solved
+#reorder orbitals
+norb=2*L
 
-#reorder
 orbinteract=[]
 ninteract=0
 for j in Wlocal[ilocal]:
     ninteract+=2
     orbinteract.append(2*j)
     orbinteract.append(2*j+1)
-aca.printmat(2*L,2*L,"D_in_"+str(ilocal),D)
+aca.printmat(norb,norb,"D_in_"+str(ilocal),D)
 
 print("interacting orbitals:",orbinteract)
 
-[Dreordered,orbinteractaca]=aca.aca_reorder(2*L,orbinteract,D,orbinteract)
-aca.printmat(2*L,2*L,"D_reordered_"+str(ilocal),Dreordered)
+[Dreordered,orbinteractaca]=aca.aca_reorder(norb,orbinteract,D,orbinteract)
+aca.printmat(norb,norb,"D_reordered_"+str(ilocal),Dreordered)
 print("orbinteractaca=",orbinteractaca)
 
 Daca=Dreordered.copy()
-norb=2*L
 Daca_levels=[]
-Daca_levels.append(np.copy(Daca[0:ninteract,0:ninteract]))
+#Daca_levels.append(np.copy(Daca[0:ninteract,0:ninteract]))
 
-for l in range(1,int(norb/ninteract-1)):
+for l in range(0,int(norb/ninteract-1)):
     Dacain=np.zeros((norb-l*ninteract,norb-l*ninteract),dtype=np.complex_)
-    Dacain[::,::]=Daca[l*ninteract::,l*ninteract::]
+    Dacain[::,::]=np.copy(Daca[l*ninteract::,l*ninteract::])
     Dacaout=aca.aca(norb-l*ninteract,ninteract,Dacain)
-    Daca[l*ninteract::,l*ninteract::]=Dacaout
-    aca.printmat(2*L,2*L,"D_aca_"+str(l),Daca)
+    Daca[l*ninteract::,l*ninteract::]=np.copy(Dacaout)
+    aca.printmat(norb,norb,"D_aca_"+str(l),Daca)
     aca.printmat((l+1)*ninteract,(l+1)*ninteract,"D_aca_truncated_"+str(l),Daca[0:(l+1)*ninteract,0:(l+1)*ninteract])
     Daca_levels.append(np.copy(Daca[0:(l+1)*ninteract,0:(l+1)*ninteract]))
+Daca_levels.append(np.copy(Daca))
 
 l=int(config['ACA']['level'])
-norb_aca=np.shape(Daca_levels[l])[0]
+Daca=Daca_levels[l]
+norb_aca=np.shape(Daca)[0]
+aca.printmat(norb_aca,norb_aca,"D_aca_used_",Daca)
 print("aca: level",l," norb=",norb_aca)
 
+tcplx=config.getboolean('CI','tcplx')
 options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
-Daca=Daca_levels[l]
-Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options)
+Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
 print("F_aca (full space)=",Faca_local)
 
 qubit_converter = QubitConverter(mapper=ParityMapper())
@@ -261,24 +268,19 @@ rotation_blocks=config['QC']['rotation_blocks'].split(",")
 # setup the initial state for the ansatz
 #entangler_map = [(0, 1), (1, 2), (2, 0)]
 ansatz = TwoLocal(norb_aca,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y')
-print(ansatz)
+#print(ansatz)
 
 
 # set the backend for the quantum computation
-#FIXME make backends selectable
-backend = Aer.get_backend('aer_simulator_statevector')
 #backend = BasicAer.get_backend('qasm_simulator')
+backend = Aer.get_backend('aer_simulator_statevector')
+backend_check = Aer.get_backend('aer_simulator')
 if not tsim:
     IBMQ.save_account(apikey,overwrite=True)
     provider = IBMQ.load_account()
     print(provider.backends(n_qubits=5, operational=True))
     backend = provider.backend.ibmq_quito
 
-#optimizer = L_BFGS_B()
-#optimizer = SPSA(maxiter=100,callback=opt_callback)
-optimizer = SPSA(maxiter=100)
-print(optimizer.print_options())
-initial_point = np.random.random(ansatz.num_parameters)
 
 #define registers
 q = QuantumRegister(norb_aca)
@@ -313,12 +315,12 @@ for i in range(int(len(orbinteract)/2)):
 
 for i in Waca:
     interact+=U*(~c_ops[2*i] @ c_ops[2*i]@~c_ops[2*i+1] @ c_ops[2*i+1])
-print(interact)
+#print(interact)
 
 qc_interact=qcs_for_op(interact,qubit_converter,qc)
-for i in range(len(qc_interact['qcs'])):
-    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
-    print(qc_interact['qcs'][i])
+#for i in range(len(qc_interact['qcs'])):
+#    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
+#    print(qc_interact['qcs'][i])
 
 #build list of constraints
 constraints=[]
@@ -356,6 +358,8 @@ c_exact=np.zeros(len(constraints))
 W_qc=0
 W_exact=0
 
+initial_point = np.random.random(ansatz.num_parameters)
+
 qcs=[]
 #programs for constraints
 
@@ -363,34 +367,38 @@ for i in range(len(constraints)):
     print(constraints[i])
     #evaluate constraint
     state=qc.bind_parameters(initial_point).decompose()
-    if tsim:
+    if tcheck:
         #check with exact value from expectation value of hermitian operator
-        state.save_expectation_value(qubit_converter.convert(constraints[i]['op']),qubits)
-        result=backend.run(state).result()
+        qconv=qubit_converter.convert(constraints[i]['op'])
+        state.save_expectation_value(qconv,qubits)
+        result=backend_check.run(state).result()
         exp = result.data()['expectation_value']
         c_exact[i]=exp
     for q in constraints[i]['qcs']['qcs']:
-        q=q.bind_parameters(initial_point).decompose()
+#        q=q.bind_parameters(initial_point).decompose()
         qcs.append(q)
 
 #programs for interaction        
-if tsim:
+if tcheck:
     #check with exact value from expectation value of hermitian operator
     state=qc.bind_parameters(initial_point).decompose()
     state.save_expectation_value(qubit_converter.convert(interact),qubits)
-    result=backend.run(state).result()
+    result=backend_check.run(state).result()
     exp = result.data()['expectation_value']
     W_exact=exp
 for q in qc_interact['qcs']:
-    q=q.bind_parameters(initial_point).decompose()
+#    q=q.bind_parameters(initial_point).decompose()
     qcs.append(q)
         
 
 print("quantum programs=",len(qcs))        
 
 #measure all constraints
-jobs=execute(qcs,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
-if not tsim or True:
+qcsp=[]
+for q in qcs:
+    qcsp.append(q.bind_parameters(initial_point).decompose())
+jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+if not tsim:
     print("waiting for job to finish: ",jobs.job_id())
     jobs.wait_for_final_state()
     print("job finished: ",jobs.job_id())
@@ -415,16 +423,78 @@ if jobs.done():
         a=a+v*qc_interact['coeff'][i]
     W_qc=a
 
-print("W_exact=",W_exact)
+if tcheck:
+    print("W_exact=",W_exact)
 print("W_qc=",W_qc)
 for i in range(len(constraints)):
     print("c",constraints[i]['observable'],constraints[i]['type'],constraints[i]['i'],"exact=",c_exact[i],"qc=",c_qc[i],"c=",constraints[i]['cval'])
 
+penalty=10
 
+def rdmf_obj(x):
+    qcsp=[]
+    for q in qcs:
+        qcsp.append(q.bind_parameters(x).decompose())
+    jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots)#,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+    if not tsim: 
+        print("waiting for job to finish: ",jobs.job_id())
+        jobs.wait_for_final_state(wait=0.1)
+        print("job finished: ",jobs.job_id())
+    else:
+        jobs.wait_for_final_state(wait=0.05)
+
+    c_qc=np.zeros(len(constraints))
+    w_qc=0
+    L=0
+    if jobs.done():
+        res=jobs.result().results
+        I=0
+        #build constraint values from results
+        for ic in range(len(constraints)):
+            a=constraints[ic]['qcs']['const']
+            for i in range(len(constraints[ic]['qcs']['qcs'])):
+                v=-2*res[I].data.counts['0x1']/shots+1
+                I=I+1
+                a=a+v*constraints[ic]['qcs']['coeff'][i]
+            c_qc[ic]=a-constraints[ic]['cval']
+            L=L+penalty*(c_qc[ic])**2
+        #build interaction expectation value from result
+        a=qc_interact['const']
+        for i in range(len(qc_interact['qcs'])):
+            v=-2*res[I].data.counts['0x1']/shots+1
+            I=I+1
+            a=a+v*qc_interact['coeff'][i]
+        W_qc=a
+        L=L+W_qc
+    print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
+    return L
+
+qiskit.utils.algorithm_globals.random_seed=seed
+    
 #augmented Lagrangian
-#for oiter in range(100):
+for oiter in range(1):
     #unconstrainted steps
-#    for iiter in range(100):
-        #spsa step
+    optimizer = COBYLA(maxiter=1000000,disp=True)
+    print("minimizing without noise with COBYLA")
+    [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
+    print("point=",point)
+    print("value=",value)
+    print("nfev=",nfev)
+
+
+
+    optimizer = SPSA(maxiter=1000000,second_order=False)#,callback=opt_callback)
+    print("calibrating")
+    [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
+    print("learning_rate=",learning_rate)
+    print("perturbation=",perturbation)
+    optimizer = SPSA(maxiter=10,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
+    #print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
+    print("minimizing")
+    [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
+    print("point=",point)
+    print("value=",value)
+    print("nfev=",nfev)
     #multiplier and penalty update
+
 

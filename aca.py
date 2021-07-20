@@ -48,8 +48,8 @@ def aca_reorder(norb,orbinteract,Din,Win):
 
 def aca(norb,ninteract,Din):
     Dout=np.zeros((norb,norb),dtype=np.complex_)
-    print("norb=",norb,np.shape(Din)) 
-    print("ninteract=",ninteract) 
+    #print("norb=",norb,np.shape(Din)) 
+    #print("ninteract=",ninteract) 
     l=1
     E=np.zeros((ninteract,norb-ninteract),dtype=np.complex_)
     E[0:ninteract,0:norb-ninteract]=Din[0:ninteract,ninteract:norb]
