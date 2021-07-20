@@ -480,21 +480,20 @@ for oiter in range(1):
     print("point=",point)
     print("value=",value)
     print("nfev=",nfev)
+    mu=mu*2
 
-
-
-    optimizer = SPSA(maxiter=1000000,second_order=False)#,callback=opt_callback)
-    print("calibrating")
-    [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
-    print("learning_rate=",learning_rate)
-    print("perturbation=",perturbation)
-    optimizer = SPSA(maxiter=10,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
-    #print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
-    print("minimizing")
-    [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
-    print("point=",point)
-    print("value=",value)
-    print("nfev=",nfev)
+    #optimizer = SPSA(maxiter=1000000,second_order=False)#,callback=opt_callback)
+    #print("calibrating")
+    #[learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
+    #print("learning_rate=",learning_rate)
+    #print("perturbation=",perturbation)
+    #optimizer = SPSA(maxiter=10,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
+    ##print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
+    #print("minimizing")
+    #[point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
+    #print("point=",point)
+    #print("value=",value)
+    #print("nfev=",nfev)
     #multiplier and penalty update
 
 
