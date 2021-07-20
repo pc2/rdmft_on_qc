@@ -472,17 +472,19 @@ def rdmf_obj(x):
 
 qiskit.utils.algorithm_globals.random_seed=seed
     
+x0=initial_point
 #augmented Lagrangian
-for oiter in range(1):
+for oiter in range(100):
     #unconstrainted steps
     optimizer = COBYLA(maxiter=1000000,disp=True,tol=1e-2)
     print("minimizing without noise with COBYLA")
-    [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
+    [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
     print("point=",point)
+    x0=point
     print("value=",value)
     print("nfev=",nfev)
-    for i in len(constraints):
-        lagrange[i]=lagraange[i]+penalty*c_qc[i]
+    for i in range(len(constraints)):
+        lagrange[i]=lagrange[i]+penalty*c_qc[i]
     penalty=penalty*2
     print("lagrange=",lagrange)
     print("penalty=",penalty)
