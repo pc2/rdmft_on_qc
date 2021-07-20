@@ -430,6 +430,8 @@ for i in range(len(constraints)):
     print("c",constraints[i]['observable'],constraints[i]['type'],constraints[i]['i'],"exact=",c_exact[i],"qc=",c_qc[i],"c=",constraints[i]['cval'])
 
 penalty=10
+lagrange=np.zeros(len(constraints))
+c_qc=np.zeros(len(constraints))
 
 def rdmf_obj(x):
     qcsp=[]
@@ -443,7 +445,6 @@ def rdmf_obj(x):
     else:
         jobs.wait_for_final_state(wait=0.05)
 
-    c_qc=np.zeros(len(constraints))
     w_qc=0
     L=0
     if jobs.done():
@@ -457,7 +458,7 @@ def rdmf_obj(x):
                 I=I+1
                 a=a+v*constraints[ic]['qcs']['coeff'][i]
             c_qc[ic]=a-constraints[ic]['cval']
-            L=L+penalty*(c_qc[ic])**2
+            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
         #build interaction expectation value from result
         a=qc_interact['const']
         for i in range(len(qc_interact['qcs'])):
@@ -474,13 +475,18 @@ qiskit.utils.algorithm_globals.random_seed=seed
 #augmented Lagrangian
 for oiter in range(1):
     #unconstrainted steps
-    optimizer = COBYLA(maxiter=1000000,disp=True)
+    optimizer = COBYLA(maxiter=1000000,disp=True,tol=1e-2)
     print("minimizing without noise with COBYLA")
     [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
     print("point=",point)
     print("value=",value)
     print("nfev=",nfev)
-    mu=mu*2
+    for i in len(constraints):
+        lagrange[i]=lagraange[i]+penalty*c_qc[i]
+    penalty=penalty*2
+    print("lagrange=",lagrange)
+    print("penalty=",penalty)
+
 
     #optimizer = SPSA(maxiter=1000000,second_order=False)#,callback=opt_callback)
     #print("calibrating")
