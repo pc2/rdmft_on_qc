@@ -4,6 +4,7 @@ import math
 import sys
 import groundstate
 import aca
+import ci
 try:
     import numpy as np
 except ImportError:
@@ -96,6 +97,14 @@ except ImportError:
     print("please install https://github.com/joselado/dmrgpy")
     quit()
 
+try:
+    import configparser
+except ImportError:
+    print("installing configparser...")
+    os.system("pip3 install configparser")
+    print("installed configparser. Please restart.")
+    quit()
+
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
 
@@ -146,26 +155,29 @@ def qcs_for_op(m,qubit_converter,qc):
 dotenv.load_dotenv()
 apikey=os.getenv("QISKIT_APIKEY")
 
-tsim=True
-L=8 #number of sites
-Llocal=1 #number of sites in local approximation
-shots=1024 #number of shots for qc-meaurements
-seed=424242 #random seed
+config = configparser.ConfigParser()
+config.sections()
+config.read(sys.argv[1])
 
-
-
-
-
-
+seed=int(config['rnd']['seed'])
+tsim=bool(config['QC']['tsim'])
+shots=int(config['QC']['shots'])
+systemtype=config['system']['type']
+L=int(config['system']['L'])
+Llocal=int(config['LocalApprox']['Llocal'])
+ilocal=int(config['LocalApprox']['ilocal'])
 np.random.seed(seed)
 
+#GS of system to get a physical density matrix
+if systemtype=='hubbard_chain':
+    U=float(config['system']['U'])
+    t=float(config['system']['t'])
+    mu=float(config['system']['mu'])
+    [E,D,W]=groundstate.hubbard_chain(L,t,U,mu,mode="DMRG")
+else:
+    print("system type not implemented")
+    exit();
 
-
-#GS of Hubbard chain
-t=-1.0
-U=2.0
-mu=-0.5*U
-[E,D,W]=groundstate.hubbard_chain(L,t,U,mu,mode="DMRG")
 print("E=",E)
 print("D=",D)
 print("W=",W)
@@ -185,59 +197,75 @@ Wlocal.append(W)
 
 print("local interactions on sites",Wlocal)
 
-for i in range(len(Wlocal)):
-    print("Functional for interaction on sites",Wlocal[i])
-    orbinteract=[]
-    
-    #set up functional to be solved
+print("Functional for interaction on sites",Wlocal[ilocal])
+orbinteract=[]
 
-    #reorder
-    orbinteract=[]
-    for j in Wlocal[i]:
-        orbinteract.append(2*j)
-        orbinteract.append(2*j+1)
-    aca.printmat(2*L,2*L,"D_in_"+str(i),D)
+#set up functional to be solved
 
-    print("interacting orbitals:",orbinteract)
+#reorder
+orbinteract=[]
+ninteract=0
+for j in Wlocal[ilocal]:
+    ninteract+=2
+    orbinteract.append(2*j)
+    orbinteract.append(2*j+1)
+aca.printmat(2*L,2*L,"D_in_"+str(ilocal),D)
 
-    Dreordered=aca.aca_reorder(2*L,orbinteract,D)
-    aca.printmat(2*L,2*L,"D_reordered_"+str(i),Dreordered)
+print("interacting orbitals:",orbinteract)
 
-    Daca=Dreordered.copy()
-    norb=2*L
-    ninteract=len(orbinteract)
-    for l in range(int(norb/ninteract-2)):
-        Dacain=np.zeros((norb-l*ninteract,norb-l*ninteract),dtype=np.complex_)
-        Dacain[::,::]=Daca[l*ninteract::,l*ninteract::]
-        Dacaout=aca.aca(norb-l*ninteract,len(orbinteract),Dacain)
-        Daca[l*ninteract::,l*ninteract::]=Dacaout
-        aca.printmat(2*L,2*L,"D_aca_"+str(l),Daca)
+[Dreordered,orbinteractaca]=aca.aca_reorder(2*L,orbinteract,D,orbinteract)
+aca.printmat(2*L,2*L,"D_reordered_"+str(ilocal),Dreordered)
+print("orbinteractaca=",orbinteractaca)
 
-#    Faca_local=hubbard_F(U,Wlocal,Daca)
+Daca=Dreordered.copy()
+norb=2*L
+Daca_levels=[]
+Daca_levels.append(np.copy(Daca[0:ninteract,0:ninteract]))
 
-    print("WARNING: This is completely UNoptimized code, for larger number of orbitals please use the Fortan implementation.")
+for l in range(1,int(norb/ninteract-1)):
+    Dacain=np.zeros((norb-l*ninteract,norb-l*ninteract),dtype=np.complex_)
+    Dacain[::,::]=Daca[l*ninteract::,l*ninteract::]
+    Dacaout=aca.aca(norb-l*ninteract,ninteract,Dacain)
+    Daca[l*ninteract::,l*ninteract::]=Dacaout
+    aca.printmat(2*L,2*L,"D_aca_"+str(l),Daca)
+    aca.printmat((l+1)*ninteract,(l+1)*ninteract,"D_aca_truncated_"+str(l),Daca[0:(l+1)*ninteract,0:(l+1)*ninteract])
+    Daca_levels.append(np.copy(Daca[0:(l+1)*ninteract,0:(l+1)*ninteract]))
 
+l=int(config['ACA']['level'])
+norb_aca=np.shape(Daca_levels[l])[0]
+print("aca: level",l," norb=",norb_aca)
+
+options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
+Daca=Daca_levels[l]
+Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options)
+print("F_aca (full space)=",Faca_local)
+
+qubit_converter = QubitConverter(mapper=ParityMapper())
+mapping=config['QC']['mapping']
+if mapping=="Parity":
+    qubit_converter = QubitConverter(mapper=ParityMapper())
+elif mapping=="JordanWigner":
+    quibit_converter = QubitConverter(mapper=JordanWignerMapper())
+elif mapping=="BravyiKitaev":
+    qubit_converter = QubitConverter(mapper=BravyiKitaevMapper())
+else:
+    print("fermionic mapping unknown")
     exit()
 
-exit()
 
-
-
-
-
-#qubit_converter = QubitConverter(mapper=ParityMapper())
-quibit_converter = QubitConverter(mapper=JordanWignerMapper())
-#qubit_converter = QubitConverter(mapper=BravyiKitaevMapper())
+entanglement=config['QC']['entanglement']
+reps=int(config['QC']['reps'])
+entanglement_blocks=config['QC']['entanglement_blocks']
+rotation_blocks=config['QC']['rotation_blocks'].split(",")
 
 # setup the initial state for the ansatz
 #entangler_map = [(0, 1), (1, 2), (2, 0)]
-ansatz = TwoLocal(4,rotation_blocks = ['rx', 'ry'], entanglement_blocks = 'cz',entanglement='linear', reps=1, parameter_prefix = 'y')
-
+ansatz = TwoLocal(norb_aca,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y')
 print(ansatz)
 
 
-
 # set the backend for the quantum computation
+#FIXME make backends selectable
 backend = Aer.get_backend('aer_simulator_statevector')
 #backend = BasicAer.get_backend('qasm_simulator')
 if not tsim:
@@ -253,7 +281,7 @@ print(optimizer.print_options())
 initial_point = np.random.random(ansatz.num_parameters)
 
 #define registers
-q = QuantumRegister(2*L)
+q = QuantumRegister(norb_aca)
 c = ClassicalRegister(1)
 qc=QuantumCircuit(q,c)
 qc=qc.compose(ansatz)
@@ -267,22 +295,24 @@ qc.draw(output='text',filename="ansatz.txt")
 qc.draw(output='mpl',filename="ansatz.png")
 
 qubits=[]
-for q in range(2*L):
+for q in range(norb_aca):
     qubits.append(q)
 
 up=0
 dn=1
 
 c_ops=[]
-for i in range(L):
-    co=[]
-    for j in range(2):
-        co.append(FermionicOp("+_"+str(2*i+j),register_length=2*L))
-    c_ops.append(co)
+for i in range(norb_aca):
+    c_ops.append(FermionicOp("+_"+str(i),register_length=norb_aca))
+
 #build interaction operator 
 interact=0
-for i in range(L):
-    interact+=U*(~c_ops[i][up] @ c_ops[i][up]@~c_ops[i][dn] @ c_ops[i][dn])
+Waca=[]
+for i in range(int(len(orbinteract)/2)):
+    Waca.append(i)
+
+for i in Waca:
+    interact+=U*(~c_ops[2*i] @ c_ops[2*i]@~c_ops[2*i+1] @ c_ops[2*i+1])
 print(interact)
 
 qc_interact=qcs_for_op(interact,qubit_converter,qc)
@@ -292,38 +322,32 @@ for i in range(len(qc_interact['qcs'])):
 
 #build list of constraints
 constraints=[]
-for i in range(L):
-    for si in range(2):
-        for j in range(L):
-            for sj in range(2):
-                if i>j:
-                    continue
-                #real part
-                c={}
-                c['observable']='1RDM'
-                c['type']='real'
-                c['i']=i
-                c['j']=j
-                c['si']=si
-                c['sj']=sj
-                m=c_ops[i][si]@ ~ c_ops[j][sj]
-                c['op']=0.5*(m+~m)
-                c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
-                c['cval']=0.5*(D[2*i+si,2*j+sj]+np.conjugate(D[2*i+si,2*j+sj])).real
-                constraints.append(c)
-                if i!=j:
-                    c={}
-                    c['observable']='1RDM'
-                    c['type']='imag'
-                    c['i']=i
-                    c['j']=j
-                    c['si']=si
-                    c['sj']=sj
-                    m=c_ops[i][si]@ ~ c_ops[j][sj]
-                    c['op']=0.5/1j*(m-~m)
-                    c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
-                    c['cval']=(0.5/1j*(D[2*i+si,2*j+sj]-np.conjugate(D[2*i+si,2*j+sj]))).real
-                    constraints.append(c)
+for i in range(norb_aca):
+    for j in range(norb_aca):
+        if i>j:
+            continue
+        #real part
+        c={}
+        c['observable']='1RDM'
+        c['type']='real'
+        c['i']=i
+        c['j']=j
+        m=c_ops[i]@ ~ c_ops[j]
+        c['op']=0.5*(m+~m)
+        c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
+        c['cval']=0.5*(Daca[i,j]+np.conjugate(Daca[i,j])).real
+        constraints.append(c)
+        if i!=j:
+            c={}
+            c['observable']='1RDM'
+            c['type']='imag'
+            c['i']=i
+            c['j']=j
+            m=c_ops[i]@ ~ c_ops[j]
+            c['op']=0.5/1j*(m-~m)
+            c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
+            c['cval']=(0.5/1j*(Daca[i,j]-np.conjugate(Daca[i,j]))).real
+            constraints.append(c)
 
 print("number of constraints=",len(constraints))
 
@@ -394,7 +418,7 @@ if jobs.done():
 print("W_exact=",W_exact)
 print("W_qc=",W_qc)
 for i in range(len(constraints)):
-    print("c",constraints[i]['observable'],constraints[i]['type'],constraints[i]['i'],constraints[i]['si'],constraints[i]['j'],constraints[i]['sj'],"exact=",c_exact[i],"qc=",c_qc[i],"c=",constraints[i]['cval'])
+    print("c",constraints[i]['observable'],constraints[i]['type'],constraints[i]['i'],"exact=",c_exact[i],"qc=",c_qc[i],"c=",constraints[i]['cval'])
 
 
 #augmented Lagrangian

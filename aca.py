@@ -18,14 +18,10 @@ def printmat(n,m,name,A):
 
     amax=1.0 #np.amax(B)
     B=B/(amax+1e-6)
-
     array = np.reshape(B, (f*n, 2*f*m))
     plt.imsave(name+".png", array)
 
-
-
-
-def aca_reorder(norb,orbinteract,Din):
+def aca_reorder(norb,orbinteract,Din,Win):
     Dout=np.zeros((norb,norb),dtype=np.complex_)
     mapping=[]
 
@@ -45,7 +41,10 @@ def aca_reorder(norb,orbinteract,Din):
     for i in range(norb):
         for j in range(norb):
             Dout[i,j]=Din[mapping[i],mapping[j]]
-    return Dout
+    Wout=[]
+    for i in Win:
+        Wout.append(mapping[i])
+    return [Dout,Wout]
 
 def aca(norb,ninteract,Din):
     Dout=np.zeros((norb,norb),dtype=np.complex_)
@@ -70,10 +69,8 @@ def aca(norb,ninteract,Din):
 
     for i in range(norb):
         Iout[i,i]=Iout[i,i]-1
-    print("Unitary check=",np.max(np.absolute(Iout)))
+    #print("Unitary check=",np.max(np.absolute(Iout)))
     #printmat(norb,norb,"ACA_I_",Iout)
-    #printmat(norb,norb,"ACA_D2_",Dout)
-     
-     
+    #printmat(norb,norb,"ACA_D2_",Dout)     
     return Dout
 
