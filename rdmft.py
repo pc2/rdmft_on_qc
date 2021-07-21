@@ -161,6 +161,7 @@ config.read(sys.argv[1])
 
 seed=int(config['rnd']['seed'])
 tsim=config.getboolean('QC','tsim')
+tnoise=config.getboolean('QC','tnoise')
 tcheck=config.getboolean('QC','tcheck')
 shots=int(config['QC']['shots'])
 systemtype=config['system']['type']
@@ -242,6 +243,8 @@ norb_aca=np.shape(Daca)[0]
 aca.printmat(norb_aca,norb_aca,"D_aca_used_",Daca)
 print("aca: level",l," norb=",norb_aca)
 
+print("Daca=",Daca)
+
 tcplx=config.getboolean('CI','tcplx')
 options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
 Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
@@ -264,16 +267,24 @@ entanglement=config['QC']['entanglement']
 reps=int(config['QC']['reps'])
 entanglement_blocks=config['QC']['entanglement_blocks']
 rotation_blocks=config['QC']['rotation_blocks'].split(",")
+if entanglement=="map":
+    entanglement_map=config['QC']['entanglement_map']
+    entanglement=[]
+    for e in entanglement_map.split(","):
+        entanglement.append((int(e.split("_")[0]),int(e.split("_")[1])))
 
 # setup the initial state for the ansatz
-#entangler_map = [(0, 1), (1, 2), (2, 0)]
 ansatz = TwoLocal(norb_aca,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y')
 #print(ansatz)
 
 
 # set the backend for the quantum computation
-#backend = BasicAer.get_backend('qasm_simulator')
-backend = Aer.get_backend('aer_simulator_statevector')
+backend = BasicAer.get_backend('qasm_simulator')
+if tnoise:
+    backend = BasicAer.get_backend('qasm_simulator')
+else:
+    backend = Aer.get_backend('aer_simulator_statevector')
+
 backend_check = Aer.get_backend('aer_simulator')
 if not tsim:
     IBMQ.save_account(apikey,overwrite=True)
@@ -305,7 +316,7 @@ dn=1
 
 c_ops=[]
 for i in range(norb_aca):
-    c_ops.append(FermionicOp("+_"+str(i),register_length=norb_aca))
+    c_ops.append(FermionicOp("-_"+str(i),register_length=norb_aca))
 
 #build interaction operator 
 interact=0
@@ -314,13 +325,15 @@ for i in range(int(len(orbinteract)/2)):
     Waca.append(i)
 
 for i in Waca:
-    interact+=U*(~c_ops[2*i] @ c_ops[2*i]@~c_ops[2*i+1] @ c_ops[2*i+1])
-#print(interact)
+    interact+=U*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
+print("interact=",interact)
 
 qc_interact=qcs_for_op(interact,qubit_converter,qc)
 #for i in range(len(qc_interact['qcs'])):
 #    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
 #    print(qc_interact['qcs'][i])
+
+
 
 #build list of constraints
 constraints=[]
@@ -334,7 +347,7 @@ for i in range(norb_aca):
         c['type']='real'
         c['i']=i
         c['j']=j
-        m=c_ops[i]@ ~ c_ops[j]
+        m=~c_ops[i]@ c_ops[j]
         c['op']=0.5*(m+~m)
         c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
         c['cval']=0.5*(Daca[i,j]+np.conjugate(Daca[i,j])).real
@@ -345,7 +358,7 @@ for i in range(norb_aca):
             c['type']='imag'
             c['i']=i
             c['j']=j
-            m=c_ops[i]@ ~ c_ops[j]
+            m=~c_ops[i]@ c_ops[j]
             c['op']=0.5/1j*(m-~m)
             c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
             c['cval']=(0.5/1j*(Daca[i,j]-np.conjugate(Daca[i,j]))).real
@@ -433,11 +446,15 @@ penalty=10
 lagrange=np.zeros(len(constraints))
 c_qc=np.zeros(len(constraints))
 
+rdmf_obj_eval=0
+
 def rdmf_obj(x):
+    global rdmf_obj_eval
+    rdmf_obj_eval+=1
     qcsp=[]
     for q in qcs:
         qcsp.append(q.bind_parameters(x).decompose())
-    jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots)#,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+    jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed+rdmf_obj_eval,seed_transpiler=seed)
     if not tsim: 
         print("waiting for job to finish: ",jobs.job_id())
         jobs.wait_for_final_state(wait=0.1)
@@ -476,13 +493,28 @@ x0=initial_point
 #augmented Lagrangian
 for oiter in range(100):
     #unconstrainted steps
-    optimizer = COBYLA(maxiter=1000000,disp=True,tol=1e-2)
-    print("minimizing without noise with COBYLA")
-    [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+    if tsim and not tnoise:
+        print("minimizing with COBYLA (no noise)")
+        optimizer = COBYLA(maxiter=1000000,disp=True,tol=1e-2)
+        [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+    elif not tsim or tnoise:
+        print("minimizing with SPSA (noise)")
+        optimizer = SPSA(maxiter=1000000,second_order=False)#,callback=opt_callback)
+        print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
+        print("calibrating")
+        [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
+        print("learning_rate=",learning_rate)
+        print("perturbation=",perturbation)
+        optimizer = SPSA(maxiter=10,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
+        print("minimizing")
+        [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
+
     print("point=",point)
-    x0=point
     print("value=",value)
     print("nfev=",nfev)
+
+    x0=point
+    #multiplier and penalty update
     for i in range(len(constraints)):
         lagrange[i]=lagrange[i]+penalty*c_qc[i]
     penalty=penalty*2
@@ -490,18 +522,5 @@ for oiter in range(100):
     print("penalty=",penalty)
 
 
-    #optimizer = SPSA(maxiter=1000000,second_order=False)#,callback=opt_callback)
-    #print("calibrating")
-    #[learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
-    #print("learning_rate=",learning_rate)
-    #print("perturbation=",perturbation)
-    #optimizer = SPSA(maxiter=10,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
-    ##print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
-    #print("minimizing")
-    #[point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
-    #print("point=",point)
-    #print("value=",value)
-    #print("nfev=",nfev)
-    #multiplier and penalty update
 
 
