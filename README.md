@@ -2,7 +2,9 @@
 
 # Dependencies
 
-* https://github.com/joselado/dmrgpy: python install.py 
+* Python >= 3.8
+* https://github.com/joselado/dmrgpy: `python install.py`
+
 # What This Script Does
 1. sets up a system like a Hubbard chain
 2. computes the numerically exact ground state with MPS and the corresponding one-particle reduced density matrix (1RDM)
