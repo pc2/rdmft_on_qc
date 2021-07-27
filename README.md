@@ -4,6 +4,7 @@
 
 * Python >= 3.8
 * https://github.com/joselado/dmrgpy: `python install.py`
+* https://github.com/quantumlib/OpenFermion: `python -m pip install --user openfermion`
 
 # What This Script Does
 1. sets up a system like a Hubbard chain
