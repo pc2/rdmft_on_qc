@@ -2,3 +2,4 @@
 *.swp
 .mpsfolder/
 __pycache__/
+*.png

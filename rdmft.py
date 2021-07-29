@@ -161,6 +161,7 @@ config.read(sys.argv[1])
 
 seed=int(config['rnd']['seed'])
 tsim=config.getboolean('QC','tsim')
+tdoqc=config.getboolean('QC','tdoqc')
 tnoise=config.getboolean('QC','tnoise')
 tcheck=config.getboolean('QC','tcheck')
 shots=int(config['QC']['shots'])
@@ -250,6 +251,11 @@ options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'
 Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
 print("F_aca (full space)=",Faca_local)
 
+tcplx=config.getboolean('CI','tcplx')
+options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
+Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Dreordered,options,tcplx)
+print("F_reordered (full space)=",Faca_local)
+
 qubit_converter = QubitConverter(mapper=ParityMapper())
 mapping=config['QC']['mapping']
 if mapping=="Parity":
@@ -262,6 +268,9 @@ else:
     print("fermionic mapping unknown")
     exit()
 
+
+if not tdoqc:
+    exit()
 
 entanglement=config['QC']['entanglement']
 reps=int(config['QC']['reps'])
