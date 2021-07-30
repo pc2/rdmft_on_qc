@@ -16,10 +16,10 @@ def printmat(n,m,name,A):
                     B[i*f+k,j*f+l]=A.real[i,j]
                     B[i*f+k,m*f+j*f+l]=A.imag[i,j]
 
-    amax=1.0 #np.amax(B)
+    amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (f*n, 2*f*m))
-    plt.imsave(name+".png", array,cmap="Greys")
+    plt.imsave(name+".png", array,cmap="Greys",vmin=0.0,vmax=amax)
     printmat_real(n,m,name,A)
     printmat_real_spin(n,m,name,A)
 
@@ -33,10 +33,10 @@ def printmat_real(n,m,name,A):
                 for l in range(f):
                     B[i*f+k,j*f+l]=A.real[i,j]
 
-    amax=1.0 #np.amax(B)
+    amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (f*n, f*m))
-    plt.imsave(name+"_real.png", array,cmap="Greys")
+    plt.imsave(name+"_real.png", array,cmap="Greys",vmin=0.0,vmax=amax)
 
 def printmat_real_spin(n,m,name,A):
     f=10
@@ -48,10 +48,10 @@ def printmat_real_spin(n,m,name,A):
                 for l in range(f):
                     B[i*f+k,j*f+l]=A.real[2*i,2*j]
 
-    amax=1.0 #np.amax(B)
+    amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (int(f*n/2), int(f*m/2)))
-    plt.imsave(name+"_real_dn.png", array,cmap="Greys")
+    plt.imsave(name+"_real_dn.png", array,cmap="Greys",vmin=0.0,vmax=amax)
     
     f=10
     B=np.zeros((int(n*f/2),int(m*f/2)),dtype=np.float)
@@ -62,10 +62,10 @@ def printmat_real_spin(n,m,name,A):
                 for l in range(f):
                     B[i*f+k,j*f+l]=A.real[2*i+1,2*j+1]
 
-    amax=1.0 #np.amax(B)
+    amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (int(f*n/2), int(f*m/2)))
-    plt.imsave(name+"_real_up.png", array,cmap="Greys")
+    plt.imsave(name+"_real_up.png", array,cmap="Greys",vmin=0.0,vmax=amax)
 
 def aca_reorder(norb,orbinteract,Din,Win):
     Dout=np.zeros((norb,norb),dtype=np.complex_)

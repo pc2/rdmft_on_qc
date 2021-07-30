@@ -109,8 +109,8 @@ def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
 
 
-def qcs_for_op(m,qubit_converter,qc):
-    m_op = qubit_converter.convert(m) #,num_particles=num_particles)
+def qcs_for_op(m,qubit_converter,qc,num_particles=0):
+    m_op = qubit_converter.convert(m,num_particles=num_particles)
     ops=[]
     qcs=[]
     mesq=[]
@@ -119,6 +119,7 @@ def qcs_for_op(m,qubit_converter,qc):
 
     #build measuring programs here
     p=m_op.to_pauli_op()
+    print(p)
     for op in p:
         if op.to_circuit().depth()>0:
             coeff.append(op.coeff)
@@ -161,6 +162,7 @@ config.read(sys.argv[1])
 
 seed=int(config['rnd']['seed'])
 tsim=config.getboolean('QC','tsim')
+two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
 tdoqc=config.getboolean('QC','tdoqc')
 tnoise=config.getboolean('QC','tnoise')
 tcheck=config.getboolean('QC','tcheck')
@@ -246,6 +248,19 @@ print("aca: level",l," norb=",norb_aca)
 
 print("Daca=",Daca)
 
+#count spin-up and spin-down electrons
+Naca1=0
+Naca2=0
+for i in range(int(norb_aca/2)):
+    Naca1+=abs(Daca[2*i,2*i])
+    Naca2+=abs(Daca[2*i+1,2*i+1])
+if abs(Naca1-int(Naca1))<1e-4:
+    Naca1=int(Naca1)
+if abs(Naca2-int(Naca2))<1e-4:
+    Naca2=int(Naca2)
+Naca=(Naca1,Naca2)    
+print("Naca=",Naca)
+
 tcplx=config.getboolean('CI','tcplx')
 options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
 Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
@@ -259,15 +274,14 @@ print("F_reordered (full space)=",Faca_local)
 qubit_converter = QubitConverter(mapper=ParityMapper())
 mapping=config['QC']['mapping']
 if mapping=="Parity":
-    qubit_converter = QubitConverter(mapper=ParityMapper())
+    qubit_converter = QubitConverter(mapper=ParityMapper(),two_qubit_reduction=two_qubit_reduction)
 elif mapping=="JordanWigner":
-    quibit_converter = QubitConverter(mapper=JordanWignerMapper())
+    quibit_converter = QubitConverter(mapper=JordanWignerMapper(),two_qubit_reduction=two_qubit_reduction)
 elif mapping=="BravyiKitaev":
-    qubit_converter = QubitConverter(mapper=BravyiKitaevMapper())
+    qubit_converter = QubitConverter(mapper=BravyiKitaevMapper(),two_qubit_reduction=two_qubit_reduction)
 else:
     print("fermionic mapping unknown")
     exit()
-
 
 if not tdoqc:
     exit()
@@ -282,9 +296,8 @@ if entanglement=="map":
     for e in entanglement_map.split(","):
         entanglement.append((int(e.split("_")[0]),int(e.split("_")[1])))
 
-# setup the initial state for the ansatz
-ansatz = TwoLocal(norb_aca,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y')
-#print(ansatz)
+
+
 
 
 # set the backend for the quantum computation
@@ -301,24 +314,7 @@ if not tsim:
     print(provider.backends(n_qubits=5, operational=True))
     backend = provider.backend.ibmq_quito
 
-
-#define registers
-q = QuantumRegister(norb_aca)
-c = ClassicalRegister(1)
-qc=QuantumCircuit(q,c)
-qc=qc.compose(ansatz)
-qc=qc.decompose()
-
-
-print("variational state:")
-print(qc)
-
-qc.draw(output='text',filename="ansatz.txt")
-qc.draw(output='mpl',filename="ansatz.png")
-
-qubits=[]
-for q in range(norb_aca):
-    qubits.append(q)
+num_particles=Naca
 
 up=0
 dn=1
@@ -335,12 +331,46 @@ for i in range(int(len(orbinteract)/2)):
 
 for i in Waca:
     interact+=U*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
-print("interact=",interact)
 
-qc_interact=qcs_for_op(interact,qubit_converter,qc)
-#for i in range(len(qc_interact['qcs'])):
-#    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
-#    print(qc_interact['qcs'][i])
+
+#get number of qubits
+nq=norb_aca
+if two_qubit_reduction:
+    m_op = qubit_converter.convert(interact,num_particles=num_particles)
+    nq=len(m_op.to_pauli_op()[0].primitive)
+print("nq=",nq)    
+
+# setup the initial state for the ansatz
+ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y')
+#print(ansatz)
+
+#define registers
+q = QuantumRegister(nq)
+c = ClassicalRegister(1)
+qc=QuantumCircuit(q,c)
+qc=qc.compose(ansatz)
+qc=qc.decompose()
+
+
+print("interact=",interact)
+qc_interact=qcs_for_op(interact,qubit_converter,qc,num_particles)
+for i in range(len(qc_interact['qcs'])):
+    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
+    print(qc_interact['qcs'][i])
+
+
+
+
+print("variational state:")
+print(qc)
+
+qc.draw(output='text',filename="ansatz.txt")
+qc.draw(output='mpl',filename="ansatz.png")
+
+qubits=[]
+for q in range(nq):
+    qubits.append(q)
+
 
 
 
@@ -358,7 +388,7 @@ for i in range(norb_aca):
         c['j']=j
         m=~c_ops[i]@ c_ops[j]
         c['op']=0.5*(m+~m)
-        c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
+        c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
         c['cval']=0.5*(Daca[i,j]+np.conjugate(Daca[i,j])).real
         constraints.append(c)
         if i!=j:
@@ -369,7 +399,7 @@ for i in range(norb_aca):
             c['j']=j
             m=~c_ops[i]@ c_ops[j]
             c['op']=0.5/1j*(m-~m)
-            c['qcs']=qcs_for_op(c['op'],qubit_converter,qc)
+            c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
             c['cval']=(0.5/1j*(Daca[i,j]-np.conjugate(Daca[i,j]))).real
             constraints.append(c)
 
@@ -391,7 +421,7 @@ for i in range(len(constraints)):
     state=qc.bind_parameters(initial_point).decompose()
     if tcheck:
         #check with exact value from expectation value of hermitian operator
-        qconv=qubit_converter.convert(constraints[i]['op'])
+        qconv=qubit_converter.convert(constraints[i]['op'],num_particles=num_particles)
         state.save_expectation_value(qconv,qubits)
         result=backend_check.run(state).result()
         exp = result.data()['expectation_value']
@@ -404,7 +434,7 @@ for i in range(len(constraints)):
 if tcheck:
     #check with exact value from expectation value of hermitian operator
     state=qc.bind_parameters(initial_point).decompose()
-    state.save_expectation_value(qubit_converter.convert(interact),qubits)
+    state.save_expectation_value(qubit_converter.convert(interact,num_particles=num_particles),qubits)
     result=backend_check.run(state).result()
     exp = result.data()['expectation_value']
     W_exact=exp
