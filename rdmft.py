@@ -5,6 +5,7 @@ import sys
 import groundstate
 import aca
 import ci
+import graphclique
 try:
     import numpy as np
 except ImportError:
@@ -163,6 +164,7 @@ config.read(sys.argv[1])
 seed=int(config['rnd']['seed'])
 tsim=config.getboolean('QC','tsim')
 two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
+combine_qc_programs=config.getboolean('QC','combine_qc_programs')
 tdoqc=config.getboolean('QC','tdoqc')
 tnoise=config.getboolean('QC','tnoise')
 tcheck=config.getboolean('QC','tcheck')
@@ -261,15 +263,18 @@ if abs(Naca2-int(Naca2))<1e-4:
 Naca=(Naca1,Naca2)    
 print("Naca=",Naca)
 
-tcplx=config.getboolean('CI','tcplx')
-options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
-Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
-print("F_aca (full space)=",Faca_local)
+tdoci=config.getboolean('CI','tdoci')
+if tdoci:
+    tcplx=config.getboolean('CI','tcplx')
+    options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
+    Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
+    print("F_aca (full space)=",Faca_local)
 
-tcplx=config.getboolean('CI','tcplx')
-options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
-Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Dreordered,options,tcplx)
-print("F_reordered (full space)=",Faca_local)
+if tdoci:
+    tcplx=config.getboolean('CI','tcplx')
+    options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
+    Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Dreordered,options,tcplx)
+    print("F_reordered (full space)=",Faca_local)
 
 qubit_converter = QubitConverter(mapper=ParityMapper())
 mapping=config['QC']['mapping']
@@ -405,6 +410,42 @@ for i in range(norb_aca):
 
 print("number of constraints=",len(constraints))
 
+pauliops=[]
+for cc in qc_interact['ops']:
+    pauliops.append(str(cc.primitive))
+
+for c in constraints:
+    for cc in c['qcs']['ops']:
+        pauliops.append(str(cc.primitive))
+
+print("plain pauliops=",len(pauliops))
+print(pauliops)       
+
+pauliops2=[]
+#get unique pauliops
+for p in pauliops:
+    found=False
+    for p2 in pauliops2:
+        if p==p2:
+            found=True
+            break
+    if found:
+        print("duplicate pauli op:",p)
+    if not found:
+        pauliops2.append(p)
+
+print("unique pauliops=",len(pauliops2))
+print(pauliops2)       
+
+if combine_qc_programs:
+    #combine as many pauliops to quantum programs as possible
+    nodes=[]
+    for p in pauliops2:
+        nodes.append(p)
+
+    cliques=graphclique.cliquecover(nodes)
+    exit()    
+
 c_qc=np.zeros(len(constraints))
 c_exact=np.zeros(len(constraints))
 W_qc=0
@@ -444,6 +485,8 @@ for q in qc_interact['qcs']:
         
 
 print("quantum programs=",len(qcs))        
+
+
 
 #measure all constraints
 qcsp=[]
