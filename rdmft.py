@@ -726,19 +726,19 @@ qiskit.utils.algorithm_globals.random_seed=seed
 maxiter=int(config['QC']['maxiter'])    
 
 x0=initial_point
+tprintevals=False
 
 if tsim:
     penalty=0
     lagrange=np.zeros(len(constraints))
-    tprintevals=False
     method="trust-constr"
 #    method="SLSQP"
     print("minimizing with constrained minimization with "+method+" (no sampling, no noise)")
     eq_cons={'type': 'eq','fun' : lambda x: rdmf_cons(x)}
     if method=="trust-constr":
-        res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 2,'disp': True,'initial_tr_radius':4*pi})
+        res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 3,'disp': True,'initial_tr_radius':4*pi,'gtol':1e-4,'xtol':1e-4})
     else:
-        res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 2,'iprint':2,'disp': True,'initial_tr_radius':4*pi})
+        res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 3,'iprint':2,'disp': True})
     print(res)
 
 penalty=10
@@ -760,10 +760,12 @@ for oiter in range(100):
         #[point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0,approx_grad=True)
     elif tsim and tsampling and not tnoise:
         print("minimizing with augmented Lagrangian and COBYLA (with sampling, no noise)")
+        tprintevals=True
         optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2)
         [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
     elif not tsim:
         print("minimizing with augmented Lagrangian and SPSA (with sampling, with noise)")
+        tprintevals=True
         optimizer = SPSA(maxiter=maxiter,second_order=False)#,callback=opt_callback)
         print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
         print("calibrating")
@@ -777,6 +779,7 @@ for oiter in range(100):
     print("point=",point)
     print("value=",value)
     print("nfev=",nfev)
+    print("constraint violation sum(c^2)=",np.sum(c_qc**2))
 
     x0=point
     #multiplier and penalty update
