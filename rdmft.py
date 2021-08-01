@@ -6,6 +6,8 @@ import groundstate
 import aca
 import ci
 import graphclique
+import time
+from scipy import sparse
 try:
     import numpy as np
 except ImportError:
@@ -34,13 +36,14 @@ except ImportError:
 
 try:
     import qiskit
-    from qiskit.circuit.library import TwoLocal
+    from qiskit.circuit.library import TwoLocal,EfficientSU2
     #from qiskit.circuit import QuantumCircuit
     from qiskit import execute
     from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
     from qiskit.algorithms import VQE
     from qiskit.algorithms.optimizers import L_BFGS_B,SPSA,COBYLA
     from qiskit.opflow.primitive_ops import PauliOp
+    from qiskit.opflow.state_fns import CircuitStateFn
     from qiskit.quantum_info import Pauli
 except ImportError:
     print("installing qiskit...")
@@ -163,11 +166,14 @@ config.read(sys.argv[1])
 
 seed=int(config['rnd']['seed'])
 tsim=config.getboolean('QC','tsim')
+tsampling=config.getboolean('QC','tsampling')
+
 two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
 combine_qc_programs=config.getboolean('QC','combine_qc_programs')
 tdoqc=config.getboolean('QC','tdoqc')
 tnoise=config.getboolean('QC','tnoise')
 tcheck=config.getboolean('QC','tcheck')
+tobj=config.getboolean('QC','tobj')
 shots=int(config['QC']['shots'])
 systemtype=config['system']['type']
 L=int(config['system']['L'])
@@ -307,12 +313,17 @@ if entanglement=="map":
 
 # set the backend for the quantum computation
 backend = BasicAer.get_backend('qasm_simulator')
+optimization_level=1
 if tnoise:
     backend = BasicAer.get_backend('qasm_simulator')
+    optimization_level=1
 else:
+    #backend = BasicAer.get_backend('statevector_simulator')
     backend = Aer.get_backend('aer_simulator_statevector')
+    optimization_level=0
 
-backend_check = Aer.get_backend('aer_simulator')
+backend_check = BasicAer.get_backend('statevector_simulator')
+#backend_check = Aer.get_backend('aer_simulator_statevector')
 if not tsim:
     IBMQ.save_account(apikey,overwrite=True)
     provider = IBMQ.load_account()
@@ -335,7 +346,11 @@ for i in range(int(len(orbinteract)/2)):
     Waca.append(i)
 
 for i in Waca:
-    interact+=U*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
+    if not tobj:
+        #FIXME
+        interact+=0.000001*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
+    else:
+        interact+=U*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
 
 
 #get number of qubits
@@ -346,7 +361,8 @@ if two_qubit_reduction:
 print("nq=",nq)    
 
 # setup the initial state for the ansatz
-ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y')
+ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y',insert_barriers=True)
+    
 #print(ansatz)
 
 #define registers
@@ -363,7 +379,8 @@ for i in range(len(qc_interact['qcs'])):
     print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
     print(qc_interact['qcs'][i])
 
-
+iop=qubit_converter.convert(interact,num_particles=num_particles)
+interact_sparse=sparse.csr_matrix(iop.to_matrix())
 
 
 print("variational state:")
@@ -372,11 +389,10 @@ print(qc)
 qc.draw(output='text',filename="ansatz.txt")
 qc.draw(output='mpl',filename="ansatz.png")
 
+
 qubits=[]
 for q in range(nq):
     qubits.append(q)
-
-
 
 
 #build list of constraints
@@ -393,6 +409,8 @@ for i in range(norb_aca):
         c['j']=j
         m=~c_ops[i]@ c_ops[j]
         c['op']=0.5*(m+~m)
+        op=qubit_converter.convert(c['op'],num_particles=num_particles)
+        c['opsparse']=sparse.csr_matrix(op.to_matrix())
         c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
         c['cval']=0.5*(Daca[i,j]+np.conjugate(Daca[i,j])).real
         constraints.append(c)
@@ -404,6 +422,8 @@ for i in range(norb_aca):
             c['j']=j
             m=~c_ops[i]@ c_ops[j]
             c['op']=0.5/1j*(m-~m)
+            op=qubit_converter.convert(c['op'],num_particles=num_particles)
+            c['opsparse']=sparse.csr_matrix(op.to_matrix())
             c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
             c['cval']=(0.5/1j*(Daca[i,j]-np.conjugate(Daca[i,j]))).real
             constraints.append(c)
@@ -435,7 +455,7 @@ for p in pauliops:
         pauliops2.append(p)
 
 print("unique pauliops=",len(pauliops2))
-print(pauliops2)       
+#print(pauliops2)       
 
 if combine_qc_programs:
     #combine as many pauliops to quantum programs as possible
@@ -452,35 +472,34 @@ W_qc=0
 W_exact=0
 
 initial_point = np.random.random(ansatz.num_parameters)
+print("number of parameters:",ansatz.num_parameters)
 
 qcs=[]
 #programs for constraints
 
+circ=qc.bind_parameters(initial_point)
+job=execute(circ,backend_check)
+result=job.result()
+psi=result.get_statevector()
 for i in range(len(constraints)):
     print(constraints[i])
     #evaluate constraint
-    state=qc.bind_parameters(initial_point).decompose()
     if tcheck:
-        #check with exact value from expectation value of hermitian operator
-        qconv=qubit_converter.convert(constraints[i]['op'],num_particles=num_particles)
-        state.save_expectation_value(qconv,qubits)
-        result=backend_check.run(state).result()
-        exp = result.data()['expectation_value']
+        exp=np.dot(np.conj(psi),constraints[i]['opsparse'].dot(psi)).real
         c_exact[i]=exp
     for q in constraints[i]['qcs']['qcs']:
-#        q=q.bind_parameters(initial_point).decompose()
         qcs.append(q)
 
 #programs for interaction        
 if tcheck:
     #check with exact value from expectation value of hermitian operator
-    state=qc.bind_parameters(initial_point).decompose()
-    state.save_expectation_value(qubit_converter.convert(interact,num_particles=num_particles),qubits)
-    result=backend_check.run(state).result()
-    exp = result.data()['expectation_value']
+    exp=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
+    #qc2=QuantumCircuit(QuantumRegister(nq)).compose(ansatz)
+    #state=CircuitStateFn(qc2.bind_parameters(initial_point))
+    #op=qubit_converter.convert(interact,num_particles=num_particles)
+    #exp=state.adjoint().compose(op).compose(state).eval().real
     W_exact=exp
 for q in qc_interact['qcs']:
-#    q=q.bind_parameters(initial_point).decompose()
     qcs.append(q)
         
 
@@ -493,14 +512,16 @@ qcsp=[]
 for q in qcs:
     qcsp.append(q.bind_parameters(initial_point).decompose())
 jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
-if not tsim:
+if not tsim: 
     print("waiting for job to finish: ",jobs.job_id())
-    jobs.wait_for_final_state()
+    jobs.wait_for_final_state(wait=1)
     print("job finished: ",jobs.job_id())
-
+else:
+    jobs.wait_for_final_state(wait=0.05)
 
 if jobs.done():
     res=jobs.result().results
+
     I=0
     #build constraint values from results
     for ic in range(len(constraints)):
@@ -530,43 +551,76 @@ c_qc=np.zeros(len(constraints))
 
 rdmf_obj_eval=0
 
+
+
 def rdmf_obj(x):
     global rdmf_obj_eval
+    t1=time.perf_counter()
+    t2=0
+    t3=0
+    t4=0
+    t5=0
     rdmf_obj_eval+=1
-    qcsp=[]
-    for q in qcs:
-        qcsp.append(q.bind_parameters(x).decompose())
-    jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed+rdmf_obj_eval,seed_transpiler=seed)
-    if not tsim: 
-        print("waiting for job to finish: ",jobs.job_id())
-        jobs.wait_for_final_state(wait=0.1)
-        print("job finished: ",jobs.job_id())
-    else:
-        jobs.wait_for_final_state(wait=0.05)
-
+    
     w_qc=0
     L=0
-    if jobs.done():
-        res=jobs.result().results
-        I=0
+    if not tsampling:
+        circ=qc.bind_parameters(x)
+        job=execute(circ,backend_check)
+        result=job.result()
+        psi=result.get_statevector()
+        t2=time.perf_counter()
         #build constraint values from results
         for ic in range(len(constraints)):
-            a=constraints[ic]['qcs']['const']
-            for i in range(len(constraints[ic]['qcs']['qcs'])):
-                v=-2*res[I].data.counts['0x1']/shots+1
-                I=I+1
-                a=a+v*constraints[ic]['qcs']['coeff'][i]
+            a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
             c_qc[ic]=a-constraints[ic]['cval']
             L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
+        t3=time.perf_counter()
         #build interaction expectation value from result
-        a=qc_interact['const']
-        for i in range(len(qc_interact['qcs'])):
-            v=-2*res[I].data.counts['0x1']/shots+1
-            I=I+1
-            a=a+v*qc_interact['coeff'][i]
+        a=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
+        t4=time.perf_counter()
         W_qc=a
         L=L+W_qc
-    print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
+        t5=time.perf_counter()
+        
+    else:
+        qcsp=[]
+        for q in qcs:
+            qcsp.append(q.bind_parameters(x))#.decompose())
+        t2=time.perf_counter()
+        jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed+rdmf_obj_eval,seed_transpiler=seed,optimization_level=optimization_level)
+        t3=time.perf_counter()
+        if not tsim: 
+            print("waiting for job to finish: ",jobs.job_id())
+            jobs.wait_for_final_state(wait=1)
+            print("job finished: ",jobs.job_id())
+        else:
+            jobs.wait_for_final_state(wait=0.05)
+        t4=time.perf_counter()
+
+        if jobs.done():
+            res=jobs.result().results
+
+            I=0
+            #build constraint values from results
+            for ic in range(len(constraints)):
+                a=constraints[ic]['qcs']['const']
+                for i in range(len(constraints[ic]['qcs']['qcs'])):
+                    v=-2*res[I].data.counts['0x1']/shots+1
+                    I=I+1
+                    a=a+v*constraints[ic]['qcs']['coeff'][i]
+                c_qc[ic]=a-constraints[ic]['cval']
+                L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
+            #build interaction expectation value from result
+            a=qc_interact['const']
+            for i in range(len(qc_interact['qcs'])):
+                v=-2*res[I].data.counts['0x1']/shots+1
+                I=I+1
+                a=a+v*qc_interact['coeff'][i]
+            W_qc=a
+            L=L+W_qc
+        t5=time.perf_counter()
+    print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t2-t1,t3-t2,t4-t3,t5-t4)
     return L
 
 qiskit.utils.algorithm_globals.random_seed=seed
@@ -577,11 +631,11 @@ x0=initial_point
 for oiter in range(100):
     #unconstrainted steps
     if tsim and not tnoise:
-        print("minimizing with COBYLA (no noise)")
+        print("minimizing with COBYLA (with sampling, no noise)")
         optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2)
         [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
     elif not tsim or tnoise:
-        print("minimizing with SPSA (with noise)")
+        print("minimizing with SPSA (with sampling, with noise)")
         optimizer = SPSA(maxiter=maxiter,second_order=False)#,callback=opt_callback)
         print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
         print("calibrating")
