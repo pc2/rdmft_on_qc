@@ -728,7 +728,7 @@ maxiter=int(config['QC']['maxiter'])
 x0=initial_point
 tprintevals=False
 
-if tsim:
+if tsim and False:
     penalty=0
     lagrange=np.zeros(len(constraints))
     method="trust-constr"
@@ -752,6 +752,7 @@ for oiter in range(100):
     if tsim and not tsampling and not tnoise:
         print("minimizing with augmented Lagrangian and LBFGS_B (no sampling, no noise)")
         method="BFGS"
+        tprintevals=True
         res=minimize(rdmf_obj, x0, method=method,tol=1e-2,options={'maxiter':10000,'verbose': 2,'disp': True})
         point=res.x
         value=rdmf_obj(point)
