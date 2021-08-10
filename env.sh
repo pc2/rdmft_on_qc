@@ -16,9 +16,12 @@ if [[ -d "$envdir" ]]; then
     rm -rf $envdir
     $PYCMD -m venv $envdir
   fi
+else 
+  $PYCMD -m venv $envdir
 fi
 
 source $envdir/bin/activate
+
 
 if [[ -d "$depdir" ]]; then
   echo "Remove existing dependencies at $depdir and start new? [y/N]"
@@ -26,8 +29,30 @@ if [[ -d "$depdir" ]]; then
   if [[ "$a" == "y" ]];
   then
     rm -rf $depdir
+    mkdir $depdir
   fi
+else
   mkdir $depdir
+fi
+
+#install packages
+if [[ ! -e "requirements.txt" ]]; then
+  echo "installing fresh"
+  $PIPCMD install wheel
+  $PIPCMD install numpy
+  $PIPCMD install scipy
+  $PIPCMD install python-dotenv
+  $PIPCMD install matplotlib
+  $PIPCMD install qiskit
+  $PIPCMD install qiskit-nature
+  $PIPCMD install pylatexenc
+  $PIPCMD install sympy
+  $PIPCMD install configparser
+  $PIPCMD install networkx
+  $PIPCMD install numba
+else
+  echo "installing according to requirements.txt"
+  $PIPCMD install -r requirements.txt
 fi
 
 #install dmrgpy
@@ -50,24 +75,6 @@ fi
 
 cd $wd
 
-#install packages
-if [[ ! -e "requirements.txt" ]]; then
-  echo "installing fresh"
-  $PIPCMD install numpy
-  $PIPCMD install scipy
-  $PIPCMD install python-dotenv
-  $PIPCMD install matplotlib
-  $PIPCMD install qiskit
-  $PIPCMD install qiskit-nature
-  $PIPCMD install pylatexenc
-  $PIPCMD install sympy
-  $PIPCMD install configparser
-  $PIPCMD install networkx
-
-else
-  echo "installing according to requirements.txt"
-  $PIPCMD install -r requirements.txt
-fi
 
 echo "source $envdir/bin/activate"
 
