@@ -10,109 +10,33 @@ import time
 from scipy import sparse
 from scipy.optimize import minimize,BFGS
 from math import pi
-try:
-    import numpy as np
-except ImportError:
-    print("installing numpy...")
-    os.system("pip3 install numpy")
-    print("installed numpy. Please restart.")
-    quit()
-
-
-try:
-    import dotenv
-except ImportError:
-    print("installing python-dotenv...")
-    os.system("pip3 install python-dotenv")
-    print("installed python-dotenv. Please restart.")
-    quit()
-
-
-try:
-    import matplotlib.pyplot as plt
-except ImportError:
-    print("installing matplotlib...")
-    os.system("pip3 install matplotlib")
-    print("installed matplotlib. Please restart.")
-    quit()
-
-try:
-    import qiskit
-    from qiskit.circuit.library import TwoLocal,EfficientSU2
-    #from qiskit.circuit import QuantumCircuit
-    from qiskit.circuit import Parameter, ParameterVector, ParameterExpression
-    from qiskit import execute
-    from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
-    from qiskit.algorithms import VQE
-    from qiskit.algorithms.optimizers import L_BFGS_B,SPSA,COBYLA,QNSPSA
-    from qiskit.opflow.primitive_ops import PauliOp
-    from qiskit.opflow.state_fns import CircuitStateFn
-    from qiskit.quantum_info import Pauli
-    from qiskit.opflow.gradients import Gradient, NaturalGradient, QFI, Hessian
-    from qiskit.opflow import Z, X, I, StateFn, CircuitStateFn, SummedOp
-except ImportError:
-    print("installing qiskit...")
-    os.system("pip3 install qiskit")
-    print("installed qiskit. Please restart.")
-    quit()
-
-try:
-    import pyscf
-except ImportError:
-    print("installing pyscf...")
-    os.system("pip3 install pyscf")
-    print("installed pyscf. Please restart.")
-    quit()
-
-try:
-    import qiskit_nature
-    from qiskit import IBMQ, assemble, transpile,Aer
-    from qiskit import BasicAer
-    from qiskit_nature.algorithms import GroundStateEigensolver
-    from qiskit_nature.converters.second_quantization import QubitConverter
-    from qiskit_nature.drivers import PySCFDriver, UnitsType, Molecule
-    from qiskit_nature.mappers.second_quantization import ParityMapper
-    from qiskit_nature.problems.second_quantization import ElectronicStructureProblem
-    from qiskit_nature.problems.second_quantization.electronic import ElectronicStructureProblem
-    from qiskit_nature.converters.second_quantization import QubitConverter
-    from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper    
-    from qiskit_nature.operators.second_quantization import FermionicOp
-    
-except ImportError  as error:
-    print("installing qiskit-nature because",error.message)
-    os.system("pip3 install qiskit-nature")
-    print("installed qiskit-nature. Please restart.")
-    quit()
-
-try:
-    import pylatexenc
-except ImportError  as error:
-    print("installing pylatexenc")
-    os.system("pip3 install pylatexenc")
-    print("installed pylatexenc. Please restart.")
-    quit()
-
-try:
-    import sympy
-except ImportError:
-    print("installing sympy...")
-    os.system("pip3 install sympy")
-    print("installed sympy. Please restart.")
-    quit()
-
-try:
-    from dmrgpy import fermionchain
-except ImportError:
-    print("please install https://github.com/joselado/dmrgpy")
-    quit()
-
-try:
-    import configparser
-except ImportError:
-    print("installing configparser...")
-    os.system("pip3 install configparser")
-    print("installed configparser. Please restart.")
-    quit()
+import numpy as np
+import dotenv
+import matplotlib.pyplot as plt
+import qiskit
+from qiskit.circuit.library import TwoLocal,EfficientSU2
+from qiskit.circuit import Parameter, ParameterVector, ParameterExpression
+from qiskit import execute
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from qiskit.algorithms import VQE
+from qiskit.algorithms.optimizers import L_BFGS_B,SPSA,COBYLA,QNSPSA
+from qiskit.opflow.primitive_ops import PauliOp
+from qiskit.opflow.state_fns import CircuitStateFn
+from qiskit.quantum_info import Pauli
+from qiskit.opflow.gradients import Gradient, NaturalGradient, QFI, Hessian
+from qiskit.opflow import Z, X, I, StateFn, CircuitStateFn, SummedOp
+import qiskit_nature
+from qiskit import IBMQ, assemble, transpile,Aer
+from qiskit import BasicAer
+from qiskit_nature.converters.second_quantization import QubitConverter
+from qiskit_nature.mappers.second_quantization import ParityMapper
+from qiskit_nature.converters.second_quantization import QubitConverter
+from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper    
+from qiskit_nature.operators.second_quantization import FermionicOp
+import pylatexenc
+import sympy
+from dmrgpy import fermionchain
+import configparser
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)

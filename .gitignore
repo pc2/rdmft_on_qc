@@ -3,3 +3,5 @@
 .mpsfolder/
 __pycache__/
 *.png
+deps
+rdmft-qc-env

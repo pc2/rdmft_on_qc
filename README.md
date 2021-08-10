@@ -7,6 +7,9 @@
 * https://github.com/quantumlib/OpenFermion: `python -m pip install --user openfermion`
 * https://github.com/Qiskit/qiskit-nature: `python -m pip install --user qiskit-nature`
 
+# Setup of Depencencies
+* simply run `bash env.sh`
+
 # What This Script Does
 1. sets up a system like a Hubbard chain
 2. computes the numerically exact ground state with MPS and the corresponding one-particle reduced density matrix (1RDM)
