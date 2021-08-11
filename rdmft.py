@@ -100,6 +100,7 @@ two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
 combine_qc_programs=config.getboolean('QC','combine_qc_programs')
 tdoqc=config.getboolean('QC','tdoqc')
 tsim=config.getboolean('QC','tsim')
+tsimcons=config.getboolean('QC','tsimcons')
 tsampling=config.getboolean('QC','tsampling')
 tnoise=config.getboolean('QC','tnoise')
 if tnoise:
@@ -123,6 +124,11 @@ if systemtype=='hubbard_chain':
     t=float(config['system']['t'])
     mu=float(config['system']['mu'])
     [E,D,W]=groundstate.hubbard_chain(L,t,U,mu,Lint,mode="DMRG")
+elif systemtype=='hubbard_2d':
+    U=float(config['system']['U'])
+    t=float(config['system']['t'])
+    mu=float(config['system']['mu'])
+    [E,D,W]=groundstate.hubbard_2d(L,t,U,mu,Lint,mode="DMRG")
 else:
     print("system type not implemented")
     exit();
@@ -227,8 +233,6 @@ else:
     print("fermionic mapping unknown")
     exit()
 
-if not tdoqc:
-    exit()
 
 entanglement=config['QC']['entanglement']
 reps=int(config['QC']['reps'])
@@ -316,7 +320,7 @@ print("variational state:")
 print(qc)
 
 qc.draw(output='text',filename="ansatz.txt")
-qc.draw(output='mpl',filename="ansatz.png")
+#qc.draw(output='mpl',filename="ansatz.png")
 
 if False:
     #gradient test
@@ -346,6 +350,7 @@ for q in range(nq):
 
 
 #build list of constraints
+print("building constraints...")
 constraints=[]
 for i in range(norb_aca):
     for j in range(norb_aca):
@@ -413,7 +418,62 @@ if combine_qc_programs:
     for p in pauliops2:
         nodes.append(p)
 
-    cliques=graphclique.cliquecover(nodes)
+    for mode in ["disjointqubits","qubitwise","commute","anticommute"]:
+      cliques=graphclique.cliquecover(nodes,commutemode=mode,printcliques=True,plotgraph=False)
+      print("groups with",mode,len(cliques))
+
+    #convert terms to sparse terms
+    spterms=[]
+    spterms.append((1.0,''))#first term is ignored
+    for n in nodes:
+      sp=[]
+      for i in range(len(n)):
+        if n[i]!="I":
+          sp.append(str(n[i])+str(i))
+      spterms.append((1.0,sp))
+    
+    #run construction of measurement circuits from https://github.com/teaguetomesh/vqe-term-grouping
+    sys.path.append('../../deps/vqe-term-grouping')
+    import term_grouping
+    from term_grouping import QWCCommutativity,FullCommutativity,genMeasureCircuit,NetworkX_approximate_clique_cover,BronKerbosch,BronKerbosch_pivot
+    #for commutativity_type in [QWCCommutativity, FullCommutativity]:
+    for commutativity_type in [FullCommutativity]:
+      cliques = genMeasureCircuit(spterms, norb_aca, commutativity_type,clique_cover_method=BronKerbosch)
+      print(cliques)
+    
+      from generate_measurement_circuit import MeasurementCircuit,_get_measurement_circuit
+      for c in cliques:
+        #build stabilizer matrix for each clique
+        stab=np.zeros((2*norb_aca,norb_aca))
+
+        i=0
+        for ct in list(c):
+          t=ct.replace("*","I").strip()
+          print(t)
+          for j in range(len(t)):
+            if t[j]=="Z":
+              stab[j,i]=1
+            if t[j]=="X":
+              stab[norb_aca+j,i]=1
+            if t[j]=="Y":
+              stab[j,i]=1
+              stab[norb_aca+j,i]=1
+          i=i+1
+          if i>=norb_aca:
+            print("clique",c,"has too many members")
+            break
+        print(stab)
+
+
+        #build measurement circuits for stabilizer ma
+        try:
+          print(_get_measurement_circuit(stab,norb_aca))
+        except AssertionError:
+          print("WARNING: skipping clique")
+          continue
+
+        exit()
+
     exit()    
 
 c_qc=np.zeros(len(constraints))
@@ -423,6 +483,9 @@ W_exact=0
 
 initial_point = np.random.random(ansatz.num_parameters)
 print("number of parameters:",ansatz.num_parameters)
+
+if not tdoqc:
+    exit()
 
 qcs=[]
 #programs for constraints
@@ -652,7 +715,7 @@ maxiter=int(config['QC']['maxiter'])
 x0=initial_point
 tprintevals=False
 
-if tsim and False:
+if tsim and tsimcons:
     penalty=0
     lagrange=np.zeros(len(constraints))
     method="trust-constr"
