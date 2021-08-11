@@ -73,6 +73,15 @@ if [[ ! -d "$depdir/OpenFermion" ]];then
   $PYCMD -m pip install openfermion
 fi
 
+#install vqe-term-grouping
+if [[ ! -d "$depdir/vqe-term-grouping" ]];then
+  cd $depdir
+  git clone https://github.com/teaguetomesh/vqe-term-grouping
+  cd vqe-term-grouping
+  git checkout 48abb10122a9cd861cc9f3ef3683c4c03b100a77
+fi
+
+
 cd $wd
 
 
