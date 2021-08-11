@@ -11,7 +11,7 @@ Make sure you have Python (version >= 3.8) installed. Then simply run `sh env.sh
 
 First follow the Linux instructions above. Note, however, that the C++ code in dmrgpy will fail to compile. In the following, we'll fix this.
 
-You will need to compile `deps/dmrgpy/src/mpscpp2/ITensor` manually. Given that a GNU g++ compiler is available (can be installed via homebrew), copy the file `options.save` to `options.mk` and make sure to set `CCCOM=g++-11 -std=c++11 -fPIC` (comment out the previous linux line). Note that using clang will work for ITensor but not for the next step.
+You will need to compile `deps/dmrgpy/src/mpscpp2/ITensor` manually. Given that a GNU g++ compiler is available (can be installed via `brew install gcc`), copy the file `options.save` to `options.mk` and make sure to set `CCCOM=g++-11 -m64 -std=c++14 -fPIC` (comment out the previous linux line). Note that using clang will work for ITensor but not for the next step.
 
 After we've compiled ITensor, we go up one directory (to `deps/dmrgpy/src/mpscpp2`) and build this as well: `make -j 4`. After completion execute `mv mpscpp mpscpp.x`. Finally, make sure to set `export DMRGROOT=/path/to/repo/deps/dmrgpy/src` either in your `.bashrc` or (to keep things contained) in a local `.envrc` in combination with using [direnv](https://direnv.net/).
 
