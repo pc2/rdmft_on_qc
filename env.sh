@@ -76,9 +76,11 @@ fi
 #install vqe-term-grouping
 if [[ ! -d "$depdir/vqe-term-grouping" ]];then
   cd $depdir
-  git clone https://github.com/teaguetomesh/vqe-term-grouping
+  #git clone https://github.com/teaguetomesh/vqe-term-groupinig
+  git clone https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/vqe-term-grouping.git
   cd vqe-term-grouping
-  git checkout 48abb10122a9cd861cc9f3ef3683c4c03b100a77
+  #git checkout 48abb10122a9cd861cc9f3ef3683c4c03b100a77
+  git checkout ead475bb9b9a130407bd89c7624c89b9d212e1fd
 fi
 
 

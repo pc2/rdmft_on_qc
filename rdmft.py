@@ -37,16 +37,20 @@ import pylatexenc
 import sympy
 from dmrgpy import fermionchain
 import configparser
+import itertools
+
+from qiskit.test import mock
+
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
 
 
-def qcs_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
+def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
     m_op = qubit_converter.convert(m,num_particles=num_particles)
-    ops=[]
-    qcs=[]
-    mesq=[]
+    pauliops=[]
+#    qcs=[]
+#    mesq=[]
     coeff=[]
     const=0
 
@@ -56,36 +60,80 @@ def qcs_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
     for op in p:
         if op.to_circuit().depth()>0:
             coeff.append(op.coeff)
-            ops.append(op)
-            #map to only sigma_z
-            q=copy.deepcopy(qc)
-
-            sg=[]
-            for i in range(len(op.primitive)):
-                #print(op.primitive[i])
-                if str(op.primitive[i])=='Z':
-                    sg.append("Z")            
-                elif str(op.primitive[i])=='X':
-                    q.h(i)
-                    sg.append("Z")            
-                elif str(op.primitive[i])=='Y':
-                    q.sdg(i)
-                    q.h(i)
-                    sg.append("Z")            
-                else:
-                    sg.append("I")            
-            #map multiple sigma_z to single sigma_z
-            zs=[i for i,x in enumerate(sg) if x=='Z']
-            mesq.append(zs[0])
-            for i in range(1,len(zs)):
-                q.cx(zs[i],zs[0])
-            if tmeasure:
-                q.measure(zs[0],0)
-            qcs.append(q)
+            pauliops.append(op)
         else:
             const+=op.coeff
-    return {"ops":ops,"qcs":qcs,"mesq":mesq,"coeff":coeff,"const":const}
+    return {"pauliops":pauliops,"coeff":coeff,"const":const}
 
+def paulis_to_zs(nq,ops):
+  q = QuantumRegister(nq)
+  c = ClassicalRegister(nq)
+  qc=QuantumCircuit(q,c)
+
+  ops2=[]
+  for op in ops:
+    ops2.append(list(op))
+  #map to only sigma_z
+  sg=[]
+  for i in range(nq):
+    isX=False
+    isY=False
+    for j in range(len(ops2)):
+      if ops2[j][i]=='X':
+        if isY:
+          print("error")
+          quit()
+        isX=True
+      if ops2[j][i]=='Y':
+        if isX:
+          print("error")
+          quit()
+        isY=True
+    if isX:
+      qc.h(i)
+    if isX:
+      qc.sdg(i)
+      qc.h(i)
+
+    for j in range(len(ops2)):
+      if ops2[j][i]=='X' and isX:
+        ops2[j][i]='Z'
+      if ops2[j][i]=='Y' and isY:
+        ops2[j][i]='Z'
+
+  print("strings after single-qubit gates=",ops2)
+
+  return ops2,qc
+
+def mqc_for_paulis(nq,ops):
+  ms=[]
+  #map to only sigma_z
+  ops2,qc=paulis_to_zs(nq,ops)
+
+  for op in ops2:
+    print(op)
+    #qc=qc.compose(opqc)
+    #ms.append(m)
+  return ms,qc
+
+def clique2stab(nq,c):
+  #build stabilizer matrix for each clique
+  stab=np.zeros((2*nq,nq), dtype=int)
+  i=-1
+  for t in c:
+    i=i+1
+    if i>=nq:
+      print("clique",c,"has too many members")
+      break
+    for j in range(len(t)):
+      if t[j]=="Z":
+        stab[j,i]=1
+      if t[j]=="X":
+        stab[norb_aca+j,i]=1
+      if t[j]=="Y":
+        stab[j,i]=1
+        stab[norb_aca+j,i]=1
+  return stab
 
 dotenv.load_dotenv()
 apikey=os.getenv("QISKIT_APIKEY")
@@ -97,7 +145,6 @@ config.read(sys.argv[1])
 seed=int(config['rnd']['seed'])
 
 two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
-combine_qc_programs=config.getboolean('QC','combine_qc_programs')
 tdoqc=config.getboolean('QC','tdoqc')
 tsim=config.getboolean('QC','tsim')
 tsimcons=config.getboolean('QC','tsimcons')
@@ -302,16 +349,13 @@ ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = en
     
 #define registers
 q = QuantumRegister(nq)
-c = ClassicalRegister(1)
+c = ClassicalRegister(nq)
 qc=QuantumCircuit(q,c)
 qc=qc.compose(ansatz)
 qc=qc.decompose()
 
 print("interact=",interact)
-qc_interact=qcs_for_op(interact,qubit_converter,qc,num_particles)
-for i in range(len(qc_interact['qcs'])):
-    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
-    print(qc_interact['qcs'][i])
+pauli_interact=paulis_for_op(interact,qubit_converter,qc,num_particles)
 
 iop=qubit_converter.convert(interact,num_particles=num_particles)
 interact_sparse=sparse.csr_matrix(iop.to_matrix())
@@ -366,7 +410,7 @@ for i in range(norb_aca):
         c['op']=0.5*(m+~m)
         op=qubit_converter.convert(c['op'],num_particles=num_particles)
         c['opsparse']=sparse.csr_matrix(op.to_matrix())
-        c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
+        c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,num_particles)
         c['cval']=0.5*(Daca[i,j]+np.conjugate(Daca[i,j])).real
         constraints.append(c)
         if i!=j:
@@ -379,102 +423,140 @@ for i in range(norb_aca):
             c['op']=0.5/1j*(m-~m)
             op=qubit_converter.convert(c['op'],num_particles=num_particles)
             c['opsparse']=sparse.csr_matrix(op.to_matrix())
-            c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
+            c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,num_particles)
             c['cval']=(0.5/1j*(Daca[i,j]-np.conjugate(Daca[i,j]))).real
             constraints.append(c)
 
 print("number of constraints=",len(constraints))
 
+#build list of pauli strings for combination
 pauliops=[]
-for cc in qc_interact['ops']:
+#interaction
+add_interaction_to_combination_of_pauli_ops=config.getboolean('QC','add_interaction_to_combination_of_pauli_ops')
+if add_interaction_to_combination_of_pauli_ops:
+  for cc in qc_interact['ops']:
     pauliops.append(str(cc.primitive))
 
+#1rdm
 for c in constraints:
-    for cc in c['qcs']['ops']:
+    for cc in c['pauli']['pauliops']:
         pauliops.append(str(cc.primitive))
 
 print("plain pauliops=",len(pauliops))
 print(pauliops)       
 
-pauliops2=[]
+pauliopsunique=[]
 #get unique pauliops
 for p in pauliops:
     found=False
-    for p2 in pauliops2:
+    for p2 in pauliopsunique:
         if p==p2:
             found=True
             break
     if found:
         print("duplicate pauli op:",p)
     if not found:
-        pauliops2.append(p)
+        pauliopsunique.append(p)
 
-print("unique pauliops=",len(pauliops2))
-#print(pauliops2)       
+print("unique pauliops=",len(pauliopsunique))
+#combine as many pauliops to quantum programs as possible
+mode=config['QC']['commutation']
+print("commutation mode=",mode)
 
-if combine_qc_programs:
-    #combine as many pauliops to quantum programs as possible
-    nodes=[]
-    for p in pauliops2:
-        nodes.append(p)
+progs=[]
+mqcs=[]
 
-    for mode in ["disjointqubits","qubitwise","commute","anticommute"]:
-      cliques=graphclique.cliquecover(nodes,commutemode=mode,printcliques=True,plotgraph=False)
-      print("groups with",mode,len(cliques))
+#FIXME
+sys.path.append('../../deps/vqe-term-grouping')
+import term_grouping
+from term_grouping import QWCCommutativity,FullCommutativity,genMeasureCircuit,NetworkX_approximate_clique_cover,BronKerbosch,BronKerbosch_pivot
+from generate_measurement_circuit import MeasurementCircuit,_get_measurement_circuit
 
-    #convert terms to sparse terms
-    spterms=[]
-    spterms.append((1.0,''))#first term is ignored
-    for n in nodes:
-      sp=[]
-      for i in range(len(n)):
-        if n[i]!="I":
-          sp.append(str(n[i])+str(i))
-      spterms.append((1.0,sp))
-    
-    #run construction of measurement circuits from https://github.com/teaguetomesh/vqe-term-grouping
-    sys.path.append('../../deps/vqe-term-grouping')
-    import term_grouping
-    from term_grouping import QWCCommutativity,FullCommutativity,genMeasureCircuit,NetworkX_approximate_clique_cover,BronKerbosch,BronKerbosch_pivot
-    #for commutativity_type in [QWCCommutativity, FullCommutativity]:
-    for commutativity_type in [FullCommutativity]:
-      cliques = genMeasureCircuit(spterms, norb_aca, commutativity_type,clique_cover_method=BronKerbosch)
-      print(cliques)
-    
-      from generate_measurement_circuit import MeasurementCircuit,_get_measurement_circuit
-      for c in cliques:
-        #build stabilizer matrix for each clique
-        stab=np.zeros((2*norb_aca,norb_aca))
+cliques=[]
+if mode=="none":
+  for p in pauliopsunique:
+    cliques.append([p])
+elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
+  #run term grouping with own implementation
+  nodes=[]
+  for p in pauliopsunique:
+    nodes.append(p)
+  cliques=graphclique.cliquecover(nodes,commutemode=mode,printcliques=True,plotgraph=False)
+  print("groups with own implementation",mode,len(cliques))
 
-        i=0
-        for ct in list(c):
-          t=ct.replace("*","I").strip()
-          print(t)
-          for j in range(len(t)):
-            if t[j]=="Z":
-              stab[j,i]=1
-            if t[j]=="X":
-              stab[norb_aca+j,i]=1
-            if t[j]=="Y":
-              stab[j,i]=1
-              stab[norb_aca+j,i]=1
-          i=i+1
-          if i>=norb_aca:
-            print("clique",c,"has too many members")
-            break
-        print(stab)
+  #run term grouping from https://github.com/teaguetomesh/vqe-term-grouping
+  #convert terms to sparse terms
+  spterms=[]
+  spterms.append((1.0,''))#first term is ignored
+  for n in nodes:
+    sp=[]
+    for i in range(len(n)):
+      if n[i]!="I":
+        sp.append(str(n[i])+str(i))
+    spterms.append((1.0,sp))
 
+  commutativity_type=QWCCommutativity
+  if mode=="qubitwise" or mode=="commute":
+    commutativity_type=QWCCommutativity
+    if mode=="commute":
+      commutativity_type=FullCommutativity
 
-        #build measurement circuits for stabilizer ma
-        try:
-          print(_get_measurement_circuit(stab,norb_aca))
-        except AssertionError:
-          print("WARNING: skipping clique")
-          continue
+    cliques2 = genMeasureCircuit(spterms, norb_aca, commutativity_type,clique_cover_method=BronKerbosch)
+    print("groups with https://arxiv.org/abs/1907.13623",mode,len(cliques2))
+    if len(cliques2)<len(cliques):
+      print("using grouping computed with approach from https://arxiv.org/abs/1907.13623")
+      clisues=[]
+      for c in cliques2:
+        cliques.append(c.replace("*","I"))
+    else:
+      print("using grouping computed with own implementation")
 
-        exit()
+#build measurement circuits for ciques
+if mode=="none" or mode=="disjointqubits" or mode=="qubitwise":
+  print("constructing measurement programs for",mode)
+  for cc in cliques:
+    #do construction directly with z-Pauli-strings instead of xyz-Pauli-strings
+    c2,qc=paulis_to_zs(norb_aca,cc)
 
-    exit()    
+    varaints=[c2]
+    if True:
+      #permute operator ordering in clique
+      variants=itertools.permutations(c2)
+
+    for c in variants:
+      print("clique=",c)
+
+      mq,mqc=mqc_for_paulis(norb_aca,c)
+      print("measurements=",mq)
+      print("measurement programs=",mqc)
+      mqcs.append({'paulis':c,'measurements':mq,'mqc':mqc})
+      stab=clique2stab(norb_aca,c)
+      
+      try:
+        q=_get_measurement_circuit(stab,norb_aca)
+      except AssertionError:
+        print("_get_measurement_circuit has failed")
+      q=qc.compose(q.circuit)
+      #backend = BasicAer.get_backend('qasm_simulator')
+      backend = mock.FakeBogota()
+      result = transpile(q, backend=backend, optimization_level=2,seed_transpiler=seed)
+      print(q)
+      print(result)
+      print(result.count_ops())
+    quit()
+
+elif mode=="commute":
+  print("constructing measurement programs for",mode)
+  #for c in cliques:
+elif mode=="anticommute":
+  print("are you joking?")
+  exit()
+
+quit()    
+
+if not add_interaction_to_combination_of_pauli_ops:
+  #add programs for measurement of interaction if required
+  exit()
 
 c_qc=np.zeros(len(constraints))
 c_exact=np.zeros(len(constraints))
