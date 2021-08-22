@@ -538,9 +538,10 @@ if mode=="none" or mode=="disjointqubits" or mode=="qubitwise":
             q=_get_measurement_circuit(stab,norb_aca)
         except AssertionError:
             print("_get_measurement_circuit has failed")
-        print("ops in measurement circuit ",q.circuit.count_ops())
 
         q=qc.compose(q.circuit)
+        print("ops in measurement circuit ",q.count_ops())
+
         #backend = BasicAer.get_backend('qasm_simulator')
         backend = mock.FakeBogota()
         result = transpile(q, backend=backend, optimization_level=2,seed_transpiler=seed)
@@ -551,6 +552,72 @@ if mode=="none" or mode=="disjointqubits" or mode=="qubitwise":
 
 elif mode=="commute":
   print("constructing measurement programs for",mode)
+
+  for ic in range(len(cliques)):
+    #do construction directly with z-Pauli-strings instead of xyz-Pauli-strings
+    cc=cliques[ic]
+
+    varaints=[cc]
+    if config.getboolean('QC','try_all_permutations_of_stabilizer_columns'):
+      #permute operator ordering in clique
+      variants=itertools.permutations(cc)
+    
+    if config.getboolean('QC','heristic_for_permutation_of_stabilizer_columns'):
+        print("heuristic for permutation of stabilizer columns")
+        #varaints=[cc]
+
+
+    ngqmin=100000000000
+    ngtmin=100000000000
+    cngqmin=[]
+    cngtmin=[]
+    igqmin=-1
+    igtmin=-1
+    gatew={"cx":1,"swap":3}
+    iv=0
+    for c in variants:
+        print("clique=",c)
+
+        stab=clique2stab(norb_aca,c)
+        
+        try:
+            q=_get_measurement_circuit(stab,norb_aca)
+        except AssertionError:
+            print("_get_measurement_circuit has failed")
+
+        #q=qc.compose(q.circuit)
+        q=q.circuit
+        ngq=0
+        for gw in gatew:
+            try:
+                ngq+=gatew[gw]*q.count_ops()[gw]
+            except KeyError:
+                ngq+=0
+        #print(q)
+
+        linear_coupling=[]
+        for i in range(norb_aca-1):
+            linear_coupling.append([i,i+1])
+        result = transpile(q, basis_gates=['u3', 'cx'],coupling_map=linear_coupling, optimization_level=3,seed_transpiler=seed)
+        ngt=0
+        for gw in gatew:
+            try:
+                ngt+=gatew[gw]*result.count_ops()[gw]
+            except KeyError:
+                ngt+=0
+        
+        print("variant gate count",ic,iv,ngq,ngt,c)
+        if ngq<ngqmin:
+            ngqmin=ngq
+            igqmin=iv
+            cngqmin=copy.deepcopy(c)
+        if ngt<ngtmin:
+            ngtmin=ngt
+            igtmin=iv
+            cngtmin=copy.deepcopy(c)
+        iv=iv+1
+    print("optimal before transpilation for clique",ic,igqmin,ngqmin,cngqmin)
+    print("optimal permutation after transpilation for clique",ic,igtmin,ngtmin,cngtmin)
   #for c in cliques:
 elif mode=="anticommute":
   print("are you joking?")
