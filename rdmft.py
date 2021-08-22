@@ -235,6 +235,8 @@ for l in range(0,int(norb/ninteract-1)):
 Daca_levels.append(np.copy(Daca))
 
 l=int(config['ACA']['level'])
+if l==-1:
+    l=len(Daca_levels)-1
 Daca=Daca_levels[l]
 norb_aca=np.shape(Daca)[0]
 aca.printmat(norb_aca,norb_aca,"D_aca_used_",Daca)
@@ -501,15 +503,15 @@ elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
     if mode=="commute":
       commutativity_type=FullCommutativity
 
-    cliques2 = genMeasureCircuit(spterms, norb_aca, commutativity_type,clique_cover_method=BronKerbosch)
-    print("groups with https://arxiv.org/abs/1907.13623",mode,len(cliques2))
-    if len(cliques2)<len(cliques):
-      print("using grouping computed with approach from https://arxiv.org/abs/1907.13623")
-      clisues=[]
-      for c in cliques2:
-        cliques.append(c.replace("*","I"))
-    else:
-      print("using grouping computed with own implementation")
+    #cliques2 = genMeasureCircuit(spterms, norb_aca, commutativity_type,clique_cover_method=BronKerbosch)
+    #print("groups with https://arxiv.org/abs/1907.13623",mode,len(cliques2))
+    #if len(cliques2)<len(cliques):
+    #  print("using grouping computed with approach from https://arxiv.org/abs/1907.13623")
+    #  clisues=[]
+    #  for c in cliques2:
+    #    cliques.append(c.replace("*","I"))
+    #else:
+    #  print("using grouping computed with own implementation")
 
 #build measurement circuits for ciques
 if mode=="none" or mode=="disjointqubits" or mode=="qubitwise":
@@ -524,25 +526,27 @@ if mode=="none" or mode=="disjointqubits" or mode=="qubitwise":
       variants=itertools.permutations(c2)
 
     for c in variants:
-      print("clique=",c)
+        print("clique=",c)
 
-      mq,mqc=mqc_for_paulis(norb_aca,c)
-      print("measurements=",mq)
-      print("measurement programs=",mqc)
-      mqcs.append({'paulis':c,'measurements':mq,'mqc':mqc})
-      stab=clique2stab(norb_aca,c)
-      
-      try:
-        q=_get_measurement_circuit(stab,norb_aca)
-      except AssertionError:
-        print("_get_measurement_circuit has failed")
-      q=qc.compose(q.circuit)
-      #backend = BasicAer.get_backend('qasm_simulator')
-      backend = mock.FakeBogota()
-      result = transpile(q, backend=backend, optimization_level=2,seed_transpiler=seed)
-      print(q)
-      print(result)
-      print(result.count_ops())
+        mq,mqc=mqc_for_paulis(norb_aca,c)
+        print("measurements=",mq)
+        print("measurement programs=",mqc)
+        mqcs.append({'paulis':c,'measurements':mq,'mqc':mqc})
+        stab=clique2stab(norb_aca,c)
+        
+        try:
+            q=_get_measurement_circuit(stab,norb_aca)
+        except AssertionError:
+            print("_get_measurement_circuit has failed")
+        print("ops in measurement circuit ",q.circuit.count_ops())
+
+        q=qc.compose(q.circuit)
+        #backend = BasicAer.get_backend('qasm_simulator')
+        backend = mock.FakeBogota()
+        result = transpile(q, backend=backend, optimization_level=2,seed_transpiler=seed)
+        print("transpiled measurement circuit")
+        print(result)
+        print("ops in transpiled measurement circuit ",result.count_ops())
     quit()
 
 elif mode=="commute":

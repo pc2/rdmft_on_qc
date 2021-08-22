@@ -2,6 +2,7 @@ import os
 import sys
 import networkx as nx
 import matplotlib
+import copy
 import matplotlib.pyplot as plt
 from qiskit.opflow.primitive_ops import PauliOp
 from qiskit.opflow.state_fns import CircuitStateFn
@@ -76,23 +77,27 @@ def cliquecover(elements,commutemode="qubitwise",plotgraph=False,printcliques=Fa
       f.savefig("graph_"+commutemode+"_complement.png")                
 
     #graph coloring
-    c=nx.greedy_color(g2,strategy="largest_first")
-#    print("coloring result:")
-    cliques=[]
-    for i in range(len(elements)):
-        cliques.append([])
-
-    for i in range(len(elements)):
-#        print(i,elements[i],"->",c[i])
-        cliques[c[i]].append(elements[i])
-
+    lmin=1000000000
+    cmin=[]
     cliques2=[]
-    for i in range(len(elements)):
-      if len(cliques[i])>0:
-        cliques2.append(cliques[i])
+    for strat in ["largest_first","random_sequential","smallest_last","independent_set","connected_sequential_bfs","connected_sequential_dfs","saturation_largest_first"]:
+      c=nx.greedy_color(g2,strategy=strat)
+      cliques=[]
+      for i in range(len(elements)):
+          cliques.append([])
+      for i in range(len(elements)):
+        cliques[c[i]].append(elements[i])
+      cliques2=[]
+      for i in range(len(elements)):
+        if len(cliques[i])>0:
+          cliques2.append(cliques[i])
+      print("strategy",strat,len(cliques2))
+      if len(cliques2)<lmin:
+        cmin=copy.deepcopy(cliques2)
+        lmin=len(cliques2)
 
     #cliques:
     if printcliques:
-      for i in range(len(cliques2)):
-          print("clique",i,cliques2[i])
-    return cliques2
+      for i in range(len(cmin)):
+          print("clique",i,cmin[i])
+    return cmin

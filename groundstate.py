@@ -15,10 +15,11 @@ def hubbard_chain(n,t,U,mu,Lint,mode="ED"):
 
     # first neighbor hopping
     h = 0
-    for i in range(n-1):
-      h = h + t*fc.Cdagup[i]*fc.Cup[i+1]
-      h = h + t*fc.Cdagdn[i]*fc.Cdn[i+1]
-    h = h + h.get_dagger() # Make Hermitian
+    if n>1:
+        for i in range(n-1):
+            h = h + t*fc.Cdagup[i]*fc.Cup[i+1]
+            h = h + t*fc.Cdagdn[i]*fc.Cdn[i+1]
+        h = h + h.get_dagger() # Make Hermitian
     # Hubbard term
     for i in range(Lint):
       h = h + U*fc.Nup[i]*fc.Ndn[i]
