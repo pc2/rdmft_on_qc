@@ -7,6 +7,8 @@ import aca
 import ci
 import graphclique
 import time
+import measurement_circuits
+import networkx as nx
 from scipy import sparse
 from scipy.optimize import minimize,BFGS
 from math import pi
@@ -38,13 +40,10 @@ import sympy
 from dmrgpy import fermionchain
 import configparser
 import itertools
-
 from qiskit.test import mock
-
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
-
 
 def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
     m_op = qubit_converter.convert(m,num_particles=num_particles)
@@ -65,75 +64,7 @@ def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
             const+=op.coeff
     return {"pauliops":pauliops,"coeff":coeff,"const":const}
 
-def paulis_to_zs(nq,ops):
-  q = QuantumRegister(nq)
-  c = ClassicalRegister(nq)
-  qc=QuantumCircuit(q,c)
 
-  ops2=[]
-  for op in ops:
-    ops2.append(list(op))
-  #map to only sigma_z
-  sg=[]
-  for i in range(nq):
-    isX=False
-    isY=False
-    for j in range(len(ops2)):
-      if ops2[j][i]=='X':
-        if isY:
-          print("error")
-          quit()
-        isX=True
-      if ops2[j][i]=='Y':
-        if isX:
-          print("error")
-          quit()
-        isY=True
-    if isX:
-      qc.h(i)
-    if isX:
-      qc.sdg(i)
-      qc.h(i)
-
-    for j in range(len(ops2)):
-      if ops2[j][i]=='X' and isX:
-        ops2[j][i]='Z'
-      if ops2[j][i]=='Y' and isY:
-        ops2[j][i]='Z'
-
-  print("strings after single-qubit gates=",ops2)
-
-  return ops2,qc
-
-def mqc_for_paulis(nq,ops):
-  ms=[]
-  #map to only sigma_z
-  ops2,qc=paulis_to_zs(nq,ops)
-
-  for op in ops2:
-    print(op)
-    #qc=qc.compose(opqc)
-    #ms.append(m)
-  return ms,qc
-
-def clique2stab(nq,c):
-  #build stabilizer matrix for each clique
-  stab=np.zeros((2*nq,nq), dtype=int)
-  i=-1
-  for t in c:
-    i=i+1
-    if i>=nq:
-      print("clique",c,"has too many members")
-      break
-    for j in range(len(t)):
-      if t[j]=="Z":
-        stab[j,i]=1
-      if t[j]=="X":
-        stab[norb_aca+j,i]=1
-      if t[j]=="Y":
-        stab[j,i]=1
-        stab[norb_aca+j,i]=1
-  return stab
 
 #main code
 
@@ -516,27 +447,179 @@ elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
     #  print("using grouping computed with own implementation")
 
 #build measurement circuits for ciques
-print("constructing measurement programs for",mode)
+print("constructing measurement programs for commutativity  mode",mode)
+gatew={"cx":1,"swap":3}
+transpiler_couplings=[[0,2],[1,2],[2,3],[3,4],[3,5]]
+transpiler_gates=['u3','cx']
+transpiler_seed=345876
+criterion_for_qc_optimality="constructed"
+#criterion_for_qc_optimality="transpiled"
+complexity_measure="depth"
+
 for ic in range(len(cliques)):
     cc=cliques[ic]
-
     variants=[cc]
+
+    print("clique=",cc)
+
+
+    #options
+    if mode=="none":
+        #one measurement per program
+        #first reduce to Pauli-z 
+        cc2,preqc=measurement_circuits.paulis_to_zs(norb_aca,cc)
+        mqubit=-1
+        mqc=[]
+
+
+        #then reduce Pauli-z-string to single-z at some qubit if necessary
+        if cc2[0].count("Z")>1:
+            print("reduce ",cc2[0],"to single qubit")
+            #find cnot gates so that number of gates is minimal
+            complexity_min=float('inf')
+
+            #reduce z's with cnots that are available in the coupling topology
+            #build up reduction graph
+            reduction_graph = nx.DiGraph()
+            root="".join(cc2[0])
+            reduction_graph.add_node(root)
+            reductions=[]
+
+            single_found=False
+
+            while not single_found:
+                reduction_found=True
+                while reduction_found:
+                    reduction_found=False
+                    #iterate over leaves and try a local reduction for every leaf
+                    for cl in [v for v, d in reduction_graph.out_degree() if d == 0]:
+                        for coupling in transpiler_couplings:
+                            if cl[coupling[0]]=="Z" and cl[coupling[1]]=="Z":
+                                #two reduction directions are possible
+                                c=list(cl[:])
+                                c[coupling[0]]="I"
+                                if "".join(c) not in [v for v, d in reduction_graph.out_degree() if d == 0]:
+                                    reduction_graph.add_node("".join(c))
+                                    reduction_graph.add_edge(cl,"".join(c),weight=1,reduction={"op":"cnot","c":coupling[0],"t":coupling[1]})
+                                    reduction_found=True
+                                c=list(cl[:])
+                                c[coupling[1]]="I"
+                                if "".join(c) not in [v for v, d in reduction_graph.out_degree() if d == 0]:
+                                    reduction_graph.add_node("".join(c))
+                                    reduction_graph.add_edge(cl,"".join(c),weight=1,reduction={"op":"cnot","c":coupling[1],"t":coupling[0]})
+                                    reduction_found=True
+
+                leaves= [node for node in reduction_graph.nodes() if reduction_graph.in_degree(node)!=0 and reduction_graph.out_degree(node)==0]                    
+                #check if a final reduction was already found
+                for l in leaves:
+                    if l.count('Z')==1:
+                        single_found=True
+                        exit
+
+                if not single_found:
+                    #try swaps that are composed of cnots that are available in the coupling
+                    #iterate over leaves
+                    for cl in [v for v, d in reduction_graph.out_degree() if d == 0]:
+                        for coupling in transpiler_couplings:
+                            if (cl[coupling[0]]=="I" and cl[coupling[1]]=="Z") or (cl[coupling[0]]=="Z" and cl[coupling[1]]=="I"):
+                                c=list(cl[:])
+                                tmp=c[coupling[0]]
+                                c[coupling[0]]=c[coupling[1]]
+                                c[coupling[1]]=tmp
+                                if "".join(c) not in [v for v, d in reduction_graph.out_degree() if d == 0]:
+                                    reduction_graph.add_node("".join(c))
+                                    reduction_graph.add_edge(cl,"".join(c),weight=3,reduction={"op":"swap","c":coupling[0],"t":coupling[1]})
+
+                
+                leaves= [node for node in reduction_graph.nodes() if reduction_graph.in_degree(node)!=0 and reduction_graph.out_degree(node)==0]                    
+                #check if a final reduction was already found
+                for l in leaves:
+                    if l.count('Z')==1:
+                        single_found=True
+                        exit
+
+            leaves= [node for node in reduction_graph.nodes() if reduction_graph.in_degree(node)!=0 and reduction_graph.out_degree(node)==0]                    
+            #check if a final reduction was already found
+            for l in leaves:
+                if l.count('Z')==1:
+                    q = QuantumRegister(nq)
+                    c = ClassicalRegister(nq)
+                    qc=QuantumCircuit(q,c)
+                    qc=qc.compose(preqc)
+                    pa=nx.dijkstra_path(reduction_graph,root,l,weight='weight')
+                    for i in range(len(pa)-1):
+                        d=reduction_graph.get_edge_data(pa[i],pa[i+1])
+                        if d["reduction"]["op"]=="cnot":
+                            qc.cnot(d["reduction"]["c"],d["reduction"]["t"])
+                        if d["reduction"]["op"]=="swap":
+                            qc.swap(d["reduction"]["c"],d["reduction"]["t"])
+                    mq=l.index('Z')
+                    qc.measure(mq,0)
+                    print(qc)
+                           
+                    transpiled_qc = transpile(qc, basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
+                    
+                    constructed_complexity=measurement_circuits.measure_complexity(qc,mode=complexity_measure,gate_weights=gatew)
+                    transpiled_complexity=measurement_circuits.measure_complexity(transpiled_qc,mode=complexity_measure,gate_weights=gatew)
+                    complexity=0
+                    if criterion_for_qc_optimality=="constructed":
+                        complexity=constructed_complexity
+                    elif criterion_for_qc_optimality=="transpiled":
+                        complexity=transpiled_complexity
+                    else:
+                        raise RuntimeError('criterion_for_qc_optimality not known')
+                    print("root=",root,"target=",l,"constructed_complexity=",complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
+                    if complexity<complexity_min:
+                        complexity_min=complexity
+                        mqubit=mq
+                        mqc=copy.deepcopy(qc)
+        else:
+            mqubit=cc2[0].index("Z")
+            q = QuantumRegister(nq)
+            c = ClassicalRegister(nq)
+            qc=QuantumCircuit(q,c)
+            qc=qc.compose(preqc)
+            qc.measure(mqubit,0)
+        print("measure at",mqubit)
+
+        #mqc=preqc.compose(mqc)
+        #print(mqc)
+        #quit()
+
+
+
+    continue
+
+    
+    if config.getboolean('QC','heristic_for_permutation_of_stabilizer_columns'):
+        print("heuristic for permutation of stabilizer columns")
+        evallimit=int(config['QC']['heristic_for_permutation_of_stabilizer_columns_parameter'])
+        #FIXME build candidates without permuting everything but instead by explicit generation
+        perms=itertools.permutations(cc)
+        variants=[]
+        for c in perms:
+            eval=0
+            for ii in range(len(c)):
+                if c[ii][ii]=="I":
+                    eval=eval+1
+            if eval<=evallimit:
+                variants.append(c)
+        if len(variants)==0:
+            raise RuntimeError("Heuristic didn't produce any variants for"+str(cc)+", please increase heristic_for_permutation_of_stabilizer_columns_parameter.")
+        print("The heuristic has produced ",len(variants),"candidates.")
+    
     if config.getboolean('QC','try_all_permutations_of_stabilizer_columns'):
         #permute operator ordering in clique
         variants=itertools.permutations(cc)
 
-    if config.getboolean('QC','heristic_for_permutation_of_stabilizer_columns'):
-        print("heuristic for permutation of stabilizer columns")
-        #variants=[cc]
-
-        
     ngqmin=100000000000
     ngtmin=100000000000
     cngqmin=[]
     cngtmin=[]
     igqmin=-1
     igtmin=-1
-    gatew={"cx":1,"swap":3}
+
+    #define weigths of gates, FIXME: move to config file
     iv=0
     for c in variants:
         print("clique=",c)
@@ -549,7 +632,8 @@ for ic in range(len(cliques)):
         c2=[]
         if mode=="none" or mode=="disjointqubits" or mode=="qubitwise":
             #do construction directly with z-Pauli-strings instead of xyz-Pauli-strings
-            c2,qc=paulis_to_zs(norb_aca,c)
+            #c2,qc=paulis_to_zs(norb_aca,c)
+            c2=copy.deepcopy(c)
         elif mode=="commute":
             c2=copy.deepcopy(c)
         elif mode=="anticommute":
@@ -562,31 +646,6 @@ for ic in range(len(cliques)):
         except AssertionError:
             print("_get_measurement_circuit has failed")
 
-        #q=qc.compose(q.circuit)
-        q=q.circuit
-        ngq=0
-        for gw in gatew:
-            try:
-                ngq+=gatew[gw]*q.count_ops()[gw]
-            except KeyError:
-                ngq+=0
-
-        transpiler_coupling=[]
-        #for i in range(norb_aca-1):
-        #    transpiler_coupling.append([i,i+1])
-        transpiler_coupling.append([0,1])
-        transpiler_coupling.append([0,2])
-        transpiler_coupling.append([0,3])
-        transpiler_coupling.append([0,4])
-        transpiler_coupling.append([0,5])
-       
-        result = transpile(q, basis_gates=['u3', 'cx'],coupling_map=transpiler_coupling, optimization_level=3,seed_transpiler=seed)
-        ngt=0
-        for gw in gatew:
-            try:
-                ngt+=gatew[gw]*result.count_ops()[gw]
-            except KeyError:
-                ngt+=0
         
         print("variant gate count",ic,iv,ngq,ngt,eval,c)
         if ngq<ngqmin:
