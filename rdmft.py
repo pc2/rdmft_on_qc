@@ -449,11 +449,11 @@ elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
 #build measurement circuits for ciques
 print("constructing measurement programs for commutativity  mode",mode)
 gatew={"cx":1,"swap":3}
-transpiler_couplings=[[0,2],[1,2],[2,3],[3,4],[3,5]]
+transpiler_couplings=[[0,2],[1,2],[2,3],[3,4],[3,5],[2,0],[2,1],[3,2],[4,3],[5,3]]
 transpiler_gates=['u3','cx']
 transpiler_seed=345876
-criterion_for_qc_optimality="constructed"
-#criterion_for_qc_optimality="transpiled"
+#criterion_for_qc_optimality="constructed"
+criterion_for_qc_optimality="transpiled"
 complexity_measure="depth"
 
 for ic in range(len(cliques)):
@@ -470,6 +470,7 @@ for ic in range(len(cliques)):
         cc2,preqc=measurement_circuits.paulis_to_zs(norb_aca,cc)
         mqubit=-1
         mqc=[]
+        tqc=[]
 
 
         #then reduce Pauli-z-string to single-z at some qubit if necessary
@@ -499,12 +500,14 @@ for ic in range(len(cliques)):
                                 c=list(cl[:])
                                 c[coupling[0]]="I"
                                 if "".join(c) not in [v for v, d in reduction_graph.out_degree() if d == 0]:
+                                    #FIXME check direction
                                     reduction_graph.add_node("".join(c))
                                     reduction_graph.add_edge(cl,"".join(c),weight=1,reduction={"op":"cnot","c":coupling[0],"t":coupling[1]})
                                     reduction_found=True
                                 c=list(cl[:])
                                 c[coupling[1]]="I"
                                 if "".join(c) not in [v for v, d in reduction_graph.out_degree() if d == 0]:
+                                    #FIXME check direction
                                     reduction_graph.add_node("".join(c))
                                     reduction_graph.add_edge(cl,"".join(c),weight=1,reduction={"op":"cnot","c":coupling[1],"t":coupling[0]})
                                     reduction_found=True
@@ -555,7 +558,6 @@ for ic in range(len(cliques)):
                             qc.swap(d["reduction"]["c"],d["reduction"]["t"])
                     mq=l.index('Z')
                     qc.measure(mq,0)
-                    print(qc)
                            
                     transpiled_qc = transpile(qc, basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
                     
@@ -568,7 +570,8 @@ for ic in range(len(cliques)):
                         complexity=transpiled_complexity
                     else:
                         raise RuntimeError('criterion_for_qc_optimality not known')
-                    print("root=",root,"target=",l,"constructed_complexity=",complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
+                    print("root=",root,"target=",l,"constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
+                    print(transpiled_qc)
                     if complexity<complexity_min:
                         complexity_min=complexity
                         mqubit=mq
@@ -577,10 +580,17 @@ for ic in range(len(cliques)):
             mqubit=cc2[0].index("Z")
             q = QuantumRegister(nq)
             c = ClassicalRegister(nq)
-            qc=QuantumCircuit(q,c)
-            qc=qc.compose(preqc)
-            qc.measure(mqubit,0)
+            mqc=QuantumCircuit(q,c)
+            mqc=mqc.compose(preqc)
+            mqc.measure(mqubit,0)
+        
+        transpiled_mqc = transpile(mqc, basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
+        constructed_complexity=measurement_circuits.measure_complexity(mqc,mode=complexity_measure,gate_weights=gatew)
+        transpiled_complexity=measurement_circuits.measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
+        print("constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
         print("measure at",mqubit)
+        print(mqc)
+        print(transpiled_mqc)
 
         #mqc=preqc.compose(mqc)
         #print(mqc)
