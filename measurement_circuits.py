@@ -10,6 +10,8 @@ import term_grouping
 from term_grouping import QWCCommutativity,FullCommutativity,genMeasureCircuit,NetworkX_approximate_clique_cover,BronKerbosch,BronKerbosch_pivot
 from generate_measurement_circuit import MeasurementCircuit,_get_measurement_circuit
 import itertools
+import galois
+from sympy.combinatorics import Permutation
 
 def clique2stab(nq,c):
   #build stabilizer matrix for each clique
@@ -213,7 +215,38 @@ def build_measurement_circuits_none(nq,cc,config):
       mqc.measure(mqubit,0)
   return {"mqc":mqc,"mqubits":[mqubit]}
 
-def build_measurement_circuits_disjointqubits(nq,cc,config):
+def rk_gf2(mat):
+  return np.linalg.matrix_rank(mat_gf2(mat))
+
+def mat_gf2(mat):
+  GF2 = galois.GF(2)
+  mat2=GF2.Zeros((mat.shape[0],mat.shape[1]))
+  for i in range(mat.shape[0]):
+    for j in range(mat.shape[1]):
+      mat2[i,j]=mat[i,j]
+  return mat2
+
+def stab_H(nq,stab,ih):
+  stab2=copy.deepcopy(stab)
+  stab2[ih+nq,:]=stab[ih,:].copy()
+  stab2[ih,:]=stab[ih+nq,:].copy()
+  return stab2
+
+def stab_cnot(nq,stab,c,t):
+  stab2=copy.deepcopy(stab)
+  stab2[c,:]=stab[c,:].copy()+stab[t,:].copy()
+  stab2[c+nq,:]=stab[c+nq,:].copy()+stab[t+nq,:].copy()
+  return stab2
+
+def stab_swap(nq,stab,i,j):
+  stab2=copy.deepcopy(stab)
+  stab2[i,:]=stab[j,:].copy()
+  stab2[i+nq,:]=stab[j+nq,:].copy()
+  stab2[j,:]=stab[i,:].copy()
+  stab2[j+nq,:]=stab[i+nq,:].copy()
+  return stab2
+
+def build_measurement_circuits_commute(nq,cc,config):
   #options
   transpiler_gates=config["QC"]["transpiler_gates"].split(",")
   transpiler_seed=int(config["QC"]["transpiler_seed"])
@@ -227,17 +260,17 @@ def build_measurement_circuits_disjointqubits(nq,cc,config):
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
 
   #first reduce to Pauli-z 
-  cc2,preqc=paulis_to_zs(nq,cc)
   mqubit=-1
   mqc=[]
   tqc=[]
 
-  print(cc2)
+  print(cc)
+  #cc,preqc=paulis_to_zs(nq,cc)
+  #variants=itertools.permutations(cc)
+  #cc.reverse()
 
-  cc2=[['Z', 'Z', 'Z', 'I', 'Z', 'Z'], ['I', 'I', 'I', 'Z', 'I', 'I'], ['Z', 'I', 'I', 'I', 'I', 'I'], ['I', 'Z', 'I', 'I', 'I', 'I'], ['I', 'I', 'Z', 'I', 'I', 'I'], ['I', 'I', 'I', 'I', 'Z', 'I']]
 
-  variants=itertools.permutations(cc2)
-  variants=[cc2]
+  variants=[cc]
 
   complexity_min=10000000
   mmin={}
@@ -245,28 +278,114 @@ def build_measurement_circuits_disjointqubits(nq,cc,config):
     print("variant: ",c)
     stab=clique2stab(nq,c)
     print(stab)
-    try:
-        q=_get_measurement_circuit(stab,nq)
-    except AssertionError:
-        print("_get_measurement_circuit has failed")
-    m={"mqc":q.circuit,"mqubits":[]}
+
+    rk1=rk_gf2(stab)
+    print("GF2-rank stab=",rk1)
+    rk2=rk_gf2(stab[nq:])
+    print("GF2-rank X=",rk2)
+
+    initialH=[]
+    #make X-matrix maximal rank by adding Hs
+    print(itertools.product([0,1],repeat=nq))
+    for p in itertools.product([0,1],repeat=nq):
+      #print(p)
+      stab2=clique2stab(nq,c)
+      for i in range(nq):
+        if p[i]==1:
+          stab2=stab_H(nq,stab2,i)
+      #print(stab2)
+
+      #apply 
+      rk1H=rk_gf2(stab2)
+      rk2H=rk_gf2(stab2[nq:])
+      #print("GF2-rank stab=",rk1H)
+      #print("GF2-rank x=",rk2H)
+      if rk2H==rk1:
+        initialH=p[:]
+        break
+    print("maximal X-rank with Hs at ",initialH)
+    print(stab2)
     
-    transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
-    constructed_complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
-    transpiled_complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
-    complexity=0
-    if criterion_for_qc_optimality=="constructed":
-        complexity=constructed_complexity
-    elif criterion_for_qc_optimality=="transpiled":
-        complexity=transpiled_complexity
-    else:
-        raise RuntimeError('criterion_for_qc_optimality not known')
-    print("variant",c,"constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
-    #print(transpiled_qc)
-    if complexity<complexity_min:
-        complexity_min=complexity
-        #mqubit=mq
-        mmin=copy.deepcopy(m)
+    #reduce X-matrix to unit matrix
+    GF2 = galois.GF(2)
+    L,U,P=GF2.lup_decompose(mat_gf2(stab2[nq:]))
+    print(np.array_equal(P @ mat_gf2(stab2[nq:]), L @ U))
+    print("L=")
+    print(L)
+    print("U=")
+    print(U)
+    print("P=")
+    print(P)
+    
+    
+    #permute columns
+    perm=[]
+    for i in range(nq):
+      for j in range(nq):
+        if P[i,j]==1:
+          perm.append(j)
+    print(perm)
+
+    p = Permutation(perm)
+    ts = p.transpositions()
+    print(ts)
+
+    stab3=copy.deepcopy(stab2)
+    for t in ts:
+      print("swap(",t[0],",",t[1],")")
+      stab3=stab_swap(nq,stab3,t[0],t[1]).copy()
+
+    print("after permutation")
+    print(stab3)
+
+    Linv=np.linalg.inv(L)
+    print("Linv")
+    print(Linv)
+    print("Linv P A")
+    print(Linv @ P @ mat_gf2(stab2[nq:]))
+    print("Linv P A")
+    print(Linv @ mat_gf2(stab3[nq:]))
+    #check reduction
+    stabgf2=mat_gf2(stab3)
+    for i in range(nq-1,-1,-1):
+      for j in range(nq):
+        if i!=j:
+          if Linv[i,j]==1:
+            print("cnot(",i,",",j,")")
+            stabgf2=stab_cnot(nq,stabgf2,i,j)
+    print(stabgf2)
+    
+    #for i in range(nq):
+    #  stabgf2=stab_H(nq,stabgf2,i)
+    #print(stabgf2)
+
+
+
+
+
+  return None 
+  try:
+      q=_get_measurement_circuit(stab,nq)
+  except AssertionError:
+      print("_get_measurement_circuit has failed")
+  m={"mqc":q.circuit,"mqubits":[]}
+  
+  transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
+  constructed_complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
+  transpiled_complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
+  complexity=0
+  if criterion_for_qc_optimality=="constructed":
+      complexity=constructed_complexity
+  elif criterion_for_qc_optimality=="transpiled":
+      complexity=transpiled_complexity
+  else:
+      raise RuntimeError('criterion_for_qc_optimality not known')
+  print("variant",c,"constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
+  #print(transpiled_qc)
+  if complexity<complexity_min:
+      complexity_min=complexity
+      #mqubit=mq
+      mmin=copy.deepcopy(m)
   print(mmin["mqc"])
 
   return m
@@ -289,11 +408,7 @@ def build_measurement_circuit(mode,nq,cc,config):
   if mode=="none" or len(cc)==1:
     #one measurement per program
     m=build_measurement_circuits_none(nq,cc,config)
-  elif mode=="disjointqubits":
-    m=build_measurement_circuits_disjointqubits(nq,cc,config)
-  elif mode=="qubitwise":
-    m=build_measurement_circuits_qubitwise(nq,cc,config)
-  elif mode=="commute":
+  elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
     m=build_measurement_circuits_commute(nq,cc,config)
 
   if m is not None:
