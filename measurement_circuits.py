@@ -235,7 +235,18 @@ def stab_H(nq,stab,ih):
 def stab_cnot(nq,stab,c,t):
   stab2=copy.deepcopy(stab)
   stab2[c,:]=stab[c,:].copy()+stab[t,:].copy()
-  stab2[c+nq,:]=stab[c+nq,:].copy()+stab[t+nq,:].copy()
+  stab2[t+nq,:]=stab[t+nq,:].copy()+stab[c+nq,:].copy()
+  return stab2
+
+def stab_s(nq,stab,c):
+  stab2=copy.deepcopy(stab)
+  stab2[c,c]=0
+  return stab2
+
+def stab_cz(nq,stab,c,t):
+  stab2=copy.deepcopy(stab)
+  stab2[c,t]=0
+  stab2[t,c]=0
   return stab2
 
 def stab_swap(nq,stab,i,j):
@@ -264,6 +275,7 @@ def build_measurement_circuits_commute(nq,cc,config):
   mqc=[]
   tqc=[]
 
+  #cc=["IYXIII","ZZZIII","XIXIII"]
   print(cc)
   #cc,preqc=paulis_to_zs(nq,cc)
   #variants=itertools.permutations(cc)
@@ -339,25 +351,67 @@ def build_measurement_circuits_commute(nq,cc,config):
     print(stab3)
 
     Linv=np.linalg.inv(L)
-    print("Linv")
-    print(Linv)
-    print("Linv P A")
-    print(Linv @ P @ mat_gf2(stab2[nq:]))
-    print("Linv P A")
-    print(Linv @ mat_gf2(stab3[nq:]))
+    #print("Linv")
+    #print(Linv)
+    #print("Linv P A")
+    #print(Linv @ P @ mat_gf2(stab2[nq:]))
+    #print("Linv P A")
+    #print(Linv @ mat_gf2(stab3[nq:]))
     #check reduction
     stabgf2=mat_gf2(stab3)
     for i in range(nq-1,-1,-1):
       for j in range(nq):
         if i!=j:
-          if Linv[i,j]==1:
+          if Linv[j,i]==1:
             print("cnot(",i,",",j,")")
-            stabgf2=stab_cnot(nq,stabgf2,i,j)
+            stabgf2=stab_cnot(nq,stabgf2,i,j).copy()
     print(stabgf2)
     
-    #for i in range(nq):
-    #  stabgf2=stab_H(nq,stabgf2,i)
-    #print(stabgf2)
+    #check if X-matrix is diagonal
+    isdiag=True
+    isU=True
+    for i in range(nq):
+      for j in range(nq):
+        if i!=j:
+          if stabgf2[i+nq,j]!=0:
+            isdiag=False
+        if j<i:
+          if stabgf2[i+nq,j]!=0:
+            isU=False
+    print("X is upper triangular :",isU)
+    if not isU:
+      raise RuntimeError("X-matrix is not upper triangular. Something went wrong.")
+    
+    print("X is diag:",isdiag)
+    if not isdiag:
+      #reduce X to diagonal form
+      for i in range(nq-2,-1,-1):
+        if stabgf2[i+nq,i]!=0:
+          print("starting at row ",i)
+          for j in range(nq-1,i,-1):
+            if stabgf2[i+nq,j]==1:
+              print("cnot(",j,",",i,")")
+              stabgf2=stab_cnot(nq,stabgf2,j,i).copy()
+    print("final after reduction")
+    print(stabgf2)
+
+    #reduce Z to zero matrix with CZ and S
+    for i in range(nq):
+      if stabgf2[i,i]==1:
+        print("S(",i,")")
+        stabgf2=stab_s(nq,stabgf2,i)
+    for i in range(nq):
+      for j in range(nq):
+        if stabgf2[i,j]==1:
+          print("CZ(",i,",",j,")")
+          stabgf2=stab_cz(nq,stabgf2,i,j).copy()
+    print(stabgf2)
+
+
+    print("final after Hs")
+    for i in range(nq):
+      stabgf2=stab_H(nq,stabgf2,i).copy()
+    print(stabgf2)
 
 
 
