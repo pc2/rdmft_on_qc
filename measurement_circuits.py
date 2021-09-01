@@ -2,7 +2,8 @@ import os
 import copy
 import math
 import sys
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, assemble, transpile,Aer,execute
+from qiskit.quantum_info import Statevector,random_statevector
 import numpy as np
 import networkx as nx
 from qiskit import IBMQ, assemble, transpile,Aer
@@ -257,6 +258,12 @@ def stab_swap(nq,stab,i,j):
   stab2[j+nq,:]=stab[i+nq,:].copy()
   return stab2
 
+def inv_perm(p):
+  ip=copy.deepcopy(list(p))
+  for i in range(len(p)):
+    ip[p[i]]=i
+  return ip
+
 def build_measurement_circuits_commute(nq,cc,config):
   #options
   transpiler_gates=config["QC"]["transpiler_gates"].split(",")
@@ -273,21 +280,43 @@ def build_measurement_circuits_commute(nq,cc,config):
   #first reduce to Pauli-z 
   mqubit=-1
   mqc=[]
-  tqc=[]
 
-  #cc=["IYXIII","ZZZIII","XIXIII"]
   print(cc)
   #cc,preqc=paulis_to_zs(nq,cc)
-  #variants=itertools.permutations(cc)
+  nq=3
+  qreg = QuantumRegister(nq)
+  creg = ClassicalRegister(nq)
+  tqc=QuantumCircuit(qreg,creg)
+  rand_sv=random_statevector(2**3)
+
+
+  cc=["IYX","ZZZ","XIX"]
+  order=list(range(nq))
+  orders=itertools.permutations(order)
+  #orders=[(2,1,0,3,4,5)]
   #cc.reverse()
-
-
-  variants=[cc]
 
   complexity_min=10000000
   mmin={}
-  for c in variants:
-    print("variant: ",c)
+  for o in orders:
+    print("order: ",o)
+    io=inv_perm(o)
+    print("inverse order: ",io)
+    
+    tqc.initialize(rand_sv.data,list(range(nq)))
+    
+    mqc=QuantumCircuit(qreg,creg)
+
+    #permute measurements with order o
+    c=[]
+    for ci in cc:
+      c2=[]
+      for i in range(nq):
+        c2.append(ci[o[i]])
+      c.append("".join(c2))
+    print("after qubit-reordering")
+    print(c)
+
     stab=clique2stab(nq,c)
     print(stab)
 
@@ -298,20 +327,19 @@ def build_measurement_circuits_commute(nq,cc,config):
 
     initialH=[]
     #make X-matrix maximal rank by adding Hs
-    print(itertools.product([0,1],repeat=nq))
     for p in itertools.product([0,1],repeat=nq):
       #print(p)
       stab2=clique2stab(nq,c)
       for i in range(nq):
         if p[i]==1:
+          mqc.h(io[i])
           stab2=stab_H(nq,stab2,i)
       #print(stab2)
 
       #apply 
       rk1H=rk_gf2(stab2)
       rk2H=rk_gf2(stab2[nq:])
-      #print("GF2-rank stab=",rk1H)
-      #print("GF2-rank x=",rk2H)
+      print(p,"GF2-ranks=",rk1H,rk2H)
       if rk2H==rk1:
         initialH=p[:]
         break
@@ -345,6 +373,7 @@ def build_measurement_circuits_commute(nq,cc,config):
     stab3=copy.deepcopy(stab2)
     for t in ts:
       print("swap(",t[0],",",t[1],")")
+      mqc.swap(io[t[0]],io[t[1]])
       stab3=stab_swap(nq,stab3,t[0],t[1]).copy()
 
     print("after permutation")
@@ -364,6 +393,7 @@ def build_measurement_circuits_commute(nq,cc,config):
         if i!=j:
           if Linv[j,i]==1:
             print("cnot(",i,",",j,")")
+            mqc.cnot(io[i],io[j])
             stabgf2=stab_cnot(nq,stabgf2,i,j).copy()
     print(stabgf2)
     
@@ -391,6 +421,7 @@ def build_measurement_circuits_commute(nq,cc,config):
           for j in range(nq-1,i,-1):
             if stabgf2[i+nq,j]==1:
               print("cnot(",j,",",i,")")
+              mqc.cnot(io[j],io[i])
               stabgf2=stab_cnot(nq,stabgf2,j,i).copy()
     print("final after reduction")
     print(stabgf2)
@@ -399,19 +430,41 @@ def build_measurement_circuits_commute(nq,cc,config):
     for i in range(nq):
       if stabgf2[i,i]==1:
         print("S(",i,")")
+        mqc.s(io[i])
         stabgf2=stab_s(nq,stabgf2,i)
     for i in range(nq):
       for j in range(nq):
         if stabgf2[i,j]==1:
           print("CZ(",i,",",j,")")
+          mqc.cz(io[i],io[j])
           stabgf2=stab_cz(nq,stabgf2,i,j).copy()
     print(stabgf2)
 
-
     print("final after Hs")
     for i in range(nq):
+      mqc.h(io[i])
       stabgf2=stab_H(nq,stabgf2,i).copy()
     print(stabgf2)
+    for ic in range(len(cc)):
+      print(cc[ic],"is measured at",io[ic])
+      mqc.measure(io[ic],ic)
+    print(mqc)
+    print("depth=",mqc.depth())
+
+    print(tqc)
+    tqc=tqc.compose(mqc)
+    print(tqc)
+    
+    backend = Aer.get_backend('aer_simulator_statevector')
+    shots=8192
+    seed=45
+    jobs=execute(tqc,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+    jobs.wait_for_final_state(wait=0.05)
+
+    if jobs.done():
+      res=jobs.result().results
+      print("result=",res[0].data.counts)
+  quit()
 
 
 
