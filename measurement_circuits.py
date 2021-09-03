@@ -19,7 +19,7 @@ from qiskit.opflow.primitive_ops import PauliOp
 
 def clique2stab(nq,c):
   #build stabilizer matrix for each clique
-  stab=np.zeros((2*nq,nq), dtype=int)
+  stab=np.zeros((2*nq+1,nq), dtype=int)
   i=-1
   for t in c:
     i=i+1
@@ -230,35 +230,57 @@ def mat_gf2(mat):
       mat2[i,j]=mat[i,j]
   return mat2
 
+def vec_gf2(mat):
+  GF2 = galois.GF(2)
+  mat2=GF2.Zeros((mat.shape[0]))
+  for i in range(mat.shape[0]):
+    mat2[i]=mat[i]
+  return mat2
+
 def stab_H(nq,stab,ih):
   stab2=copy.deepcopy(stab)
+  #swap x and z
   stab2[ih+nq,:]=stab[ih,:].copy()
   stab2[ih,:]=stab[ih+nq,:].copy()
+  #r_i=r_i+x_i*z_i
+  stab2[2*nq,:]=stab[2*nq,:].copy()+stab[ih,:].copy()*stab[ih+nq,:].copy()
+  return stab2
+
+def stab_s(nq,stab,c):
+  stab2=copy.deepcopy(stab)
+  stab2[2*nq,:]=stab[2*nq,:].copy()+stab[c,:].copy()*stab[c+nq,:].copy()
+  #stab2[c,c]=0
+  stab2[c,:]=stab[c,:].copy()+stab[nq+c,:].copy()
   return stab2
 
 def stab_cnot(nq,stab,c,t):
   stab2=copy.deepcopy(stab)
+  ones=vec_gf2(np.ones(nq, dtype=int))
+  stab2[2*nq,:]=stab[2*nq,:].copy()+stab[c+nq,:].copy()*stab[t,:].copy()*(stab[t+nq,:].copy()+stab[c,:].copy()+ones)
+
   stab2[c,:]=stab[c,:].copy()+stab[t,:].copy()
   stab2[t+nq,:]=stab[t+nq,:].copy()+stab[c+nq,:].copy()
   return stab2
 
-def stab_sdg(nq,stab,c):
-  stab2=copy.deepcopy(stab)
-  stab2[c,c]=0
-  return stab2
 
 def stab_cz(nq,stab,c,t):
   stab2=copy.deepcopy(stab)
-  stab2[c,t]=0
-  stab2[t,c]=0
+  stab2=stab_H(nq,stab2,t)
+  stab2=stab_cnot(nq,stab2,c,t)
+  stab2=stab_H(nq,stab2,t)
+  #stab2[c,t]=0
+  #stab2[t,c]=0
   return stab2
 
 def stab_swap(nq,stab,i,j):
   stab2=copy.deepcopy(stab)
-  stab2[i,:]=stab[j,:].copy()
-  stab2[i+nq,:]=stab[j+nq,:].copy()
-  stab2[j,:]=stab[i,:].copy()
-  stab2[j+nq,:]=stab[i+nq,:].copy()
+  stab2=stab_cnot(nq,stab2,i,j)
+  stab2=stab_cnot(nq,stab2,j,i)
+  stab2=stab_cnot(nq,stab2,i,j)
+  #stab2[i,:]=stab[j,:].copy()
+  #stab2[i+nq,:]=stab[j+nq,:].copy()
+  #stab2[j,:]=stab[i,:].copy()
+  #stab2[j+nq,:]=stab[i+nq,:].copy()
   return stab2
 
 def inv_perm(p):
@@ -286,14 +308,14 @@ def build_measurement_circuits_commute(nq,cc_in,config):
 
   print("input",cc_in)
   #cc,preqc=paulis_to_zs(nq,cc)
-  nq=2
+  #nq=2
   qreg = QuantumRegister(nq)
   creg = ClassicalRegister(nq)
   tqc=QuantumCircuit(qreg,creg)
   rand_sv=random_statevector(2**nq,seed=2344)
 
   #cc_in=["YIXIII","XYYYZI"]
-  cc_in=["XX","XI"]
+  #cc_in=["YY","YI"]
   #cc_in=["IYX","ZZZ","XIX"]
   #cc_in=["IY","YY"]
     
@@ -334,9 +356,9 @@ def build_measurement_circuits_commute(nq,cc_in,config):
     stab=clique2stab(nq,c)
     print(stab)
 
-    rk1=rk_gf2(stab)
+    rk1=rk_gf2(stab[0:2*nq,0:nq])
     print("GF2-rank stab=",rk1)
-    rk2=rk_gf2(stab[nq:])
+    rk2=rk_gf2(stab[nq:2*nq,0:nq])
     print("GF2-rank X=",rk2)
 
     initialH=[]
@@ -344,35 +366,27 @@ def build_measurement_circuits_commute(nq,cc_in,config):
     for p in itertools.product([0,1],repeat=nq):
       mqc=QuantumCircuit(qreg,creg)
       tqc=QuantumCircuit(qreg,creg)
+      stab2=clique2stab(nq,c)
+      stabgf2=mat_gf2(stab2)
 
       tqc.initialize(rand_sv.data,list(range(nq)))
 
-      #print(p)
-      exclude=False
-      stab2=clique2stab(nq,c)
       print("initial")
-      print(stab2)
+      print(stabgf2)
       for i in range(nq):
-        #no H on Ys
-        for j in range(nq):
-          if p[i]==1 and stab2[nq+i,j]==1 and stab2[i,j]==1:
-            print("exclude",i,j)
-            exclude=True
-            break
         if p[i]==1:
-          stab2=stab_H(nq,stab2,i)
-      #print(stab2)
+          stabgf2=stab_H(nq,stabgf2,i)
 
       #apply 
-      rk1H=rk_gf2(stab2)
-      rk2H=rk_gf2(stab2[nq:])
+      rk1H=rk_gf2(stabgf2[0:2*nq,0:nq])
+      rk2H=rk_gf2(stabgf2[nq:2*nq,0:nq])
       print(p,"GF2-ranks=",rk1H,rk2H)
-      if rk2H==rk1 and not exclude:
+      if rk2H==rk1:
         initialH=p[:]
       else:
         continue
       print("maximal X-rank with Hs at ",initialH)
-      print(stab2)
+      print(stabgf2)
         
       mqc=QuantumCircuit(qreg,creg)
       for i in range(nq):
@@ -381,8 +395,8 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       
       #reduce X-matrix to unit matrix
       GF2 = galois.GF(2)
-      L,U,P=GF2.lup_decompose(mat_gf2(stab2[nq:]))
-      print(np.array_equal(P @ mat_gf2(stab2[nq:]), L @ U))
+      L,U,P=GF2.lup_decompose(stabgf2[nq:2*nq,:])
+      print(np.array_equal(P @ stabgf2[nq:2*nq,:], L @ U))
       print("L=")
       print(L)
       print("U=")
@@ -403,24 +417,15 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       ts = p.transpositions()
       print(ts)
 
-      stab3=copy.deepcopy(stab2)
       for t in ts:
         print("swap(",t[0],",",t[1],")")
         mqc.swap(io[t[0]],io[t[1]])
-        stab3=stab_swap(nq,stab3,t[0],t[1]).copy()
+        stabgf2=stab_swap(nq,stabgf2,t[0],t[1]).copy()
 
       print("after permutation")
-      print(stab3)
+      print(stabgf2)
 
       Linv=np.linalg.inv(L)
-      #print("Linv")
-      #print(Linv)
-      #print("Linv P A")
-      #print(Linv @ P @ mat_gf2(stab2[nq:]))
-      #print("Linv P A")
-      #print(Linv @ mat_gf2(stab3[nq:]))
-      #check reduction
-      stabgf2=mat_gf2(stab3)
       for i in range(nq-1,-1,-1):
         for j in range(nq):
           if i!=j:
@@ -468,9 +473,9 @@ def build_measurement_circuits_commute(nq,cc_in,config):
             stabgf2=stab_cz(nq,stabgf2,i,j).copy()
       for i in range(nq):
         if stabgf2[i,i]==1:
-          print("Sdg(",i,")")
-          mqc.sdg(io[i])
-          stabgf2=stab_sdg(nq,stabgf2,i)
+          print("S(",i,")")
+          mqc.s(io[i])
+          stabgf2=stab_s(nq,stabgf2,i)
       print(stabgf2)
 
 
@@ -485,6 +490,13 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       #mqc.measure(1,0)
       #print(mqc)
       print("depth=",mqc.depth())
+      #get sign from phase row
+      signs=np.ones(nq,dtype=int)
+      for i in range(nq):
+        if stabgf2[2*nq,i]==1:
+          signs[i]=-1
+
+      print("signs=",signs)
 
 
       if 0==1:
@@ -500,10 +512,10 @@ def build_measurement_circuits_commute(nq,cc_in,config):
         #tqc.measure(0,0)
         #tqc.measure(1,1)
         tqc=tqc.compose(mqc)
-      print(tqc)
+      #print(tqc)
       
       backend = Aer.get_backend('aer_simulator_statevector')
-      shots=81920
+      shots=8192
       seed=45
       jobs=execute(tqc,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
       jobs.wait_for_final_state(wait=0.05)
@@ -525,12 +537,15 @@ def build_measurement_circuits_commute(nq,cc_in,config):
             V=V-v
           else:
             V=V+v
+        V=V*signs[io[ic]]
         
+        #check result
         mop=PauliOp(Pauli(cc_in[ic]))
         msparse=sparse.csr_matrix(mop.to_matrix())
         exp=np.dot(np.conj(rand_sv.data),msparse.dot(rand_sv.data)).real
-        print("value=",cc_in[ic],V,exp)
-    quit()
+
+        print("value=",cc_in[ic],V,exp,abs(V-exp))
+  #quit()
 
 
 
