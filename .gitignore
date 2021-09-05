@@ -6,5 +6,3 @@ __pycache__/
 deps
 rdmft-qc-env
 *ansatz.txt
-generate_measurement_circuit.py
-term_grouping.py

@@ -41,9 +41,6 @@ from dmrgpy import fermionchain
 import configparser
 import itertools
 from qiskit.test import mock
-import term_grouping
-from term_grouping import QWCCommutativity,FullCommutativity,genMeasureCircuit,NetworkX_approximate_clique_cover,BronKerbosch,BronKerbosch_pivot
-from generate_measurement_circuit import MeasurementCircuit,_get_measurement_circuit
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
@@ -412,133 +409,30 @@ mqcs=[]
   
 cliques=[]
 if mode=="none":
-  for p in pauliopsunique:
-    cliques.append([p])
+    for p in pauliopsunique:
+        cliques.append([p])
 elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
-  #run term grouping with own implementation
-  nodes=[]
-  for p in pauliopsunique:
-    nodes.append(p)
-  cliques=graphclique.cliquecover(nodes,commutemode=mode,printcliques=True,plotgraph=False)
-  print("groups with own implementation",mode,len(cliques))
-
-  #run term grouping from https://github.com/teaguetomesh/vqe-term-grouping
-  #convert terms to sparse terms
-  spterms=[]
-  spterms.append((1.0,''))#first term is ignored
-  for n in nodes:
-    sp=[]
-    for i in range(len(n)):
-      if n[i]!="I":
-        sp.append(str(n[i])+str(i))
-    spterms.append((1.0,sp))
-
-  commutativity_type=QWCCommutativity
-  if mode=="qubitwise" or mode=="commute":
-    commutativity_type=QWCCommutativity
-    if mode=="commute":
-      commutativity_type=FullCommutativity
-
-    #cliques2 = genMeasureCircuit(spterms, norb_aca, commutativity_type,clique_cover_method=BronKerbosch)
-    #print("groups with https://arxiv.org/abs/1907.13623",mode,len(cliques2))
-    #if len(cliques2)<len(cliques):
-    #  print("using grouping computed with approach from https://arxiv.org/abs/1907.13623")
-    #  clisues=[]
-    #  for c in cliques2:
-    #    cliques.append(c.replace("*","I"))
-    #else:
-    #  print("using grouping computed with own implementation")
+    #run term grouping with own implementation
+    nodes=[]
+    for p in pauliopsunique:
+        nodes.append(p)
+    cliques=graphclique.cliquecover(nodes,commutemode=mode,printcliques=True,plotgraph=False)
+    print("resulting groups",mode,len(cliques))
 
 #build measurement circuits for ciques
 print("constructing measurement programs for commutativity  mode",mode)
-#criterion_for_qc_optimality="constructed"
-criterion_for_qc_optimality="transpiled"
-complexity_measure="depth"
 
 for ic in range(len(cliques)):
     cc=cliques[ic]
     variants=[cc]
-
     print("clique=",cc)
     m=measurement_circuits.build_measurement_circuit(mode,nq,cc,config)
-
-    continue
-
-    
-    if config.getboolean('QC','heristic_for_permutation_of_stabilizer_columns'):
-        print("heuristic for permutation of stabilizer columns")
-        evallimit=int(config['QC']['heristic_for_permutation_of_stabilizer_columns_parameter'])
-        #FIXME build candidates without permuting everything but instead by explicit generation
-        perms=itertools.permutations(cc)
-        variants=[]
-        for c in perms:
-            eval=0
-            for ii in range(len(c)):
-                if c[ii][ii]=="I":
-                    eval=eval+1
-            if eval<=evallimit:
-                variants.append(c)
-        if len(variants)==0:
-            raise RuntimeError("Heuristic didn't produce any variants for"+str(cc)+", please increase heristic_for_permutation_of_stabilizer_columns_parameter.")
-        print("The heuristic has produced ",len(variants),"candidates.")
-    
-    if config.getboolean('QC','try_all_permutations_of_stabilizer_columns'):
-        #permute operator ordering in clique
-        variants=itertools.permutations(cc)
-
-    ngqmin=100000000000
-    ngtmin=100000000000
-    cngqmin=[]
-    cngtmin=[]
-    igqmin=-1
-    igtmin=-1
-
-    #define weigths of gates, FIXME: move to config file
-    iv=0
-    for c in variants:
-        print("clique=",c)
-
-        eval=0
-        for ii in range(len(c)):
-            if c[ii][ii]=="I":
-                eval=eval+1
-
-        c2=[]
-        if mode=="none" or mode=="disjointqubits" or mode=="qubitwise":
-            #do construction directly with z-Pauli-strings instead of xyz-Pauli-strings
-            #c2,qc=paulis_to_zs(norb_aca,c)
-            c2=copy.deepcopy(c)
-        elif mode=="commute":
-            c2=copy.deepcopy(c)
-        elif mode=="anticommute":
-            print("are you joking?")
-            exit()
-
-        stab=clique2stab(norb_aca,c2)
-        try:
-            q=_get_measurement_circuit(stab,norb_aca)
-        except AssertionError:
-            print("_get_measurement_circuit has failed")
-
-        
-        print("variant gate count",ic,iv,ngq,ngt,eval,c)
-        if ngq<ngqmin:
-            ngqmin=ngq
-            igqmin=iv
-            cngqmin=copy.deepcopy(c)
-        if ngt<ngtmin:
-            ngtmin=ngt
-            igtmin=iv
-            cngtmin=copy.deepcopy(c)
-        iv=iv+1
-    print("optimal before transpilation for clique",ic,igqmin,ngqmin,cngqmin)
-    print("optimal permutation after transpilation for clique",ic,igtmin,ngtmin,cngtmin)
 
 quit()    
 
 if not add_interaction_to_combination_of_pauli_ops:
-  #add programs for measurement of interaction if required
-  exit()
+    #add programs for measurement of interaction if required
+    exit()
 
 c_qc=np.zeros(len(constraints))
 c_exact=np.zeros(len(constraints))

@@ -9,13 +9,13 @@ from qiskit.quantum_info import Pauli
 import numpy as np
 import networkx as nx
 from qiskit import IBMQ, assemble, transpile,Aer
-import term_grouping
-from term_grouping import QWCCommutativity,FullCommutativity,genMeasureCircuit,NetworkX_approximate_clique_cover,BronKerbosch,BronKerbosch_pivot
-from generate_measurement_circuit import MeasurementCircuit,_get_measurement_circuit
 import itertools
 import galois
 from sympy.combinatorics import Permutation
 from qiskit.opflow.primitive_ops import PauliOp
+#import term_grouping
+#from term_grouping import QWCCommutativity,FullCommutativity,genMeasureCircuit,NetworkX_approximate_clique_cover,BronKerbosch,BronKerbosch_pivot
+#from generate_measurement_circuit import MeasurementCircuit,_get_measurement_circuit
 
 def clique2stab(nq,c):
   #build stabilizer matrix for each clique
@@ -64,7 +64,6 @@ def paulis_to_zs(nq,ops):
     if isX:
       qc.sdg(i)
       qc.h(i)
-
     for j in range(len(ops2)):
       if ops2[j][i]=='X' and isX:
         ops2[j][i]='Z'
@@ -217,7 +216,8 @@ def build_measurement_circuits_none(nq,cc,config):
       mqc=QuantumCircuit(q,c)
       mqc=mqc.compose(preqc)
       mqc.measure(mqubit,0)
-  return {"mqc":mqc,"mqubits":[mqubit]}
+  signs=[1]
+  return {"mqc":mqc,"mqubits":[mqubit],"signs":signs}
 
 def rk_gf2(mat):
   return np.linalg.matrix_rank(mat_gf2(mat))
@@ -262,7 +262,6 @@ def stab_cnot(nq,stab,c,t):
   stab2[t+nq,:]=stab[t+nq,:].copy()+stab[c+nq,:].copy()
   return stab2
 
-
 def stab_cz(nq,stab,c,t):
   stab2=copy.deepcopy(stab)
   stab2=stab_H(nq,stab2,t)
@@ -301,24 +300,21 @@ def build_measurement_circuits_commute(nq,cc_in,config):
     gatew[c.split("_")[0]]=int(c.split("_")[1])
   complexity_measure=config["QC"]["complexity_measure"]
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
+  tprint=config.getboolean('QC','print_construction_of_measurement_circuits')
 
   #first reduce to Pauli-z 
   mqubit=-1
   mqc=[]
 
-  print("input",cc_in)
-  #cc,preqc=paulis_to_zs(nq,cc)
-  #nq=2
+  if tprint:
+    print("input",cc_in)
   qreg = QuantumRegister(nq)
   creg = ClassicalRegister(nq)
   tqc=QuantumCircuit(qreg,creg)
   rand_sv=random_statevector(2**nq,seed=2344)
 
-  #cc_in=["YIXIII","XYYYZI"]
-  #cc_in=["YY","YI"]
-  #cc_in=["IYX","ZZZ","XIX"]
-  #cc_in=["IY","YY"]
-    
+  #cc_in=['IIIYYX', 'XXYIXY', 'IIIZXI', 'YIYIXZ', 'XYYXZI', 'XZXIII']
+
   cc_reordered=[]
   for c in cc_in:  
       cc2=list(c)
@@ -326,22 +322,22 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       cc_reordered.append("".join(cc2))
   
   cc=copy.deepcopy(cc_reordered)
-  print("cc with qiskit ordering",cc)
+  if tprint:
+    print("cc with qiskit ordering",cc)
 
   order=list(range(nq))
-  orders=itertools.permutations(order)
-  #orders=[(2,1,0,3,4,5)]
   orders=[list(range(nq))]
-  #cc.reverse()
+  if config.getboolean('QC','reorder_measurement_qubits'):
+    orders=itertools.permutations(order)
 
   complexity_min=10000000
   mmin={}
+
+  #orders=[(0, 1, 2, 4, 5, 3)]
   for o in orders:
-    print("order: ",o)
+    if tprint:
+      print("try order: ",o)
     io=o[:] #inv_perm(o)
-    #print("inverse order: ",io)
-    
-    
 
     #permute measurements with order o
     c=[]
@@ -350,20 +346,38 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       for i in range(nq):
         c2.append(ci[o[i]])
       c.append("".join(c2))
-    print("after qubit-reordering")
-    print(c)
+    if tprint:
+      print("after qubit-reordering")
+      print(c)
 
     stab=clique2stab(nq,c)
-    print(stab)
+    if tprint:
+      print(stab)
+    if config.getboolean('QC','reorder_measurement_qubits_restricted'):
+      exclude=False
+      for i in range(len(c)):
+        if not(stab[i,i]==1 or stab[nq+i,i]==1): 
+          exclude=True
+          break
+
+      if exclude:
+        if tprint:
+          print("excluded because reorder_measurement_qubits_restricted=T and not every measurement qubit has a pauli-operator")
+        continue
 
     rk1=rk_gf2(stab[0:2*nq,0:nq])
-    print("GF2-rank stab=",rk1)
+    if tprint:
+      print("GF2-rank stab=",rk1)
     rk2=rk_gf2(stab[nq:2*nq,0:nq])
-    print("GF2-rank X=",rk2)
+    if tprint:
+      print("GF2-rank X=",rk2)
 
     initialH=[]
+    initialH_found=False
     #make X-matrix maximal rank by adding Hs
     for p in itertools.product([0,1],repeat=nq):
+      if initialH_found and not config.getboolean('QC','try_all_initial_H_combinations'):
+        break
       mqc=QuantumCircuit(qreg,creg)
       tqc=QuantumCircuit(qreg,creg)
       stab2=clique2stab(nq,c)
@@ -371,8 +385,9 @@ def build_measurement_circuits_commute(nq,cc_in,config):
 
       tqc.initialize(rand_sv.data,list(range(nq)))
 
-      print("initial")
-      print(stabgf2)
+      if tprint:
+        print("initial")
+        print(stabgf2)
       for i in range(nq):
         if p[i]==1:
           stabgf2=stab_H(nq,stabgf2,i)
@@ -380,13 +395,17 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       #apply 
       rk1H=rk_gf2(stabgf2[0:2*nq,0:nq])
       rk2H=rk_gf2(stabgf2[nq:2*nq,0:nq])
-      print(p,"GF2-ranks=",rk1H,rk2H)
+      if tprint:
+        print(p,"GF2-ranks=",rk1H,rk2H)
       if rk2H==rk1:
         initialH=p[:]
+        initialH_found=True
       else:
         continue
+
       print("maximal X-rank with Hs at ",initialH)
-      print(stabgf2)
+      if tprint:
+        print(stabgf2)
         
       mqc=QuantumCircuit(qreg,creg)
       for i in range(nq):
@@ -396,14 +415,14 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       #reduce X-matrix to unit matrix
       GF2 = galois.GF(2)
       L,U,P=GF2.lup_decompose(stabgf2[nq:2*nq,:])
-      print(np.array_equal(P @ stabgf2[nq:2*nq,:], L @ U))
-      print("L=")
-      print(L)
-      print("U=")
-      print(U)
-      print("P=")
-      print(P)
-      
+      if tprint:
+        print(np.array_equal(P @ stabgf2[nq:2*nq,:], L @ U))
+        print("L=")
+        print(L)
+        print("U=")
+        print(U)
+        print("P=")
+        print(P)
       
       #permute columns
       perm=[]
@@ -411,29 +430,35 @@ def build_measurement_circuits_commute(nq,cc_in,config):
         for j in range(nq):
           if P[i,j]==1:
             perm.append(j)
-      print(perm)
+      if tprint:
+        print(perm)
 
       p = Permutation(perm)
       ts = p.transpositions()
-      print(ts)
+      if tprint:
+        print(ts)
 
       for t in ts:
-        print("swap(",t[0],",",t[1],")")
+        if tprint:
+          print("swap(",t[0],",",t[1],")")
         mqc.swap(io[t[0]],io[t[1]])
         stabgf2=stab_swap(nq,stabgf2,t[0],t[1]).copy()
 
-      print("after permutation")
-      print(stabgf2)
+      if tprint:
+        print("after permutation")
+        print(stabgf2)
 
       Linv=np.linalg.inv(L)
       for i in range(nq-1,-1,-1):
         for j in range(nq):
           if i!=j:
             if Linv[j,i]==1:
-              print("cnot(",i,",",j,")")
+              if tprint:
+                print("cnot(",i,",",j,")")
               mqc.cnot(io[i],io[j])
               stabgf2=stab_cnot(nq,stabgf2,i,j).copy()
-      print(stabgf2)
+      if tprint:
+        print(stabgf2)
       
       #check if X-matrix is diagonal
       isdiag=True
@@ -446,137 +471,138 @@ def build_measurement_circuits_commute(nq,cc_in,config):
           if j<i:
             if stabgf2[i+nq,j]!=0:
               isU=False
-      print("X is upper triangular :",isU)
+      if tprint:
+        print("X is upper triangular :",isU)
       if not isU:
         raise RuntimeError("X-matrix is not upper triangular. Something went wrong.")
       
-      print("X is diag:",isdiag)
+      if tprint:
+        print("X is diag:",isdiag)
       if not isdiag:
         #reduce X to diagonal form
         for i in range(nq-2,-1,-1):
           if stabgf2[i+nq,i]!=0:
-            print("starting at row ",i)
+            if tprint:
+              print("starting at row ",i)
             for j in range(nq-1,i,-1):
               if stabgf2[i+nq,j]==1:
-                print("cnot(",j,",",i,")")
+                if tprint:
+                  print("cnot(",j,",",i,")")
                 mqc.cnot(io[j],io[i])
                 stabgf2=stab_cnot(nq,stabgf2,j,i).copy()
-      print("final after reduction")
-      print(stabgf2)
+      if tprint:
+        print("final after reduction")
+        print(stabgf2)
 
       #reduce Z to zero matrix with CZ and S
       for i in range(nq):
         for j in range(nq):
           if stabgf2[i,j]==1 and i!=j:
-            print("CZ(",i,",",j,")")
+            if tprint:
+              print("CZ(",i,",",j,")")
             mqc.cz(io[i],io[j])
             stabgf2=stab_cz(nq,stabgf2,i,j).copy()
       for i in range(nq):
         if stabgf2[i,i]==1:
-          print("S(",i,")")
+          if tprint:
+            print("S(",i,")")
           mqc.s(io[i])
           stabgf2=stab_s(nq,stabgf2,i)
-      print(stabgf2)
 
+      if tprint:
+        print(stabgf2)
+        print("final after Hs")
 
-      print("final after Hs")
       for i in range(nq):
         mqc.h(io[i])
         stabgf2=stab_H(nq,stabgf2,i).copy()
-      print(stabgf2)
-      for ic in range(len(cc)):
-        print(cc[ic],"is measured at",io[ic])
-        mqc.measure(ic,ic)
-      #mqc.measure(1,0)
-      #print(mqc)
-      print("depth=",mqc.depth())
+
+      if tprint:
+        print(stabgf2)
+      
       #get sign from phase row
       signs=np.ones(nq,dtype=int)
       for i in range(nq):
         if stabgf2[2*nq,i]==1:
-          signs[i]=-1
-
-      print("signs=",signs)
-
-
-      if 0==1:
-        stab=clique2stab(nq,c)
-        q=_get_measurement_circuit(stab,nq)
-        tqc=tqc.compose(q.circuit)
-      else:
-        #tqc.sdg(0)
-        #tqc.sdg(1)
-        #tqc.h(0)
-        #tqc.h(1)
-        #tqc.cnot(1,0)
-        #tqc.measure(0,0)
-        #tqc.measure(1,1)
-        tqc=tqc.compose(mqc)
-      #print(tqc)
-      
-      backend = Aer.get_backend('aer_simulator_statevector')
-      shots=8192
-      seed=45
-      jobs=execute(tqc,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
-      jobs.wait_for_final_state(wait=0.05)
-
-      if jobs.done():
-        res=jobs.result().results
-        print("result=",res[0].data.counts)
-
-      for r in res[0].data.counts:
-        print(r,bin(int(r, base=16))[2:].zfill(nq),res[0].data.counts[r]/shots)
+          if config.getboolean("QC","add_Ys_instead_of_separate_signs"):
+            mqc.y(i)
+          else:
+            signs[i]=-1
 
       for ic in range(len(cc)):
-        print(cc_in[ic],"is measured as Z at",io[ic])
-        V=0
+        if tprint:
+          print(cc[ic],"is measured at",io[ic])
+        mqc.measure(ic,ic)
+      if tprint:
+        print("depth=",mqc.depth())
+
+      if tprint:
+        print("signs=",signs)
+
+      ##construction of https://arxiv.org/pdf/1907.13623.pdf
+      #stab=clique2stab(nq,c)
+      #q=_get_measurement_circuit(stab,nq)
+      #tqc=tqc.compose(q.circuit)
+      
+      if config.getboolean('QC','test_construction_of_measurement_circuits'):
+        tqc=tqc.compose(mqc)
+        #test with example vector 
+        backend = Aer.get_backend('aer_simulator_statevector')
+        shots=int(config['QC']['shots'])
+        seed=int(config['rnd']['seed'])
+        jobs=execute(tqc,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+        jobs.wait_for_final_state(wait=0.05)
+
+        if jobs.done():
+          res=jobs.result().results
+          if tprint:
+            print("result=",res[0].data.counts)
+
         for r in res[0].data.counts:
-          b=bin(int(r, base=16))[2:].zfill(nq)
-          v=res[0].data.counts[r]/shots
-          if b[nq-1-io[ic]]=='1':
-            V=V-v
-          else:
-            V=V+v
-        V=V*signs[io[ic]]
-        
-        #check result
-        mop=PauliOp(Pauli(cc_in[ic]))
-        msparse=sparse.csr_matrix(mop.to_matrix())
-        exp=np.dot(np.conj(rand_sv.data),msparse.dot(rand_sv.data)).real
+          if tprint:
+            print(r,bin(int(r, base=16))[2:].zfill(nq),res[0].data.counts[r]/shots)
 
-        print("value=",cc_in[ic],V,exp,abs(V-exp))
-  #quit()
+        for ic in range(len(cc)):
+          if tprint:
+            print(cc_in[ic],"is measured as Z at",io[ic])
+          V=0
+          for r in res[0].data.counts:
+            b=bin(int(r, base=16))[2:].zfill(nq)
+            v=res[0].data.counts[r]/shots
+            if b[nq-1-io[ic]]=='1':
+              V=V-v
+            else:
+              V=V+v
+          V=V*signs[ic]
+          
+          #check result
+          mop=PauliOp(Pauli(cc_in[ic]))
+          msparse=sparse.csr_matrix(mop.to_matrix())
+          exp=np.dot(np.conj(rand_sv.data),msparse.dot(rand_sv.data)).real
+          print("value=",cc_in[ic],V,exp,abs(V-exp))
+      mqubits=[]
+      for ic in range(len(cc)):
+        mqubits.append(io[ic])
+      
+      m={"mqc":mqc,"mqubits":mqubits,"signs":signs}
 
+      transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
+      constructed_complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
+      transpiled_complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
+      complexity=0
+      if criterion_for_qc_optimality=="constructed":
+          complexity=constructed_complexity
+      elif criterion_for_qc_optimality=="transpiled":
+          complexity=transpiled_complexity
+      else:
+          raise RuntimeError('criterion_for_qc_optimality not known')
+      print("ordering",c,"constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
+      if complexity<complexity_min:
+          complexity_min=complexity
+          #mqubit=mq
+          mmin=copy.deepcopy(m)
 
-
-
-
-  return None 
-  try:
-      q=_get_measurement_circuit(stab,nq)
-  except AssertionError:
-      print("_get_measurement_circuit has failed")
-  m={"mqc":q.circuit,"mqubits":[]}
-  
-  transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
-  constructed_complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
-  transpiled_complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
-  complexity=0
-  if criterion_for_qc_optimality=="constructed":
-      complexity=constructed_complexity
-  elif criterion_for_qc_optimality=="transpiled":
-      complexity=transpiled_complexity
-  else:
-      raise RuntimeError('criterion_for_qc_optimality not known')
-  print("variant",c,"constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
-  #print(transpiled_qc)
-  if complexity<complexity_min:
-      complexity_min=complexity
-      #mqubit=mq
-      mmin=copy.deepcopy(m)
-  print(mmin["mqc"])
-
-  return m
+  return mmin
 
 
 def build_measurement_circuit(mode,nq,cc,config):
