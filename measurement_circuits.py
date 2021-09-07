@@ -11,6 +11,7 @@ import networkx as nx
 from qiskit import IBMQ, assemble, transpile,Aer
 import itertools
 import galois
+import graphclique
 from sympy.combinatorics import Permutation
 from qiskit.opflow.primitive_ops import PauliOp
 #import term_grouping
@@ -61,7 +62,7 @@ def paulis_to_zs(nq,ops):
         isY=True
     if isX:
       qc.h(i)
-    if isX:
+    if isY:
       qc.sdg(i)
       qc.h(i)
     for j in range(len(ops2)):
@@ -98,9 +99,13 @@ def build_measurement_circuits_none(nq,cc,config):
     gatew[c.split("_")[0]]=int(c.split("_")[1])
   complexity_measure=config["QC"]["complexity_measure"]
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
+  
+  cc2=list(cc[0])
+  cc2.reverse()
+  cc_reordered=["".join(cc2)]
 
   #first reduce to Pauli-z 
-  cc2,preqc=paulis_to_zs(nq,cc)
+  cc2,preqc=paulis_to_zs(nq,cc_reordered)
   mqubit=-1
   mqc=[]
   tqc=[]
@@ -191,6 +196,7 @@ def build_measurement_circuits_none(nq,cc,config):
                       qc.swap(d["reduction"]["c"],d["reduction"]["t"])
               mq=l.index('Z')
               qc.measure(mq,0)
+              mq=0
                       
               transpiled_qc = transpile(qc, basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
               
@@ -216,6 +222,7 @@ def build_measurement_circuits_none(nq,cc,config):
       mqc=QuantumCircuit(q,c)
       mqc=mqc.compose(preqc)
       mqc.measure(mqubit,0)
+      mqubit=0
   signs=[1]
   return {"mqc":mqc,"mqubits":[mqubit],"signs":signs}
 
@@ -524,7 +531,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       signs=np.ones(nq,dtype=int)
       for i in range(nq):
         if stabgf2[2*nq,i]==1:
-          if config.getboolean("QC","add_Ys_instead_of_separate_signs"):
+          if True: #config.getboolean("QC","add_Ys_instead_of_separate_signs"):
             mqc.y(io[i])
           else:
             signs[i]=-1
@@ -641,3 +648,45 @@ def build_measurement_circuit(mode,nq,cc,config):
 
   return m
 
+def get_unique_pauliops(pauliops):
+  pauliopsunique=[]
+  #get unique pauliops
+  maxI=0
+  minI=1000000
+  for p in pauliops:
+      found=False
+      maxI=max(maxI,p.count("I"))
+      minI=min(minI,p.count("I"))
+      for p2 in pauliopsunique:
+          if p==p2:
+              found=True
+              break
+      if found:
+          print("duplicate pauli op:",p)
+      if not found:
+          pauliopsunique.append(p)
+  return {"unique pauliops":pauliopsunique,"maximal I count":maxI,"minimal I count":minI}
+
+def build_cliques(mode,pauliops):
+  cliques=[]
+  if mode=="none":
+      for p in pauliops:
+          cliques.append([p])
+  elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
+      #run term grouping with own implementation
+      nodes=[]
+      for p in pauliops:
+          nodes.append(p)
+      cliques=graphclique.cliquecover(nodes,commutemode=mode,printcliques=True,plotgraph=False)
+  return cliques
+
+def build_measurement_circuits(cliques,mode,nq,config):
+  mqcs=[]
+  op_to_mqcs=[]
+  for ic in range(len(cliques)):
+      cc=cliques[ic]
+      variants=[cc]
+      print("clique=",cc)
+      m=build_measurement_circuit(mode,nq,cc,config)
+      mqcs.append({"mqc":m['mqc'],"mqubits":m['mqubits'],"ops":cc,"signs":m['signs']})
+  return mqcs
