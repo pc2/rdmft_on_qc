@@ -75,7 +75,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
         jobs.wait_for_final_state(wait=1)
         print("job finished: ",jobs.job_id())
     else:
-        jobs.wait_for_final_state(wait=0.05)
+        jobs.wait_for_final_state(wait=0.01)
 
     if jobs.done():
         res=jobs.result().results
@@ -102,7 +102,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 V=V*mqcs[im]['signs'][ic]
                 Va.append(V)
             Vs.append(Va)
-            print(mqcs[im]['ops'],Va)
+            #print(mqcs[im]['ops'],Va)
     return Vs
 
 def measurements_to_interact(mqcs,v,pauli_interact):
@@ -123,7 +123,7 @@ def measurements_to_interact(mqcs,v,pauli_interact):
     return W
 
 def measurements_to_constraints(mqcs,v,constraints):
-    c=[]
+    c=np.zeros(len(constraints))
     for ic in range(len(constraints)):
         cv=constraints[ic]['pauli']['const']-constraints[ic]['cval']
         for ip in range(len(constraints[ic]['pauli']['pauliops'])):
@@ -138,7 +138,7 @@ def measurements_to_constraints(mqcs,v,constraints):
                         cv=cv+v[im][io]*constraints[ic]['pauli']['coeff'][ip]
                         found=True
                         break
-        c.append(cv)
+        c[ic]=cv
     return c
 
 def rdmf_obj(x):
@@ -166,13 +166,13 @@ def rdmf_obj(x):
         W_qc=a
         L=L+W_qc
     else:
-        v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed,tsim)
+        v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed+rdmf_obj_eval,tsim,optimization_level)
         W_qc=measurements_to_interact(mqcs,v,pauli_interact)
         c_qc=measurements_to_constraints(mqcs,v,constraints)
         for ic in range(len(constraints)):
             L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
         L=L+W_qc
-    if tprintevals:
+    if tprintevals and rdmf_obj_eval%printevalsevery==0:
         print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
     return L
 
@@ -363,19 +363,17 @@ if entanglement=="map":
         entanglement.append((int(e.split("_")[0]),int(e.split("_")[1])))
 
 
-
-
-
 # set the backend for the quantum computation
 backend = BasicAer.get_backend('qasm_simulator')
-optimization_level=1
+optimization_level=2
 if tnoise:
     backend = BasicAer.get_backend('qasm_simulator')
-    optimization_level=1
+    optimization_level=2
+    raise RuntimeError("Noise model is not properly set")
 else:
     #backend = BasicAer.get_backend('statevector_simulator')
     backend = Aer.get_backend('aer_simulator_statevector')
-    optimization_level=0
+    optimization_level=2
 
 backend_check = BasicAer.get_backend('statevector_simulator')
 #backend_check = Aer.get_backend('aer_simulator_statevector')
@@ -536,7 +534,7 @@ print("number of parameters:",ansatz.num_parameters)
 if not tdoqc:
     exit()
 
-v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed,tsim)
+v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed,tsim,optimization_level)
 W_qc=measurements_to_interact(mqcs,v,pauli_interact)
 c_qc=measurements_to_constraints(mqcs,v,constraints)
 
@@ -558,6 +556,7 @@ if tcheck:
 rdmf_obj_eval=0
 rdmf_cons_eval=0
 tprintevals=True
+printevalsevery=1
 
 qiskit.utils.algorithm_globals.random_seed=seed
 maxiter=int(config['QC']['maxiter'])    
@@ -579,32 +578,33 @@ if tsim and tsimcons:
     print(res)
     quit()
 else:
+    print("Augmented Lagrangian")
     penalty=10
+    print("initial penalty=",penalty)
+
     lagrange=np.zeros(len(constraints))
+    tprintevals=True
+
     #augmented Lagrangian
     for oiter in range(100):
         value=0
         point=[]
         nfev=0
         #unconstrainted steps
+        print("Augmented Lagrangian: unconstrained subproblem")
         if tsim and not tsampling and not tnoise:
-            print("minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS_B (no derivatives, no sampling, no noise, i.e., exact expectation values)")
+            print("minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS_B (numerical derivatives, no sampling, no noise, i.e., exact expectation values)")
             method="BFGS"
-            tprintevals=True
             res=minimize(rdmf_obj, x0, method=method,tol=1e-2,options={'maxiter':10000,'verbose': 2,'disp': True})
             point=res.x
             value=rdmf_obj(point)
             nfev=res.nfev
-            #optimizer = L_BFGS_B(maxiter=maxiter,tol=1e-3)
-            #[point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0,approx_grad=True)
         elif tsim and tsampling and not tnoise:
             print("minimizing over parametrized qc-programs with augmented Lagrangian and COBYLA (no derivatives, with sampling, no noise)")
-            tprintevals=True
             optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2)
             [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
-        elif not tsim:
+        elif not tsim or tnoise:
             print("minimizing over parametrized qc-programs with augmented Lagrangian and SPSA (no derivatives, with sampling, with noise)")
-            tprintevals=True
             optimizer = SPSA(maxiter=maxiter,second_order=False)#,callback=opt_callback)
             print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
             print("calibrating")
@@ -618,15 +618,20 @@ else:
         print("point=",point)
         print("value=",value)
         print("nfev=",nfev)
+        v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed,tsim,optimization_level)
+        W_qc=measurements_to_interact(mqcs,v,pauli_interact)
+        c_qc=measurements_to_constraints(mqcs,v,constraints)
+
         print("constraint violation sum(c^2)=",np.sum(c_qc**2))
 
+        print("Augmented Lagrangian: penalty and multiplier update")
         x0=point
         #multiplier and penalty update
         for i in range(len(constraints)):
             lagrange[i]=lagrange[i]+penalty*c_qc[i]
         penalty=penalty*2
-        print("lagrange=",lagrange)
-        print("penalty=",penalty)
+        print("new lagrange multiplier=",lagrange)
+        print("new penalty=",penalty)
 
 
 

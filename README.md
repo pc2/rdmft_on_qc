@@ -20,15 +20,19 @@
 7. sets up all quantum programs including measurements for the required observables
 8. computes the ilocal-th local density-matrix functional in the ACA by constrained minimization with the augmented Lagrangian over the parameters of the hardware-efficient trial state (get multiple coffees)
   * Either with
-    * simulation of the quantum programs on a classical computer without noise (tsim=True, tnoise=False)
-    * simulation of the quantum programs on a classical computer with noise (tsim=True, tnoise=True)
-    * execution of the quantum programs on a quantum computer (tsim=False))
+    * simulation of the quantum programs on a classical computer without sampling, without noise and with explicit constraints (tsim=True, tsampling=False, tnoise=False, tsimcons=True)
+    * simulation of the quantum programs on a classical computer with sampling, without noise and with implicit constraints (tsim=True, tsampling=True, tnoise=False, tsimcons=False)
+      * currently without convergence criterion fou outer iterations of augmented Lagrangian
+    * simulation of the quantum programs on a classical computer with sampling, with noise and with implicit constraints (tsim=True, tsampling=True, tnoise=True, tsimcons=False)
+      * currently without convergence criterion fou outer iterations of augmented Lagrangian
+    * simulation of the quantum programs on a quantum computer (tsim=False, tsampling=True, tnoise=True, tsimcons=False)
+      * currently without convergence criterion fou outer iterations of augmented Lagrangian
 
 # What is Currently  Missing:
-* possible reuse of Pauli-measurements for multiple observables https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/rdmf_on_qc/-/issues/12
-* reduction of number of quantum programs by combining multiple observables into one program https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/rdmf_on_qc/-/issues/11
 * Pulse mode https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/rdmf_on_qc/-/issues/10
-* hardware-efficient placement of cnots in measurements https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/rdmf_on_qc/-/issues/13
+* hardware-efficient placement of cnots in measurements https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/rdmf_on_qc/-/issues/13: partially done
+  * for measurement circuits that measure only a single qubit
+  * implicitly for construction of measurement circuits of commuting measurements
 * testing
 
 # How to Use
