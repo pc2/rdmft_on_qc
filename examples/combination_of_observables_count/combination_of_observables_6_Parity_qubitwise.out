@@ -1,0 +1,513 @@
+GS energy with  DMRG -8.628893198968244
+N= 5.999999999999998
+E= -8.628893198968244
+D= [[ 5.00000000e-01+0.j  3.13171697e-12+0.j  4.26078583e-01+0.j
+  -1.96823646e-12+0.j -5.73000756e-13+0.j -1.73039093e-14+0.j
+  -1.82350788e-01+0.j  7.16154337e-13+0.j  1.37289325e-13+0.j
+   9.20182880e-14+0.j  1.35379476e-01+0.j -3.85976747e-13+0.j]
+ [ 3.13171626e-12+0.j  5.00000000e-01+0.j  1.85201899e-12+0.j
+   4.26078583e-01+0.j  2.71107280e-14+0.j -2.51622239e-13+0.j
+  -8.34643105e-13+0.j -1.82350788e-01+0.j -2.44380518e-13+0.j
+  -2.49507731e-13+0.j  5.93689324e-13+0.j  1.35379476e-01+0.j]
+ [ 4.26078583e-01+0.j  1.85199899e-12+0.j  5.00000000e-01+0.j
+  -2.38502055e-12+0.j  2.36764811e-01+0.j  1.67444789e-13+0.j
+   4.18903233e-13+0.j  9.23247963e-13+0.j -4.10333437e-02+0.j
+  -4.59462849e-14+0.j -3.35829106e-13+0.j -5.81464867e-13+0.j]
+ [-1.96824416e-12+0.j  4.26078583e-01+0.j -2.38502572e-12+0.j
+   5.00000000e-01+0.j  6.37882551e-14+0.j  2.36764811e-01+0.j
+   9.79095598e-13+0.j -7.70316100e-13+0.j  2.93844914e-14+0.j
+  -4.10333437e-02+0.j -6.81101847e-13+0.j  5.72989397e-13+0.j]
+ [-5.72902142e-13+0.j  2.71605699e-14+0.j  2.36764811e-01+0.j
+   6.37517138e-14+0.j  5.00000000e-01+0.j  1.83721205e-13+0.j
+   3.86226351e-01+0.j  2.13792441e-14+0.j -2.61804038e-13+0.j
+  -2.64316906e-13+0.j -1.82350788e-01+0.j -3.21267704e-13+0.j]
+ [-1.73118041e-14+0.j -2.51561076e-13+0.j  1.67442318e-13+0.j
+   2.36764811e-01+0.j  1.83784445e-13+0.j  5.00000000e-01+0.j
+  -1.80987974e-13+0.j  3.86226351e-01+0.j  3.24199757e-13+0.j
+   6.99365167e-13+0.j  8.81220927e-14+0.j -1.82350788e-01+0.j]
+ [-1.82350788e-01+0.j -8.34619011e-13+0.j  4.18895206e-13+0.j
+   9.79083010e-13+0.j  3.86226351e-01+0.j -1.80981729e-13+0.j
+   5.00000000e-01+0.j -7.21435214e-13+0.j  2.36764811e-01+0.j
+   3.08193348e-13+0.j  8.03947427e-13+0.j  4.93210932e-13+0.j]
+ [ 7.16179097e-13+0.j -1.82350788e-01+0.j  9.23254829e-13+0.j
+  -7.70280255e-13+0.j  2.12552949e-14+0.j  3.86226351e-01+0.j
+  -7.21442012e-13+0.j  5.00000000e-01+0.j -6.88766377e-14+0.j
+   2.36764811e-01+0.j  1.16235980e-13+0.j -8.04462803e-13+0.j]
+ [ 1.37291090e-13+0.j -2.44350865e-13+0.j -4.10333437e-02+0.j
+   2.93875460e-14+0.j -2.61723614e-13+0.j  3.24182027e-13+0.j
+   2.36764811e-01+0.j -6.88931733e-14+0.j  5.00000000e-01+0.j
+   5.60472010e-13+0.j  4.26078583e-01+0.j  2.95711384e-14+0.j]
+ [ 9.20323339e-14+0.j -2.49507955e-13+0.j -4.59499217e-14+0.j
+  -4.10333437e-02+0.j -2.64308236e-13+0.j  6.99387485e-13+0.j
+   3.08192304e-13+0.j  2.36764811e-01+0.j  5.60503453e-13+0.j
+   5.00000000e-01+0.j -2.48113374e-13+0.j  4.26078583e-01+0.j]
+ [ 1.35379476e-01+0.j  5.93682322e-13+0.j -3.35807425e-13+0.j
+  -6.81095157e-13+0.j -1.82350788e-01+0.j  8.81305146e-14+0.j
+   8.04001517e-13+0.j  1.16248326e-13+0.j  4.26078583e-01+0.j
+  -2.48097356e-13+0.j  5.00000000e-01+0.j -7.69408084e-13+0.j]
+ [-3.85972499e-13+0.j  1.35379476e-01+0.j -5.81468237e-13+0.j
+   5.72985063e-13+0.j -3.21220791e-13+0.j -1.82350788e-01+0.j
+   4.93217591e-13+0.j -8.04515231e-13+0.j  2.96048320e-14+0.j
+   4.26078583e-01+0.j -7.69397316e-13+0.j  5.00000000e-01+0.j]]
+W= [0.19143493+0.j 0.20874443+0.j 0.20920033+0.j 0.20920033+0.j
+ 0.20874443+0.j 0.19143493+0.j]
+local approximation with  1 sites
+local interactions on sites [[0], [1], [2], [3], [4], [5]]
+Functional for interaction on sites [0]
+interacting orbitals: [0, 1]
+mapping: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+orbinteractaca= [0, 1]
+aca: level 5  norb= 12
+Daca= [[ 5.00000000e-01+0.j  3.13171697e-12+0.j -4.82827476e-01+0.j
+  -1.61092145e-29+0.j  8.15650733e-29+0.j -4.96511976e-31+0.j
+   2.85327000e-18+0.j -7.89526162e-29+0.j  1.88602225e-29+0.j
+  -2.62455296e-30+0.j -1.22760572e-17+0.j -7.41348299e-30+0.j]
+ [ 3.13171626e-12+0.j  5.00000000e-01+0.j -4.32383807e-16+0.j
+  -4.82827476e-01+0.j -1.76931319e-30+0.j -6.39644672e-30+0.j
+  -2.24045018e-28+0.j  3.90356674e-17+0.j  8.42795745e-30+0.j
+   6.83072429e-30+0.j  1.30735064e-28+0.j  7.97922927e-18+0.j]
+ [-4.82827476e-01+0.j -4.03670880e-16+0.j  5.00000000e-01+0.j
+  -3.02948238e-12+0.j  1.34368867e-02+0.j  3.12682760e-30+0.j
+   1.75773476e-29+0.j -7.10631826e-31+0.j  4.21523156e-19+0.j
+   8.36987411e-30+0.j  3.60702107e-37+0.j -6.31088724e-30+0.j]
+ [ 1.49515559e-17+0.j -4.82827476e-01+0.j -3.02949490e-12+0.j
+   5.00000000e-01+0.j -1.34297651e-14+0.j  1.34368867e-02+0.j
+  -3.31479626e-30+0.j  4.21844717e-30+0.j -1.68639795e-30+0.j
+   4.47804970e-19+0.j -3.22175312e-37+0.j  3.15544362e-30+0.j]
+ [ 9.86142606e-17+0.j  4.98418194e-17+0.j  1.34368867e-02+0.j
+  -1.35114760e-14+0.j  5.00000000e-01+0.j  8.05964819e-12+0.j
+   4.84954492e-01+0.j  2.39343302e-28+0.j -2.85066416e-28+0.j
+   5.44942751e-28+0.j -1.50092766e-16+0.j -3.52138781e-28+0.j]
+ [-7.89482246e-18+0.j  6.11629561e-17+0.j  1.41063860e-18+0.j
+   1.34368867e-02+0.j  8.05969398e-12+0.j  5.00000000e-01+0.j
+   4.52269640e-14+0.j  4.84954492e-01+0.j -9.06931852e-28+0.j
+   2.46264770e-28+0.j  3.90264370e-28+0.j -5.04565872e-17+0.j]
+ [-1.56394539e-16+0.j  1.43204991e-17+0.j  5.15669559e-17+0.j
+   1.14064651e-17+0.j  4.84954492e-01+0.j  4.52296045e-14+0.j
+   5.00000000e-01+0.j -8.31609521e-12+0.j  4.14311348e-03+0.j
+  -2.98973755e-30+0.j -6.31090495e-30+0.j  2.52435490e-29+0.j]
+ [ 2.02154731e-17+0.j -6.10576832e-17+0.j -4.07419921e-19+0.j
+   8.52309146e-18+0.j -6.25513879e-17+0.j  4.84954492e-01+0.j
+  -8.31608217e-12+0.j  5.00000000e-01+0.j  5.23102299e-14+0.j
+   4.14311348e-03+0.j -2.42178662e-36+0.j  0.00000000e+00+0.j]
+ [ 1.76543329e-18+0.j  2.96534524e-17+0.j  1.35641353e-16+0.j
+   4.27407667e-17+0.j -6.71270655e-17+0.j  2.51359808e-17+0.j
+   4.14311348e-03+0.j  5.23630975e-14+0.j  5.00000000e-01+0.j
+  -5.53034298e-12+0.j  4.92327001e-01+0.j  0.00000000e+00+0.j]
+ [ 1.40459367e-17+0.j -2.24277058e-19+0.j  7.49386948e-18+0.j
+  -2.29709620e-17+0.j -1.60755544e-17+0.j  1.04604042e-18+0.j
+   9.64827200e-18+0.j  4.14311348e-03+0.j -5.53029409e-12+0.j
+   5.00000000e-01+0.j -4.49693313e-14+0.j -4.92327001e-01+0.j]
+ [-3.77133046e-17+0.j  2.53657047e-19+0.j -3.23971852e-17+0.j
+   4.85000369e-18+0.j -1.40744532e-16+0.j -4.12951296e-18+0.j
+  -3.86149947e-17+0.j -1.19507321e-17+0.j  4.92327001e-01+0.j
+  -4.49547825e-14+0.j  5.00000000e-01+0.j -5.68460175e-12+0.j]
+ [ 7.62036236e-18+0.j  3.34164767e-17+0.j -1.06176724e-18+0.j
+   2.56096608e-17+0.j  7.14593651e-17+0.j -4.29366933e-18+0.j
+  -4.46899584e-18+0.j  3.82134810e-18+0.j -1.55761284e-19+0.j
+  -4.92327001e-01+0.j -5.68460003e-12+0.j  5.00000000e-01+0.j]]
+Naca= (2.9999999999999987, 2.999999999999999)
+nq= 12
+interact= NNIIIIIIIIII * (1+0j)
+variational state:
+        ┌──────────┐┌───────────┐┌───────────┐             ┌───────────┐»
+ q0_0: ─┤ Ry(y[0]) ├┤ Rz(y[12]) ├┤ Rx(y[24]) ├──────■──────┤ Ry(y[36]) ├»
+        ├──────────┤├───────────┤└─────┬─────┘┌─────┴─────┐└───────────┘»
+ q0_1: ─┤ Ry(y[1]) ├┤ Rz(y[13]) ├──────┼──────┤ Rx(y[25]) ├──────■──────»
+        ├──────────┤├───────────┤      │      └───────────┘┌─────┴─────┐»
+ q0_2: ─┤ Ry(y[2]) ├┤ Rz(y[14]) ├──────┼───────────────────┤ Rx(y[26]) ├»
+        ├──────────┤├───────────┤      │                   └───────────┘»
+ q0_3: ─┤ Ry(y[3]) ├┤ Rz(y[15]) ├──────┼────────────────────────────────»
+        ├──────────┤├───────────┤      │                                »
+ q0_4: ─┤ Ry(y[4]) ├┤ Rz(y[16]) ├──────┼────────────────────────────────»
+        ├──────────┤├───────────┤      │                                »
+ q0_5: ─┤ Ry(y[5]) ├┤ Rz(y[17]) ├──────┼────────────────────────────────»
+        ├──────────┤├───────────┤      │                                »
+ q0_6: ─┤ Ry(y[6]) ├┤ Rz(y[18]) ├──────┼────────────────────────────────»
+        ├──────────┤├───────────┤      │                                »
+ q0_7: ─┤ Ry(y[7]) ├┤ Rz(y[19]) ├──────┼────────────────────────────────»
+        ├──────────┤├───────────┤      │                                »
+ q0_8: ─┤ Ry(y[8]) ├┤ Rz(y[20]) ├──────┼────────────────────────────────»
+        ├──────────┤├───────────┤      │                                »
+ q0_9: ─┤ Ry(y[9]) ├┤ Rz(y[21]) ├──────┼────────────────────────────────»
+       ┌┴──────────┤├───────────┤      │                                »
+q0_10: ┤ Ry(y[10]) ├┤ Rz(y[22]) ├──────┼────────────────────────────────»
+       ├───────────┤├───────────┤      │                                »
+q0_11: ┤ Ry(y[11]) ├┤ Rz(y[23]) ├──────■────────────────────────────────»
+       └───────────┘└───────────┘                                       »
+c0: 12/═════════════════════════════════════════════════════════════════»
+                                                                        »
+«       ┌───────────┐                                                    »
+« q0_0: ┤ Rz(y[48]) ├────────────────────────────────────────────────────»
+«       ├───────────┤┌───────────┐                                       »
+« q0_1: ┤ Ry(y[37]) ├┤ Rz(y[49]) ├───────────────────────────────────────»
+«       └───────────┘├───────────┤┌───────────┐                          »
+« q0_2: ──────■──────┤ Ry(y[38]) ├┤ Rz(y[50]) ├──────────────────────────»
+«       ┌─────┴─────┐└───────────┘├───────────┤┌───────────┐             »
+« q0_3: ┤ Rx(y[27]) ├──────■──────┤ Ry(y[39]) ├┤ Rz(y[51]) ├─────────────»
+«       └───────────┘┌─────┴─────┐└───────────┘├───────────┤┌───────────┐»
+« q0_4: ─────────────┤ Rx(y[28]) ├──────■──────┤ Ry(y[40]) ├┤ Rz(y[52]) ├»
+«                    └───────────┘┌─────┴─────┐└───────────┘├───────────┤»
+« q0_5: ──────────────────────────┤ Rx(y[29]) ├──────■──────┤ Ry(y[41]) ├»
+«                                 └───────────┘┌─────┴─────┐└───────────┘»
+« q0_6: ───────────────────────────────────────┤ Rx(y[30]) ├──────■──────»
+«                                              └───────────┘┌─────┴─────┐»
+« q0_7: ────────────────────────────────────────────────────┤ Rx(y[31]) ├»
+«                                                           └───────────┘»
+« q0_8: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_9: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+«q0_10: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+«q0_11: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+«c0: 12/═════════════════════════════════════════════════════════════════»
+«                                                                        »
+«                                                                        »
+« q0_0: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_1: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_2: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_3: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_4: ─────────────────────────────────────────────────────────────────»
+«       ┌───────────┐                                                    »
+« q0_5: ┤ Rz(y[53]) ├────────────────────────────────────────────────────»
+«       ├───────────┤┌───────────┐                                       »
+« q0_6: ┤ Ry(y[42]) ├┤ Rz(y[54]) ├───────────────────────────────────────»
+«       └───────────┘├───────────┤┌───────────┐                          »
+« q0_7: ──────■──────┤ Ry(y[43]) ├┤ Rz(y[55]) ├──────────────────────────»
+«       ┌─────┴─────┐└───────────┘├───────────┤┌───────────┐             »
+« q0_8: ┤ Rx(y[32]) ├──────■──────┤ Ry(y[44]) ├┤ Rz(y[56]) ├─────────────»
+«       └───────────┘┌─────┴─────┐└───────────┘├───────────┤┌───────────┐»
+« q0_9: ─────────────┤ Rx(y[33]) ├──────■──────┤ Ry(y[45]) ├┤ Rz(y[57]) ├»
+«                    └───────────┘┌─────┴─────┐└───────────┘├───────────┤»
+«q0_10: ──────────────────────────┤ Rx(y[34]) ├──────■──────┤ Ry(y[46]) ├»
+«                                 └───────────┘┌─────┴─────┐├───────────┤»
+«q0_11: ───────────────────────────────────────┤ Rx(y[35]) ├┤ Ry(y[47]) ├»
+«                                              └───────────┘└───────────┘»
+«c0: 12/═════════════════════════════════════════════════════════════════»
+«                                                                        »
+«                    ┌───────────┐             ┌───────────┐┌───────────┐»
+« q0_0: ─────────────┤ Rx(y[60]) ├──────■──────┤ Ry(y[72]) ├┤ Rz(y[84]) ├»
+«                    └─────┬─────┘┌─────┴─────┐└───────────┘├───────────┤»
+« q0_1: ───────────────────┼──────┤ Rx(y[61]) ├──────■──────┤ Ry(y[73]) ├»
+«                          │      └───────────┘┌─────┴─────┐└───────────┘»
+« q0_2: ───────────────────┼───────────────────┤ Rx(y[62]) ├──────■──────»
+«                          │                   └───────────┘┌─────┴─────┐»
+« q0_3: ───────────────────┼────────────────────────────────┤ Rx(y[63]) ├»
+«                          │                                └───────────┘»
+« q0_4: ───────────────────┼─────────────────────────────────────────────»
+«                          │                                             »
+« q0_5: ───────────────────┼─────────────────────────────────────────────»
+«                          │                                             »
+« q0_6: ───────────────────┼─────────────────────────────────────────────»
+«                          │                                             »
+« q0_7: ───────────────────┼─────────────────────────────────────────────»
+«                          │                                             »
+« q0_8: ───────────────────┼─────────────────────────────────────────────»
+«                          │                                             »
+« q0_9: ───────────────────┼─────────────────────────────────────────────»
+«       ┌───────────┐      │                                             »
+«q0_10: ┤ Rz(y[58]) ├──────┼─────────────────────────────────────────────»
+«       ├───────────┤      │                                             »
+«q0_11: ┤ Rz(y[59]) ├──────■─────────────────────────────────────────────»
+«       └───────────┘                                                    »
+«c0: 12/═════════════════════════════════════════════════════════════════»
+«                                                                        »
+«                                                                        »
+« q0_0: ─────────────────────────────────────────────────────────────────»
+«       ┌───────────┐                                                    »
+« q0_1: ┤ Rz(y[85]) ├────────────────────────────────────────────────────»
+«       ├───────────┤┌───────────┐                                       »
+« q0_2: ┤ Ry(y[74]) ├┤ Rz(y[86]) ├───────────────────────────────────────»
+«       └───────────┘├───────────┤┌───────────┐                          »
+« q0_3: ──────■──────┤ Ry(y[75]) ├┤ Rz(y[87]) ├──────────────────────────»
+«       ┌─────┴─────┐└───────────┘├───────────┤┌───────────┐             »
+« q0_4: ┤ Rx(y[64]) ├──────■──────┤ Ry(y[76]) ├┤ Rz(y[88]) ├─────────────»
+«       └───────────┘┌─────┴─────┐└───────────┘├───────────┤┌───────────┐»
+« q0_5: ─────────────┤ Rx(y[65]) ├──────■──────┤ Ry(y[77]) ├┤ Rz(y[89]) ├»
+«                    └───────────┘┌─────┴─────┐└───────────┘├───────────┤»
+« q0_6: ──────────────────────────┤ Rx(y[66]) ├──────■──────┤ Ry(y[78]) ├»
+«                                 └───────────┘┌─────┴─────┐└───────────┘»
+« q0_7: ───────────────────────────────────────┤ Rx(y[67]) ├──────■──────»
+«                                              └───────────┘┌─────┴─────┐»
+« q0_8: ────────────────────────────────────────────────────┤ Rx(y[68]) ├»
+«                                                           └───────────┘»
+« q0_9: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+«q0_10: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+«q0_11: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+«c0: 12/═════════════════════════════════════════════════════════════════»
+«                                                                        »
+«                                                                        »
+« q0_0: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_1: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_2: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_3: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_4: ─────────────────────────────────────────────────────────────────»
+«                                                                        »
+« q0_5: ─────────────────────────────────────────────────────────────────»
+«       ┌───────────┐                                                    »
+« q0_6: ┤ Rz(y[90]) ├────────────────────────────────────────────────────»
+«       ├───────────┤┌───────────┐                                       »
+« q0_7: ┤ Ry(y[79]) ├┤ Rz(y[91]) ├───────────────────────────────────────»
+«       └───────────┘├───────────┤┌───────────┐                          »
+« q0_8: ──────■──────┤ Ry(y[80]) ├┤ Rz(y[92]) ├──────────────────────────»
+«       ┌─────┴─────┐└───────────┘├───────────┤┌───────────┐             »
+« q0_9: ┤ Rx(y[69]) ├──────■──────┤ Ry(y[81]) ├┤ Rz(y[93]) ├─────────────»
+«       └───────────┘┌─────┴─────┐└───────────┘├───────────┤┌───────────┐»
+«q0_10: ─────────────┤ Rx(y[70]) ├──────■──────┤ Ry(y[82]) ├┤ Rz(y[94]) ├»
+«                    └───────────┘┌─────┴─────┐├───────────┤├───────────┤»
+«q0_11: ──────────────────────────┤ Rx(y[71]) ├┤ Ry(y[83]) ├┤ Rz(y[95]) ├»
+«                                 └───────────┘└───────────┘└───────────┘»
+«c0: 12/═════════════════════════════════════════════════════════════════»
+«                                                                        »
+«       ┌───────────┐             ┌────────────┐┌────────────┐              »
+« q0_0: ┤ Rx(y[96]) ├──────■──────┤ Ry(y[108]) ├┤ Rz(y[120]) ├──────────────»
+«       └─────┬─────┘┌─────┴─────┐└────────────┘├────────────┤┌────────────┐»
+« q0_1: ──────┼──────┤ Rx(y[97]) ├──────■───────┤ Ry(y[109]) ├┤ Rz(y[121]) ├»
+«             │      └───────────┘┌─────┴─────┐ └────────────┘├────────────┤»
+« q0_2: ──────┼───────────────────┤ Rx(y[98]) ├───────■───────┤ Ry(y[110]) ├»
+«             │                   └───────────┘ ┌─────┴─────┐ └────────────┘»
+« q0_3: ──────┼─────────────────────────────────┤ Rx(y[99]) ├───────■───────»
+«             │                                 └───────────┘ ┌─────┴──────┐»
+« q0_4: ──────┼───────────────────────────────────────────────┤ Rx(y[100]) ├»
+«             │                                               └────────────┘»
+« q0_5: ──────┼─────────────────────────────────────────────────────────────»
+«             │                                                             »
+« q0_6: ──────┼─────────────────────────────────────────────────────────────»
+«             │                                                             »
+« q0_7: ──────┼─────────────────────────────────────────────────────────────»
+«             │                                                             »
+« q0_8: ──────┼─────────────────────────────────────────────────────────────»
+«             │                                                             »
+« q0_9: ──────┼─────────────────────────────────────────────────────────────»
+«             │                                                             »
+«q0_10: ──────┼─────────────────────────────────────────────────────────────»
+«             │                                                             »
+«q0_11: ──────■─────────────────────────────────────────────────────────────»
+«                                                                           »
+«c0: 12/════════════════════════════════════════════════════════════════════»
+«                                                                           »
+«                                                                             »
+« q0_0: ──────────────────────────────────────────────────────────────────────»
+«                                                                             »
+« q0_1: ──────────────────────────────────────────────────────────────────────»
+«       ┌────────────┐                                                        »
+« q0_2: ┤ Rz(y[122]) ├────────────────────────────────────────────────────────»
+«       ├────────────┤┌────────────┐                                          »
+« q0_3: ┤ Ry(y[111]) ├┤ Rz(y[123]) ├──────────────────────────────────────────»
+«       └────────────┘├────────────┤┌────────────┐                            »
+« q0_4: ──────■───────┤ Ry(y[112]) ├┤ Rz(y[124]) ├────────────────────────────»
+«       ┌─────┴──────┐└────────────┘├────────────┤┌────────────┐              »
+« q0_5: ┤ Rx(y[101]) ├──────■───────┤ Ry(y[113]) ├┤ Rz(y[125]) ├──────────────»
+«       └────────────┘┌─────┴──────┐└────────────┘├────────────┤┌────────────┐»
+« q0_6: ──────────────┤ Rx(y[102]) ├──────■───────┤ Ry(y[114]) ├┤ Rz(y[126]) ├»
+«                     └────────────┘┌─────┴──────┐└────────────┘├────────────┤»
+« q0_7: ────────────────────────────┤ Rx(y[103]) ├──────■───────┤ Ry(y[115]) ├»
+«                                   └────────────┘┌─────┴──────┐└────────────┘»
+« q0_8: ──────────────────────────────────────────┤ Rx(y[104]) ├──────■───────»
+«                                                 └────────────┘┌─────┴──────┐»
+« q0_9: ────────────────────────────────────────────────────────┤ Rx(y[105]) ├»
+«                                                               └────────────┘»
+«q0_10: ──────────────────────────────────────────────────────────────────────»
+«                                                                             »
+«q0_11: ──────────────────────────────────────────────────────────────────────»
+«                                                                             »
+«c0: 12/══════════════════════════════════════════════════════════════════════»
+«                                                                             »
+«                                                               
+« q0_0: ────────────────────────────────────────────────────────
+«                                                               
+« q0_1: ────────────────────────────────────────────────────────
+«                                                               
+« q0_2: ────────────────────────────────────────────────────────
+«                                                               
+« q0_3: ────────────────────────────────────────────────────────
+«                                                               
+« q0_4: ────────────────────────────────────────────────────────
+«                                                               
+« q0_5: ────────────────────────────────────────────────────────
+«                                                               
+« q0_6: ────────────────────────────────────────────────────────
+«       ┌────────────┐                                          
+« q0_7: ┤ Rz(y[127]) ├──────────────────────────────────────────
+«       ├────────────┤┌────────────┐                            
+« q0_8: ┤ Ry(y[116]) ├┤ Rz(y[128]) ├────────────────────────────
+«       └────────────┘├────────────┤┌────────────┐              
+« q0_9: ──────■───────┤ Ry(y[117]) ├┤ Rz(y[129]) ├──────────────
+«       ┌─────┴──────┐└────────────┘├────────────┤┌────────────┐
+«q0_10: ┤ Rx(y[106]) ├──────■───────┤ Ry(y[118]) ├┤ Rz(y[130]) ├
+«       └────────────┘┌─────┴──────┐├────────────┤├────────────┤
+«q0_11: ──────────────┤ Rx(y[107]) ├┤ Ry(y[119]) ├┤ Rz(y[131]) ├
+«                     └────────────┘└────────────┘└────────────┘
+«c0: 12/════════════════════════════════════════════════════════
+«                                                               
+building constraints...
+number of constraints= 144
+plain pauliops= 276
+['IIIIIIIIIIIZ', 'IIIIIIIIIIIX', 'IIIIIIIIIIZX', 'IIIIIIIIIIIY', 'IIIIIIIIIIZY', 'IIIIIIIIIZXX', 'IIIIIIIIIIYY', 'IIIIIIIIIIYX', 'IIIIIIIIIZXY', 'IIIIIIIIZXXX', 'IIIIIIIIIYXY', 'IIIIIIIIIYXX', 'IIIIIIIIZXXY', 'IIIIIIIZXXXX', 'IIIIIIIIYXXY', 'IIIIIIIIYXXX', 'IIIIIIIZXXXY', 'IIIIIIZXXXXX', 'IIIIIIIYXXXY', 'IIIIIIIYXXXX', 'IIIIIIZXXXXY', 'IIIIIZXXXXXX', 'IIIIIIYXXXXY', 'IIIIIIYXXXXX', 'IIIIIZXXXXXY', 'IIIIZXXXXXXX', 'IIIIIYXXXXXY', 'IIIIIYXXXXXX', 'IIIIZXXXXXXY', 'IIIZXXXXXXXX', 'IIIIYXXXXXXY', 'IIIIYXXXXXXX', 'IIIZXXXXXXXY', 'IIZXXXXXXXXX', 'IIIYXXXXXXXY', 'IIIYXXXXXXXX', 'IIZXXXXXXXXY', 'IZXXXXXXXXXX', 'IIYXXXXXXXXY', 'IIYXXXXXXXXX', 'IZXXXXXXXXXY', 'ZXXXXXXXXXXX', 'IYXXXXXXXXXY', 'IYXXXXXXXXXX', 'ZXXXXXXXXXXY', 'IIIIIIIIIIZZ', 'IIIIIIIIIIXI', 'IIIIIIIIIZXZ', 'IIIIIIIIIZYI', 'IIIIIIIIIIYZ', 'IIIIIIIIIYYI', 'IIIIIIIIZXXZ', 'IIIIIIIIZXYI', 'IIIIIIIIIYXZ', 'IIIIIIIIYXYI', 'IIIIIIIZXXXZ', 'IIIIIIIZXXYI', 'IIIIIIIIYXXZ', 'IIIIIIIYXXYI', 'IIIIIIZXXXXZ', 'IIIIIIZXXXYI', 'IIIIIIIYXXXZ', 'IIIIIIYXXXYI', 'IIIIIZXXXXXZ', 'IIIIIZXXXXYI', 'IIIIIIYXXXXZ', 'IIIIIYXXXXYI', 'IIIIZXXXXXXZ', 'IIIIZXXXXXYI', 'IIIIIYXXXXXZ', 'IIIIYXXXXXYI', 'IIIZXXXXXXXZ', 'IIIZXXXXXXYI', 'IIIIYXXXXXXZ', 'IIIYXXXXXXYI', 'IIZXXXXXXXXZ', 'IIZXXXXXXXYI', 'IIIYXXXXXXXZ', 'IIYXXXXXXXYI', 'IZXXXXXXXXXZ', 'IZXXXXXXXXYI', 'IIYXXXXXXXXZ', 'IYXXXXXXXXYI', 'ZXXXXXXXXXXZ', 'ZXXXXXXXXXYI', 'IYXXXXXXXXXZ', 'IIIIIIIIIZZI', 'IIIIIIIIIXII', 'IIIIIIIIZXZI', 'IIIIIIIIZYII', 'IIIIIIIIIYZI', 'IIIIIIIIYYII', 'IIIIIIIZXXZI', 'IIIIIIIZXYII', 'IIIIIIIIYXZI', 'IIIIIIIYXYII', 'IIIIIIZXXXZI', 'IIIIIIZXXYII', 'IIIIIIIYXXZI', 'IIIIIIYXXYII', 'IIIIIZXXXXZI', 'IIIIIZXXXYII', 'IIIIIIYXXXZI', 'IIIIIYXXXYII', 'IIIIZXXXXXZI', 'IIIIZXXXXYII', 'IIIIIYXXXXZI', 'IIIIYXXXXYII', 'IIIZXXXXXXZI', 'IIIZXXXXXYII', 'IIIIYXXXXXZI', 'IIIYXXXXXYII', 'IIZXXXXXXXZI', 'IIZXXXXXXYII', 'IIIYXXXXXXZI', 'IIYXXXXXXYII', 'IZXXXXXXXXZI', 'IZXXXXXXXYII', 'IIYXXXXXXXZI', 'IYXXXXXXXYII', 'ZXXXXXXXXXZI', 'ZXXXXXXXXYII', 'IYXXXXXXXXZI', 'IIIIIIIIZZII', 'IIIIIIIIXIII', 'IIIIIIIZXZII', 'IIIIIIIZYIII', 'IIIIIIIIYZII', 'IIIIIIIYYIII', 'IIIIIIZXXZII', 'IIIIIIZXYIII', 'IIIIIIIYXZII', 'IIIIIIYXYIII', 'IIIIIZXXXZII', 'IIIIIZXXYIII', 'IIIIIIYXXZII', 'IIIIIYXXYIII', 'IIIIZXXXXZII', 'IIIIZXXXYIII', 'IIIIIYXXXZII', 'IIIIYXXXYIII', 'IIIZXXXXXZII', 'IIIZXXXXYIII', 'IIIIYXXXXZII', 'IIIYXXXXYIII', 'IIZXXXXXXZII', 'IIZXXXXXYIII', 'IIIYXXXXXZII', 'IIYXXXXXYIII', 'IZXXXXXXXZII', 'IZXXXXXXYIII', 'IIYXXXXXXZII', 'IYXXXXXXYIII', 'ZXXXXXXXXZII', 'ZXXXXXXXYIII', 'IYXXXXXXXZII', 'IIIIIIIZZIII', 'IIIIIIIXIIII', 'IIIIIIZXZIII', 'IIIIIIZYIIII', 'IIIIIIIYZIII', 'IIIIIIYYIIII', 'IIIIIZXXZIII', 'IIIIIZXYIIII', 'IIIIIIYXZIII', 'IIIIIYXYIIII', 'IIIIZXXXZIII', 'IIIIZXXYIIII', 'IIIIIYXXZIII', 'IIIIYXXYIIII', 'IIIZXXXXZIII', 'IIIZXXXYIIII', 'IIIIYXXXZIII', 'IIIYXXXYIIII', 'IIZXXXXXZIII', 'IIZXXXXYIIII', 'IIIYXXXXZIII', 'IIYXXXXYIIII', 'IZXXXXXXZIII', 'IZXXXXXYIIII', 'IIYXXXXXZIII', 'IYXXXXXYIIII', 'ZXXXXXXXZIII', 'ZXXXXXXYIIII', 'IYXXXXXXZIII', 'IIIIIIZZIIII', 'IIIIIIXIIIII', 'IIIIIZXZIIII', 'IIIIIZYIIIII', 'IIIIIIYZIIII', 'IIIIIYYIIIII', 'IIIIZXXZIIII', 'IIIIZXYIIIII', 'IIIIIYXZIIII', 'IIIIYXYIIIII', 'IIIZXXXZIIII', 'IIIZXXYIIIII', 'IIIIYXXZIIII', 'IIIYXXYIIIII', 'IIZXXXXZIIII', 'IIZXXXYIIIII', 'IIIYXXXZIIII', 'IIYXXXYIIIII', 'IZXXXXXZIIII', 'IZXXXXYIIIII', 'IIYXXXXZIIII', 'IYXXXXYIIIII', 'ZXXXXXXZIIII', 'ZXXXXXYIIIII', 'IYXXXXXZIIII', 'IIIIIZZIIIII', 'IIIIIXIIIIII', 'IIIIZXZIIIII', 'IIIIZYIIIIII', 'IIIIIYZIIIII', 'IIIIYYIIIIII', 'IIIZXXZIIIII', 'IIIZXYIIIIII', 'IIIIYXZIIIII', 'IIIYXYIIIIII', 'IIZXXXZIIIII', 'IIZXXYIIIIII', 'IIIYXXZIIIII', 'IIYXXYIIIIII', 'IZXXXXZIIIII', 'IZXXXYIIIIII', 'IIYXXXZIIIII', 'IYXXXYIIIIII', 'ZXXXXXZIIIII', 'ZXXXXYIIIIII', 'IYXXXXZIIIII', 'IIIIZZIIIIII', 'IIIIXIIIIIII', 'IIIZXZIIIIII', 'IIIZYIIIIIII', 'IIIIYZIIIIII', 'IIIYYIIIIIII', 'IIZXXZIIIIII', 'IIZXYIIIIIII', 'IIIYXZIIIIII', 'IIYXYIIIIIII', 'IZXXXZIIIIII', 'IZXXYIIIIIII', 'IIYXXZIIIIII', 'IYXXYIIIIIII', 'ZXXXXZIIIIII', 'ZXXXYIIIIIII', 'IYXXXZIIIIII', 'IIIZZIIIIIII', 'IIIXIIIIIIII', 'IIZXZIIIIIII', 'IIZYIIIIIIII', 'IIIYZIIIIIII', 'IIYYIIIIIIII', 'IZXXZIIIIIII', 'IZXYIIIIIIII', 'IIYXZIIIIIII', 'IYXYIIIIIIII', 'ZXXXZIIIIIII', 'ZXXYIIIIIIII', 'IYXXZIIIIIII', 'IIZZIIIIIIII', 'IIXIIIIIIIII', 'IZXZIIIIIIII', 'IZYIIIIIIIII', 'IIYZIIIIIIII', 'IYYIIIIIIIII', 'ZXXZIIIIIIII', 'ZXYIIIIIIIII', 'IYXZIIIIIIII', 'IZZIIIIIIIII', 'IXIIIIIIIIII', 'ZXZIIIIIIIII', 'ZYIIIIIIIIII', 'IYZIIIIIIIII', 'ZZIIIIIIIIII']
+unique pauliops= 276
+commutation mode= qubitwise
+graphclique-cliquecover: 276 with commutationmode qubitwise
+strategy largest_first 143
+strategy random_sequential 145
+strategy smallest_last 143
+strategy independent_set 151
+strategy connected_sequential_bfs 144
+strategy connected_sequential_dfs 144
+strategy saturation_largest_first 143
+clique 0 ['IIIIIIIIIIIX', 'IZXXXXXXXXXX', 'IIIIIIIIIIXI', 'IIIIIIIIIXII', 'IIIIIIIIXIII', 'IIIIIIIXIIII', 'IIIIIIXIIIII', 'IIIIIXIIIIII', 'IIIIXIIIIIII', 'IIIXIIIIIIII', 'IIXIIIIIIIII', 'ZZIIIIIIIIII']
+clique 1 ['IIIIIIIIIIIY', 'IZXXXXXXXXXY']
+clique 2 ['ZXXXXXXXXXXX', 'IXIIIIIIIIII']
+clique 3 ['IYXXXXXXXXXY', 'ZYIIIIIIIIII']
+clique 4 ['IYXXXXXXXXXX']
+clique 5 ['ZXXXXXXXXXXY']
+clique 6 ['IIIIIIIIIIIZ', 'IZXXXXXXXXXZ']
+clique 7 ['ZXXXXXXXXXXZ']
+clique 8 ['IYXXXXXXXXXZ']
+clique 9 ['IIZXXXXXXXXX', 'IZZIIIIIIIII']
+clique 10 ['IIZXXXXXXXXY', 'ZXZIIIIIIIII']
+clique 11 ['IIYXXXXXXXXY', 'IZYIIIIIIIII']
+clique 12 ['IIYXXXXXXXXX', 'IYYIIIIIIIII']
+clique 13 ['IIZXXXXXXXXZ', 'IYZIIIIIIIII']
+clique 14 ['IIIIIIIIIIYY', 'IZXXXXXXXXYI']
+clique 15 ['IIYXXXXXXXXZ', 'ZXYIIIIIIIII']
+clique 16 ['IIIIIIIIIIYX', 'IYXXXXXXXXYI']
+clique 17 ['IIIIIIIIIIYZ', 'ZXXXXXXXXXYI']
+clique 18 ['IIIIIIIIIIZX', 'IZXXXXXXXXZI']
+clique 19 ['IIIIIIIIIIZY', 'ZXXXXXXXXXZI']
+clique 20 ['IIIIIIIIIIZZ', 'IYXXXXXXXXZI']
+clique 21 ['IIZXXXXXXXYI']
+clique 22 ['IIYXXXXXXXYI']
+clique 23 ['IIZXXXXXXXZI']
+clique 24 ['IIYXXXXXXXZI']
+clique 25 ['IIIZXXXXXXXX', 'IZXZIIIIIIII']
+clique 26 ['IIIZXXXXXXXY', 'ZXXZIIIIIIII']
+clique 27 ['IIIYXXXXXXXY', 'IZXYIIIIIIII']
+clique 28 ['IIIYXXXXXXXX', 'IYXYIIIIIIII']
+clique 29 ['IIIZXXXXXXXZ', 'IYXZIIIIIIII']
+clique 30 ['IIIYXXXXXXXZ', 'ZXXYIIIIIIII']
+clique 31 ['IIIIIIIIIYXY', 'IZXXXXXXXYII']
+clique 32 ['IIIIIIIIIYXX', 'IYXXXXXXXYII']
+clique 33 ['IIIIIIIIIYXZ', 'ZXXXXXXXXYII']
+clique 34 ['IIIIIIIIIZXX', 'IZXXXXXXXZII']
+clique 35 ['IIIIIIIIIZXY', 'ZXXXXXXXXZII']
+clique 36 ['IIIIIIIIIZXZ', 'IYXXXXXXXZII']
+clique 37 ['IIIZXXXXXXYI', 'IIZZIIIIIIII']
+clique 38 ['IIIYXXXXXXYI', 'IIZYIIIIIIII']
+clique 39 ['IIIZXXXXXXZI', 'IIYZIIIIIIII']
+clique 40 ['IIIIIIIIIYYI', 'IIZXXXXXXYII']
+clique 41 ['IIIYXXXXXXZI', 'IIYYIIIIIIII']
+clique 42 ['IIIIIIIIIYZI', 'IIYXXXXXXYII']
+clique 43 ['IIIIIIIIIZYI', 'IIZXXXXXXZII']
+clique 44 ['IIIIIIIIIZZI', 'IIYXXXXXXZII']
+clique 45 ['IIIIZXXXXXXX', 'IZXXZIIIIIII']
+clique 46 ['IIIIZXXXXXXY', 'ZXXXZIIIIIII']
+clique 47 ['IIIIYXXXXXXY', 'IZXXYIIIIIII']
+clique 48 ['IIIIYXXXXXXX', 'IYXXYIIIIIII']
+clique 49 ['IIIIZXXXXXXZ', 'IYXXZIIIIIII']
+clique 50 ['IIIIYXXXXXXZ', 'ZXXXYIIIIIII']
+clique 51 ['IIIZXXXXXYII']
+clique 52 ['IIIYXXXXXYII']
+clique 53 ['IIIZXXXXXZII']
+clique 54 ['IIIYXXXXXZII']
+clique 55 ['IIIIIIIIYXXY', 'IZXXXXXXYIII']
+clique 56 ['IIIIIIIIYXXX', 'IYXXXXXXYIII']
+clique 57 ['IIIIIIIIYXXZ', 'ZXXXXXXXYIII']
+clique 58 ['IIIIIIIIZXXX', 'IZXXXXXXZIII']
+clique 59 ['IIIIIIIIZXXY', 'ZXXXXXXXZIII']
+clique 60 ['IIIIIIIIZXXZ', 'IYXXXXXXZIII']
+clique 61 ['IIIIZXXXXXYI', 'IIZXZIIIIIII']
+clique 62 ['IIIIYXXXXXYI', 'IIZXYIIIIIII']
+clique 63 ['IIIIZXXXXXZI', 'IIYXZIIIIIII']
+clique 64 ['IIIIYXXXXXZI', 'IIYXYIIIIIII']
+clique 65 ['IIIIIIIIYXYI', 'IIZXXXXXYIII']
+clique 66 ['IIIIIIIIYXZI', 'IIYXXXXXYIII']
+clique 67 ['IIIIIIIIZXYI', 'IIZXXXXXZIII']
+clique 68 ['IIIIIIIIZXZI', 'IIYXXXXXZIII']
+clique 69 ['IIIIZXXXXYII', 'IIIZZIIIIIII']
+clique 70 ['IIIIYXXXXYII', 'IIIZYIIIIIII']
+clique 71 ['IIIIZXXXXZII', 'IIIYZIIIIIII']
+clique 72 ['IIIIIIIIYYII', 'IIIZXXXXYIII']
+clique 73 ['IIIIYXXXXZII', 'IIIYYIIIIIII']
+clique 74 ['IIIIIIIIYZII', 'IIIYXXXXYIII']
+clique 75 ['IIIIIIIIZYII', 'IIIZXXXXZIII']
+clique 76 ['IIIIIIIIZZII', 'IIIYXXXXZIII']
+clique 77 ['IIIIIZXXXXXX', 'IZXXXZIIIIII']
+clique 78 ['IIIIIZXXXXXY', 'ZXXXXZIIIIII']
+clique 79 ['IIIIIYXXXXXY', 'IZXXXYIIIIII']
+clique 80 ['IIIIIYXXXXXX', 'IYXXXYIIIIII']
+clique 81 ['IIIIIZXXXXXZ', 'IYXXXZIIIIII']
+clique 82 ['IIIIIYXXXXXZ', 'ZXXXXYIIIIII']
+clique 83 ['IIIIIIIYXXXY', 'IZXXXXXYIIII']
+clique 84 ['IIIIIIIYXXXX', 'IYXXXXXYIIII']
+clique 85 ['IIIIIIIYXXXZ', 'ZXXXXXXYIIII']
+clique 86 ['IIIIIIIZXXXX', 'IZXXXXXZIIII']
+clique 87 ['IIIIIIIZXXXY', 'ZXXXXXXZIIII']
+clique 88 ['IIIIIIIZXXXZ', 'IYXXXXXZIIII']
+clique 89 ['IIIIIZXXXXYI', 'IIZXXZIIIIII']
+clique 90 ['IIIIIYXXXXYI', 'IIZXXYIIIIII']
+clique 91 ['IIIIIZXXXXZI', 'IIYXXZIIIIII']
+clique 92 ['IIIIIYXXXXZI', 'IIYXXYIIIIII']
+clique 93 ['IIIIIIIYXXYI', 'IIZXXXXYIIII']
+clique 94 ['IIIIIIIYXXZI', 'IIYXXXXYIIII']
+clique 95 ['IIIIIIIZXXYI', 'IIZXXXXZIIII']
+clique 96 ['IIIIIIIZXXZI', 'IIYXXXXZIIII']
+clique 97 ['IIIIZXXXYIII']
+clique 98 ['IIIIYXXXYIII']
+clique 99 ['IIIIZXXXZIII']
+clique 100 ['IIIIYXXXZIII']
+clique 101 ['IIIIIZXXXYII', 'IIIZXZIIIIII']
+clique 102 ['IIIIIYXXXYII', 'IIIZXYIIIIII']
+clique 103 ['IIIIIZXXXZII', 'IIIYXZIIIIII']
+clique 104 ['IIIIIYXXXZII', 'IIIYXYIIIIII']
+clique 105 ['IIIIIIIYXYII', 'IIIZXXXYIIII']
+clique 106 ['IIIIIIIYXZII', 'IIIYXXXYIIII']
+clique 107 ['IIIIIIIZXYII', 'IIIZXXXZIIII']
+clique 108 ['IIIIIIIZXZII', 'IIIYXXXZIIII']
+clique 109 ['IIIIIIZXXXXX', 'IZXXXXZIIIII']
+clique 110 ['IIIIIIZXXXXY', 'ZXXXXXZIIIII']
+clique 111 ['IIIIIIYXXXXY', 'IZXXXXYIIIII']
+clique 112 ['IIIIIIYXXXXX', 'IYXXXXYIIIII']
+clique 113 ['IIIIIIZXXXXZ', 'IYXXXXZIIIII']
+clique 114 ['IIIIIIYXXXXZ', 'ZXXXXXYIIIII']
+clique 115 ['IIIIIIZXXXYI', 'IIZXXXZIIIII']
+clique 116 ['IIIIIIYXXXYI', 'IIZXXXYIIIII']
+clique 117 ['IIIIIIZXXXZI', 'IIYXXXZIIIII']
+clique 118 ['IIIIIIYXXXZI', 'IIYXXXYIIIII']
+clique 119 ['IIIIIZXXYIII', 'IIIIZZIIIIII']
+clique 120 ['IIIIIYXXYIII', 'IIIIZYIIIIII']
+clique 121 ['IIIIIZXXZIII', 'IIIIYZIIIIII']
+clique 122 ['IIIIIIIYYIII', 'IIIIZXXYIIII']
+clique 123 ['IIIIIYXXZIII', 'IIIIYYIIIIII']
+clique 124 ['IIIIIIIYZIII', 'IIIIYXXYIIII']
+clique 125 ['IIIIIIIZYIII', 'IIIIZXXZIIII']
+clique 126 ['IIIIIIIZZIII', 'IIIIYXXZIIII']
+clique 127 ['IIIIIIZXXYII', 'IIIZXXZIIIII']
+clique 128 ['IIIIIIYXXYII', 'IIIZXXYIIIII']
+clique 129 ['IIIIIIZXXZII', 'IIIYXXZIIIII']
+clique 130 ['IIIIIIYXXZII', 'IIIYXXYIIIII']
+clique 131 ['IIIIIZXYIIII']
+clique 132 ['IIIIIYXYIIII']
+clique 133 ['IIIIIZXZIIII']
+clique 134 ['IIIIIYXZIIII']
+clique 135 ['IIIIIIZXYIII', 'IIIIZXZIIIII']
+clique 136 ['IIIIIIYXYIII', 'IIIIZXYIIIII']
+clique 137 ['IIIIIIZXZIII', 'IIIIYXZIIIII']
+clique 138 ['IIIIIIYXZIII', 'IIIIYXYIIIII']
+clique 139 ['IIIIIIZYIIII', 'IIIIIZZIIIII']
+clique 140 ['IIIIIIYYIIII', 'IIIIIZYIIIII']
+clique 141 ['IIIIIIZZIIII', 'IIIIIYZIIIII']
+clique 142 ['IIIIIIYZIIII', 'IIIIIYYIIIII']
+groups with own implementation qubitwise 143

@@ -6,6 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def printmat(n,m,name,A):
+    try:
+        os.mkdir("aca")
+    except FileExistsError:
+        print("aca-directory for images already exists")
     f=10
     B=np.zeros((n*f,2*m*f),dtype=np.float)
 
@@ -19,11 +23,15 @@ def printmat(n,m,name,A):
     amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (f*n, 2*f*m))
-    plt.imsave(name+".png", array,cmap="Greys",vmin=0.0,vmax=amax)
+    plt.imsave("aca/"+name+".png", array,cmap="Greys",vmin=0.0,vmax=amax)
     printmat_real(n,m,name,A)
     printmat_real_spin(n,m,name,A)
 
 def printmat_real(n,m,name,A):
+    try:
+        os.mkdir("aca")
+    except FileExistsError:
+        print("aca-directory for images already exists")
     f=10
     B=np.zeros((n*f,m*f),dtype=np.float)
 
@@ -36,9 +44,13 @@ def printmat_real(n,m,name,A):
     amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (f*n, f*m))
-    plt.imsave(name+"_real.png", array,cmap="Greys",vmin=0.0,vmax=amax)
+    plt.imsave("aca/"+name+"_real.png", array,cmap="Greys",vmin=0.0,vmax=amax)
 
 def printmat_real_spin(n,m,name,A):
+    try:
+        os.mkdir("aca")
+    except FileExistsError:
+        print("aca-directory for images already exists")
     f=10
     B=np.zeros((int(n*f/2),int(m*f/2)),dtype=np.float)
 
@@ -51,7 +63,7 @@ def printmat_real_spin(n,m,name,A):
     amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (int(f*n/2), int(f*m/2)))
-    plt.imsave(name+"_real_dn.png", array,cmap="Greys",vmin=0.0,vmax=amax)
+    plt.imsave("aca/"+name+"_real_dn.png", array,cmap="Greys",vmin=0.0,vmax=amax)
     
     f=10
     B=np.zeros((int(n*f/2),int(m*f/2)),dtype=np.float)
@@ -65,7 +77,7 @@ def printmat_real_spin(n,m,name,A):
     amax=np.amax(abs(B))
     B=abs(B)/(amax+1e-6)
     array = np.reshape(B, (int(f*n/2), int(f*m/2)))
-    plt.imsave(name+"_real_up.png", array,cmap="Greys",vmin=0.0,vmax=amax)
+    plt.imsave("aca/"+name+"_real_up.png", array,cmap="Greys",vmin=0.0,vmax=amax)
 
 def aca_reorder(norb,orbinteract,Din,Win):
     Dout=np.zeros((norb,norb),dtype=np.complex_)

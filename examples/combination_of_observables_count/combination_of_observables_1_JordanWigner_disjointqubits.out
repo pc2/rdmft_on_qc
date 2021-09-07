@@ -1,0 +1,54 @@
+GS energy with  DMRG -0.5000000000000001
+N= 1.0000000000000002
+E= -0.5000000000000001
+D= [[0.04447757+0.j 0.20615363+0.j]
+ [0.20615363+0.j 0.95552243+0.j]]
+W= [5.10141002e-34+0.j]
+local approximation with  1 sites
+local interactions on sites [[0]]
+Functional for interaction on sites [0]
+interacting orbitals: [0, 1]
+mapping: [0, 1]
+orbinteractaca= [0, 1]
+aca: level 0  norb= 2
+Daca= [[0.04447757+0.j 0.20615363+0.j]
+ [0.20615363+0.j 0.95552243+0.j]]
+Naca= (0.044477574867819496, 0.9555224251321807)
+nq= 2
+interact= NN * (1+0j)
+variational state:
+      ┌──────────┐┌──────────┐            ┌──────────┐┌──────────┐            »
+q0_0: ┤ Ry(y[0]) ├┤ Rz(y[2]) ├─────■──────┤ Ry(y[5]) ├┤ Rz(y[7]) ├─────■──────»
+      ├──────────┤├──────────┤┌────┴─────┐├──────────┤├──────────┤┌────┴─────┐»
+q0_1: ┤ Ry(y[1]) ├┤ Rz(y[3]) ├┤ Rx(y[4]) ├┤ Ry(y[6]) ├┤ Rz(y[8]) ├┤ Rx(y[9]) ├»
+      └──────────┘└──────────┘└──────────┘└──────────┘└──────────┘└──────────┘»
+c0: 2/════════════════════════════════════════════════════════════════════════»
+                                                                              »
+«      ┌───────────┐┌───────────┐             ┌───────────┐┌───────────┐
+«q0_0: ┤ Ry(y[10]) ├┤ Rz(y[12]) ├──────■──────┤ Ry(y[15]) ├┤ Rz(y[17]) ├
+«      ├───────────┤├───────────┤┌─────┴─────┐├───────────┤├───────────┤
+«q0_1: ┤ Ry(y[11]) ├┤ Rz(y[13]) ├┤ Rx(y[14]) ├┤ Ry(y[16]) ├┤ Rz(y[18]) ├
+«      └───────────┘└───────────┘└───────────┘└───────────┘└───────────┘
+«c0: 2/═════════════════════════════════════════════════════════════════
+«                                                                       
+building constraints...
+number of constraints= 4
+plain pauliops= 6
+['IZ', 'IX', 'ZX', 'IY', 'ZY', 'ZZ']
+unique pauliops= 6
+commutation mode= disjointqubits
+graphclique-cliquecover: 6 with commutationmode disjointqubits
+strategy largest_first 6
+strategy random_sequential 6
+strategy smallest_last 6
+strategy independent_set 6
+strategy connected_sequential_bfs 6
+strategy connected_sequential_dfs 6
+strategy saturation_largest_first 6
+clique 0 ['IZ']
+clique 1 ['IX']
+clique 2 ['ZX']
+clique 3 ['IY']
+clique 4 ['ZY']
+clique 5 ['ZZ']
+groups with own implementation disjointqubits 6

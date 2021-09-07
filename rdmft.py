@@ -5,8 +5,8 @@ import sys
 import groundstate
 import aca
 import ci
-import graphclique
 import time
+import measurement_circuits
 from scipy import sparse
 from scipy.optimize import minimize,BFGS
 from math import pi
@@ -28,64 +28,176 @@ from qiskit.opflow import Z, X, I, StateFn, CircuitStateFn, SummedOp
 import qiskit_nature
 from qiskit import IBMQ, assemble, transpile,Aer
 from qiskit import BasicAer
+from qiskit_nature.circuit.library import HartreeFock
 from qiskit_nature.converters.second_quantization import QubitConverter
 from qiskit_nature.mappers.second_quantization import ParityMapper
 from qiskit_nature.converters.second_quantization import QubitConverter
 from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper    
 from qiskit_nature.operators.second_quantization import FermionicOp
 import pylatexenc
-import sympy
-from dmrgpy import fermionchain
 import configparser
+import itertools
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     print("Opt step:",nfunc,par,f,stepsize,accepted)
 
-
-def qcs_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
+def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
     m_op = qubit_converter.convert(m,num_particles=num_particles)
-    ops=[]
-    qcs=[]
-    mesq=[]
+    pauliops=[]
     coeff=[]
     const=0
 
     #build measuring programs here
     p=m_op.to_pauli_op()
-    #print(p)
     for op in p:
         if op.to_circuit().depth()>0:
             coeff.append(op.coeff)
-            ops.append(op)
-            #map to only sigma_z
-            q=copy.deepcopy(qc)
-
-            sg=[]
-            for i in range(len(op.primitive)):
-                #print(op.primitive[i])
-                if str(op.primitive[i])=='Z':
-                    sg.append("Z")            
-                elif str(op.primitive[i])=='X':
-                    q.h(i)
-                    sg.append("Z")            
-                elif str(op.primitive[i])=='Y':
-                    q.sdg(i)
-                    q.h(i)
-                    sg.append("Z")            
-                else:
-                    sg.append("I")            
-            #map multiple sigma_z to single sigma_z
-            zs=[i for i,x in enumerate(sg) if x=='Z']
-            mesq.append(zs[0])
-            for i in range(1,len(zs)):
-                q.cx(zs[i],zs[0])
-            if tmeasure:
-                q.measure(zs[0],0)
-            qcs.append(q)
+            pauliops.append(op)
         else:
             const+=op.coeff
-    return {"ops":ops,"qcs":qcs,"mesq":mesq,"coeff":coeff,"const":const}
+    return {"pauliops":pauliops,"coeff":coeff,"const":const}
 
+
+def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_level=3):
+    #measure all quantum programs
+    qcs_par=[]
+    for mqc in mqcs:
+        q = QuantumRegister(nq)
+        c = ClassicalRegister(nq)
+        qc=QuantumCircuit(q,c)
+        qc=qc.compose(ansatz)
+        qc=qc.compose(mqc['mqc'])
+        qcs_par.append(qc.bind_parameters(x))
+    jobs=execute(qcs_par,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed,optimization_level=optimization_level)
+    
+    if not tsim: 
+        print("waiting for job to finish: ",jobs.job_id())
+        jobs.wait_for_final_state(wait=1)
+        print("job finished: ",jobs.job_id())
+    else:
+        jobs.wait_for_final_state(wait=0.01)
+
+    if jobs.done():
+        res=jobs.result().results
+
+        Vs=[]
+        #loop over programs
+        for im in range(len(mqcs)):
+            #for r in res[im].data.counts:
+            #    print(r,bin(int(r, base=16))[2:].zfill(nq),res[im].data.counts[r]/shots)
+
+            Va=[]
+            #loop over measurements in program
+            for ic in range(len(mqcs[im]['ops'])):
+                #print("op=",mqcs[im]['ops'][ic],"is measured at",mqcs[im]['mqubits'][ic],mqcs[im]['signs'][ic])
+                V=0
+                for r in res[im].data.counts:
+                    b=bin(int(r, base=16))[2:].zfill(nq)
+                    v=res[im].data.counts[r]/shots
+                    #if b[nq-1-mqcs[im]['mqubits'][ic]]=='1':
+                    if b[nq-1-ic]=='1':
+                        V=V-v
+                    else:
+                        V=V+v
+                V=V*mqcs[im]['signs'][ic]
+                Va.append(V)
+            Vs.append(Va)
+            #print(mqcs[im]['ops'],Va)
+    return Vs
+
+def measurements_to_interact(mqcs,v,pauli_interact):
+    W=pauli_interact['const']
+
+    for ic in range(len(pauli_interact['pauliops'])):
+        op=str(pauli_interact['pauliops'][ic].primitive)
+        #find measurement in mqcs
+        found=False
+        for im in range(len(mqcs)):
+            if found:
+                break
+            for io in range(len(mqcs[im]['ops'])):
+                if op==mqcs[im]['ops'][io]:
+                    W=W+v[im][io]*pauli_interact['coeff'][ic]
+                    found=True
+                    break
+    return W
+
+def measurements_to_constraints(mqcs,v,constraints):
+    c=np.zeros(len(constraints))
+    for ic in range(len(constraints)):
+        cv=constraints[ic]['pauli']['const']-constraints[ic]['cval']
+        for ip in range(len(constraints[ic]['pauli']['pauliops'])):
+            found=False
+            op=str(constraints[ic]['pauli']['pauliops'][ip].primitive)
+            #find measurement in mqcs
+            for im in range(len(mqcs)):
+                if found:
+                    break
+                for io in range(len(mqcs[im]['ops'])):
+                    if op==mqcs[im]['ops'][io]:
+                        cv=cv+v[im][io]*constraints[ic]['pauli']['coeff'][ip]
+                        found=True
+                        break
+        c[ic]=cv
+    return c
+
+def rdmf_obj(x):
+    global rdmf_obj_eval
+    rdmf_obj_eval+=1
+    c_qc=np.zeros(len(constraints))
+    W_qc=0
+    L=0
+    if not tsampling:
+        circ=qc.bind_parameters(x)
+        job=execute(circ,backend_check)
+        result=job.result()
+        psi=result.get_statevector()
+        #build constraint values from results
+        for ic in range(len(constraints)):
+            if not build_sparse:
+                raise RuntimeError("build_sparse not enabled")
+            a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
+            c_qc[ic]=a-constraints[ic]['cval']
+            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
+        #build interaction expectation value from result
+        if not build_sparse:
+            raise RuntimeError("build_sparse not enabled")
+        a=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
+        W_qc=a
+        L=L+W_qc
+    else:
+        v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed+rdmf_obj_eval,tsim,optimization_level)
+        W_qc=measurements_to_interact(mqcs,v,pauli_interact)
+        c_qc=measurements_to_constraints(mqcs,v,constraints)
+        for ic in range(len(constraints)):
+            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
+        L=L+W_qc
+    if tprintevals and rdmf_obj_eval%printevalsevery==0:
+        print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
+    return L
+
+def rdmf_cons(x):
+    global rdmf_cons_eval
+    c_qc=np.zeros(len(constraints))
+    rdmf_cons_eval+=1
+    
+    L=0
+    if not tsampling:
+        circ=qc.bind_parameters(x)
+        job=execute(circ,backend_check)
+        result=job.result()
+        psi=result.get_statevector()
+        #build constraint values from results
+        for ic in range(len(constraints)):
+            if not build_sparse:
+                raise RuntimeError("build_sparse not enabled")
+            a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
+            c_qc[ic]=a-constraints[ic]['cval']
+    else:
+        raise RuntimeError("rdmft_cons must not be used with tsampling=True or tsim=False")
+    return c_qc
+
+#main code
 
 dotenv.load_dotenv()
 apikey=os.getenv("QISKIT_APIKEY")
@@ -96,10 +208,12 @@ config.read(sys.argv[1])
 
 seed=int(config['rnd']['seed'])
 
+build_sparse=config.getboolean('QC','build_sparse')
+commutation_mode=config['QC']['commutation']
 two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
-combine_qc_programs=config.getboolean('QC','combine_qc_programs')
 tdoqc=config.getboolean('QC','tdoqc')
 tsim=config.getboolean('QC','tsim')
+tsimcons=config.getboolean('QC','tsimcons')
 tsampling=config.getboolean('QC','tsampling')
 tnoise=config.getboolean('QC','tnoise')
 if tnoise:
@@ -123,6 +237,11 @@ if systemtype=='hubbard_chain':
     t=float(config['system']['t'])
     mu=float(config['system']['mu'])
     [E,D,W]=groundstate.hubbard_chain(L,t,U,mu,Lint,mode="DMRG")
+elif systemtype=='hubbard_2d':
+    U=float(config['system']['U'])
+    t=float(config['system']['t'])
+    mu=float(config['system']['mu'])
+    [E,D,W]=groundstate.hubbard_2d(L,t,U,mu,Lint,mode="DMRG")
 else:
     print("system type not implemented")
     exit();
@@ -182,6 +301,8 @@ for l in range(0,int(norb/ninteract-1)):
 Daca_levels.append(np.copy(Daca))
 
 l=int(config['ACA']['level'])
+if l==-1:
+    l=len(Daca_levels)-1
 Daca=Daca_levels[l]
 norb_aca=np.shape(Daca)[0]
 aca.printmat(norb_aca,norb_aca,"D_aca_used_",Daca)
@@ -195,10 +316,13 @@ Naca2=0
 for i in range(int(norb_aca/2)):
     Naca1+=abs(Daca[2*i,2*i])
     Naca2+=abs(Daca[2*i+1,2*i+1])
-if abs(Naca1-int(Naca1))<1e-4:
-    Naca1=int(Naca1)
-if abs(Naca2-int(Naca2))<1e-4:
-    Naca2=int(Naca2)
+
+if abs(Naca1-round(Naca1))<1e-4:
+    print("rounding Naca1 to integer")
+    Naca1=round(Naca1)
+if abs(Naca2-round(Naca2))<1e-4:
+    print("rounding Naca2 to integer")
+    Naca2=round(Naca2)
 Naca=(Naca1,Naca2)    
 print("Naca=",Naca)
 
@@ -227,8 +351,6 @@ else:
     print("fermionic mapping unknown")
     exit()
 
-if not tdoqc:
-    exit()
 
 entanglement=config['QC']['entanglement']
 reps=int(config['QC']['reps'])
@@ -241,19 +363,17 @@ if entanglement=="map":
         entanglement.append((int(e.split("_")[0]),int(e.split("_")[1])))
 
 
-
-
-
 # set the backend for the quantum computation
 backend = BasicAer.get_backend('qasm_simulator')
-optimization_level=1
+optimization_level=2
 if tnoise:
     backend = BasicAer.get_backend('qasm_simulator')
-    optimization_level=1
+    optimization_level=2
+    raise RuntimeError("Noise model is not properly set")
 else:
     #backend = BasicAer.get_backend('statevector_simulator')
     backend = Aer.get_backend('aer_simulator_statevector')
-    optimization_level=0
+    optimization_level=2
 
 backend_check = BasicAer.get_backend('statevector_simulator')
 #backend_check = Aer.get_backend('aer_simulator_statevector')
@@ -295,28 +415,21 @@ print("nq=",nq)
 
 # setup the initial state for the ansatz
 ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y',insert_barriers=False)
-    
+#ansatz = HartreeFock(nq,Naca,qubit_converter)
+
 #define registers
 q = QuantumRegister(nq)
-c = ClassicalRegister(1)
+c = ClassicalRegister(nq)
 qc=QuantumCircuit(q,c)
 qc=qc.compose(ansatz)
 qc=qc.decompose()
 
-print("interact=",interact)
-qc_interact=qcs_for_op(interact,qubit_converter,qc,num_particles)
-for i in range(len(qc_interact['qcs'])):
-    print("op=",qc_interact['ops'][i],", measuring qubit",qc_interact['mesq'][i],", coeff=",qc_interact['coeff'][i])
-    print(qc_interact['qcs'][i])
-
-iop=qubit_converter.convert(interact,num_particles=num_particles)
-interact_sparse=sparse.csr_matrix(iop.to_matrix())
-
 print("variational state:")
 print(qc)
 
+print("ansatz-state is written to ansatz.txt")
 qc.draw(output='text',filename="ansatz.txt")
-qc.draw(output='mpl',filename="ansatz.png")
+#qc.draw(output='mpl',filename="ansatz.png")
 
 if False:
     #gradient test
@@ -331,21 +444,18 @@ if False:
 
     op = ~StateFn(H) @ CircuitStateFn(primitive=qc2, coeff=1.)
     print("op=",op)
-
-
     grad = Gradient(grad_method='param_shift').convert(operator = op, params = params)
     for i in range(len(grad)):
         print("grad=",params[i],grad[i])
     exit()
 
-
-
-qubits=[]
-for q in range(nq):
-    qubits.append(q)
-
+pauli_interact=paulis_for_op(interact,qubit_converter,qc,num_particles)
+interact_op=qubit_converter.convert(interact,num_particles=num_particles)
+if build_sparse:
+    interact_sparse=sparse.csr_matrix(interact_op.to_matrix())
 
 #build list of constraints
+print("building constraints...")
 constraints=[]
 for i in range(norb_aca):
     for j in range(norb_aca):
@@ -360,8 +470,9 @@ for i in range(norb_aca):
         m=~c_ops[i]@ c_ops[j]
         c['op']=0.5*(m+~m)
         op=qubit_converter.convert(c['op'],num_particles=num_particles)
-        c['opsparse']=sparse.csr_matrix(op.to_matrix())
-        c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
+        if build_sparse:
+            c['opsparse']=sparse.csr_matrix(op.to_matrix())
+        c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,num_particles)
         c['cval']=0.5*(Daca[i,j]+np.conjugate(Daca[i,j])).real
         constraints.append(c)
         if i!=j:
@@ -373,278 +484,79 @@ for i in range(norb_aca):
             m=~c_ops[i]@ c_ops[j]
             c['op']=0.5/1j*(m-~m)
             op=qubit_converter.convert(c['op'],num_particles=num_particles)
-            c['opsparse']=sparse.csr_matrix(op.to_matrix())
-            c['qcs']=qcs_for_op(c['op'],qubit_converter,qc,num_particles)
+            if build_sparse:
+                c['opsparse']=sparse.csr_matrix(op.to_matrix())
+            c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,num_particles)
             c['cval']=(0.5/1j*(Daca[i,j]-np.conjugate(Daca[i,j]))).real
             constraints.append(c)
 
 print("number of constraints=",len(constraints))
 
+############################################################################
+#build measurement programs for 1rdm
 pauliops=[]
-for cc in qc_interact['ops']:
-    pauliops.append(str(cc.primitive))
-
 for c in constraints:
-    for cc in c['qcs']['ops']:
+    for cc in c['pauli']['pauliops']:
         pauliops.append(str(cc.primitive))
+unique_pauliops=measurement_circuits.get_unique_pauliops(pauliops)['unique pauliops']
+#compute commuting cliques
+cliques=measurement_circuits.build_cliques(commutation_mode,unique_pauliops)
+#build measurement circuits for ciques
+print("constructing measurement programs for 1rdm with commutativity mode",commutation_mode)
+mqcs_1rdm=measurement_circuits.build_measurement_circuits(cliques,commutation_mode,nq,config)
 
-print("plain pauliops=",len(pauliops))
-print(pauliops)       
+############################################################################
+#build measurement programs for interaction
+pauliops=[]
+for cc in pauli_interact['pauliops']:
+    pauliops.append(str(cc.primitive))
+unique_pauliops=measurement_circuits.get_unique_pauliops(pauliops)['unique pauliops']
+#compute commuting cliques
+cliques=measurement_circuits.build_cliques(commutation_mode,unique_pauliops)
+#build measurement circuits for ciques
+print("constructing measurement programs for interaction with commutativity mode",commutation_mode)
+mqcs_interact=measurement_circuits.build_measurement_circuits(cliques,commutation_mode,nq,config)
 
-pauliops2=[]
-#get unique pauliops
-for p in pauliops:
-    found=False
-    for p2 in pauliops2:
-        if p==p2:
-            found=True
-            break
-    if found:
-        print("duplicate pauli op:",p)
-    if not found:
-        pauliops2.append(p)
+#############################################################################
+#combine measurement programs for 1rdm and interaction
+mqcs=copy.deepcopy(mqcs_1rdm)
+mqcs.extend(mqcs_interact)
 
-print("unique pauliops=",len(pauliops2))
-#print(pauliops2)       
+print("Number of quantum programs:",len(mqcs_1rdm),"for 1rdm and ",len(mqcs_interact),"for interaction")
+print(mqcs)
 
-if combine_qc_programs:
-    #combine as many pauliops to quantum programs as possible
-    nodes=[]
-    for p in pauliops2:
-        nodes.append(p)
 
-    cliques=graphclique.cliquecover(nodes)
-    exit()    
-
-c_qc=np.zeros(len(constraints))
-c_exact=np.zeros(len(constraints))
-W_qc=0
-W_exact=0
-
+#set intial parameters
+np.random.seed(seed)
 initial_point = np.random.random(ansatz.num_parameters)
 print("number of parameters:",ansatz.num_parameters)
 
-qcs=[]
-#programs for constraints
+if not tdoqc:
+    exit()
 
-circ=qc.bind_parameters(initial_point)
-job=execute(circ,backend_check)
-result=job.result()
-psi=result.get_statevector()
-for i in range(len(constraints)):
-    print(constraints[i])
-    #evaluate constraint
-    if tcheck:
-        exp=np.dot(np.conj(psi),constraints[i]['opsparse'].dot(psi)).real
-        c_exact[i]=exp
-    for q in constraints[i]['qcs']['qcs']:
-        qcs.append(q)
-
-#programs for interaction        
-if tcheck:
-    #check with exact value from expectation value of hermitian operator
-    exp=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
-    #qc2=QuantumCircuit(QuantumRegister(nq)).compose(ansatz)
-    #state=CircuitStateFn(qc2.bind_parameters(initial_point))
-    #op=qubit_converter.convert(interact,num_particles=num_particles)
-    #exp=state.adjoint().compose(op).compose(state).eval().real
-    W_exact=exp
-for q in qc_interact['qcs']:
-    qcs.append(q)
-        
-
-print("quantum programs=",len(qcs))        
-
+v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed,tsim,optimization_level)
+W_qc=measurements_to_interact(mqcs,v,pauli_interact)
+c_qc=measurements_to_constraints(mqcs,v,constraints)
 
 if tcheck:
-#measure all constraints
-    qcsp=[]
-    for q in qcs:
-        qcsp.append(q.bind_parameters(initial_point).decompose())
-    jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
-    if not tsim: 
-        print("waiting for job to finish: ",jobs.job_id())
-        jobs.wait_for_final_state(wait=1)
-        print("job finished: ",jobs.job_id())
-    else:
-        jobs.wait_for_final_state(wait=0.05)
+    circ=ansatz.bind_parameters(initial_point)
+    job=execute(circ,backend_check)
+    result=job.result()
+    psi=result.get_statevector()
 
-    if jobs.done():
-        res=jobs.result().results
+    W_exact=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
+    print("W_exact=",W_exact,"W_qc=",W_qc)
 
-        I=0
-        #build constraint values from results
-        for ic in range(len(constraints)):
-            a=constraints[ic]['qcs']['const']
-            for i in range(len(constraints[ic]['qcs']['qcs'])):
-                v=-2*res[I].data.counts['0x1']/shots+1
-                I=I+1
-                a=a+v*constraints[ic]['qcs']['coeff'][i]
-            c_qc[ic]=a
-        #build interaction expectation value from result
-        a=qc_interact['const']
-        for i in range(len(qc_interact['qcs'])):
-            v=-2*res[I].data.counts['0x1']/shots+1
-            I=I+1
-            a=a+v*qc_interact['coeff'][i]
-        W_qc=a
+    c_exact=np.zeros(len(constraints))
+    for ic in range(len(constraints)):
+        c_exact=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real-constraints[ic]['cval']
+        print("constraints exact=",c_exact,"qc=",c_qc[ic])
 
-    print("W_exact=",W_exact)
-    print("W_qc=",W_qc)
-    for i in range(len(constraints)):
-        print("c",constraints[i]['observable'],constraints[i]['type'],constraints[i]['i'],"exact=",c_exact[i],"qc=",c_qc[i],"c=",constraints[i]['cval'])
-
-c_qc=np.zeros(len(constraints))
 
 rdmf_obj_eval=0
 rdmf_cons_eval=0
 tprintevals=True
-
-
-def rdmf_obj(x):
-    global rdmf_obj_eval
-    global tprintevals
-    t1=time.perf_counter()
-    t2=0
-    t3=0
-    t4=0
-    t5=0
-    rdmf_obj_eval+=1
-    
-    w_qc=0
-    L=0
-    if not tsampling:
-        circ=qc.bind_parameters(x)
-        job=execute(circ,backend_check)
-        result=job.result()
-        psi=result.get_statevector()
-        t2=time.perf_counter()
-        #build constraint values from results
-        for ic in range(len(constraints)):
-            a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
-            c_qc[ic]=a-constraints[ic]['cval']
-            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
-        t3=time.perf_counter()
-        #build interaction expectation value from result
-        a=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
-        t4=time.perf_counter()
-        W_qc=a
-        L=L+W_qc
-        t5=time.perf_counter()
-        
-    else:
-        qcsp=[]
-        for q in qcs:
-            qcsp.append(q.bind_parameters(x))#.decompose())
-        t2=time.perf_counter()
-        jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed+rdmf_obj_eval,seed_transpiler=seed,optimization_level=optimization_level)
-        t3=time.perf_counter()
-        if not tsim: 
-            print("waiting for job to finish: ",jobs.job_id())
-            jobs.wait_for_final_state(wait=1)
-            print("job finished: ",jobs.job_id())
-        else:
-            jobs.wait_for_final_state(wait=0.05)
-        t4=time.perf_counter()
-
-        if jobs.done():
-            res=jobs.result().results
-
-            I=0
-            #build constraint values from results
-            for ic in range(len(constraints)):
-                a=constraints[ic]['qcs']['const']
-                for i in range(len(constraints[ic]['qcs']['qcs'])):
-                    v=-2*res[I].data.counts['0x1']/shots+1
-                    I=I+1
-                    a=a+v*constraints[ic]['qcs']['coeff'][i]
-                c_qc[ic]=a-constraints[ic]['cval']
-                L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
-            #build interaction expectation value from result
-            a=qc_interact['const']
-            for i in range(len(qc_interact['qcs'])):
-                v=-2*res[I].data.counts['0x1']/shots+1
-                I=I+1
-                a=a+v*qc_interact['coeff'][i]
-            W_qc=a
-            L=L+W_qc
-        t5=time.perf_counter()
-    if tprintevals:
-        print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t2-t1,t3-t2,t4-t3,t5-t4)
-    return L
-
-def rdmf_cons(x):
-    global rdmf_cons_eval
-    global tprintevals
-    c_qc=np.zeros(len(constraints))
-    t1=time.perf_counter()
-    t2=0
-    t3=0
-    t4=0
-    t5=0
-    rdmf_cons_eval+=1
-    
-    w_qc=0
-    L=0
-    if not tsampling:
-        circ=qc.bind_parameters(x)
-        job=execute(circ,backend_check)
-        result=job.result()
-        psi=result.get_statevector()
-        t2=time.perf_counter()
-        #build constraint values from results
-        for ic in range(len(constraints)):
-            a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
-            c_qc[ic]=a-constraints[ic]['cval']
-            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
-        t3=time.perf_counter()
-        #build interaction expectation value from result
-        a=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
-        t4=time.perf_counter()
-        W_qc=a
-        L=L+W_qc
-        t5=time.perf_counter()
-        
-    else:
-        qcsp=[]
-        for q in qcs:
-            qcsp.append(q.bind_parameters(x))#.decompose())
-        t2=time.perf_counter()
-        jobs=execute(qcsp,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed+rdmf_obj_eval,seed_transpiler=seed,optimization_level=optimization_level)
-        t3=time.perf_counter()
-        if not tsim: 
-            print("waiting for job to finish: ",jobs.job_id())
-            jobs.wait_for_final_state(wait=1)
-            print("job finished: ",jobs.job_id())
-        else:
-            jobs.wait_for_final_state(wait=0.05)
-        t4=time.perf_counter()
-
-        if jobs.done():
-            res=jobs.result().results
-
-            I=0
-            #build constraint values from results
-            for ic in range(len(constraints)):
-                a=constraints[ic]['qcs']['const']
-                for i in range(len(constraints[ic]['qcs']['qcs'])):
-                    v=-2*res[I].data.counts['0x1']/shots+1
-                    I=I+1
-                    a=a+v*constraints[ic]['qcs']['coeff'][i]
-                c_qc[ic]=a-constraints[ic]['cval']
-                L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
-            #build interaction expectation value from result
-            a=qc_interact['const']
-            for i in range(len(qc_interact['qcs'])):
-                v=-2*res[I].data.counts['0x1']/shots+1
-                I=I+1
-                a=a+v*qc_interact['coeff'][i]
-            W_qc=a
-            L=L+W_qc
-        t5=time.perf_counter()
-    if tprintevals:
-        print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t2-t1,t3-t2,t4-t3,t5-t4)
-    return c_qc
+printevalsevery=1
 
 qiskit.utils.algorithm_globals.random_seed=seed
 maxiter=int(config['QC']['maxiter'])    
@@ -652,67 +564,74 @@ maxiter=int(config['QC']['maxiter'])
 x0=initial_point
 tprintevals=False
 
-if tsim and False:
+if tsim and tsimcons:
     penalty=0
     lagrange=np.zeros(len(constraints))
     method="trust-constr"
 #    method="SLSQP"
-    print("minimizing with constrained minimization with "+method+" (no sampling, no noise)")
+    print("minimizing over parametrized qc-programs with constrained minimization with "+method+" (no derivatives, no sampling, no noise, i.e. exact expectation values)")
     eq_cons={'type': 'eq','fun' : lambda x: rdmf_cons(x)}
     if method=="trust-constr":
         res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 3,'disp': True,'initial_tr_radius':4*pi,'gtol':1e-4,'xtol':1e-4})
     else:
         res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 3,'iprint':2,'disp': True})
     print(res)
+    quit()
+else:
+    print("Augmented Lagrangian")
+    penalty=10
+    print("initial penalty=",penalty)
 
-penalty=10
-lagrange=np.zeros(len(constraints))
-#augmented Lagrangian
-for oiter in range(100):
-    value=0
-    point=[]
-    nfev=0
-    #unconstrainted steps
-    if tsim and not tsampling and not tnoise:
-        print("minimizing with augmented Lagrangian and LBFGS_B (no sampling, no noise)")
-        method="BFGS"
-        tprintevals=True
-        res=minimize(rdmf_obj, x0, method=method,tol=1e-2,options={'maxiter':10000,'verbose': 2,'disp': True})
-        point=res.x
-        value=rdmf_obj(point)
-        nfev=res.nfev
-        #optimizer = L_BFGS_B(maxiter=maxiter,tol=1e-3)
-        #[point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0,approx_grad=True)
-    elif tsim and tsampling and not tnoise:
-        print("minimizing with augmented Lagrangian and COBYLA (with sampling, no noise)")
-        tprintevals=True
-        optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2)
-        [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
-    elif not tsim:
-        print("minimizing with augmented Lagrangian and SPSA (with sampling, with noise)")
-        tprintevals=True
-        optimizer = SPSA(maxiter=maxiter,second_order=False)#,callback=opt_callback)
-        print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
-        print("calibrating")
-        [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
-        print("learning_rate=",learning_rate)
-        print("perturbation=",perturbation)
-        optimizer = SPSA(maxiter=maxiter,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
-        print("minimizing")
-        [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
+    lagrange=np.zeros(len(constraints))
+    tprintevals=True
 
-    print("point=",point)
-    print("value=",value)
-    print("nfev=",nfev)
-    print("constraint violation sum(c^2)=",np.sum(c_qc**2))
+    #augmented Lagrangian
+    for oiter in range(100):
+        value=0
+        point=[]
+        nfev=0
+        #unconstrainted steps
+        print("Augmented Lagrangian: unconstrained subproblem")
+        if tsim and not tsampling and not tnoise:
+            print("minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS_B (numerical derivatives, no sampling, no noise, i.e., exact expectation values)")
+            method="BFGS"
+            res=minimize(rdmf_obj, x0, method=method,tol=1e-2,options={'maxiter':10000,'verbose': 2,'disp': True})
+            point=res.x
+            value=rdmf_obj(point)
+            nfev=res.nfev
+        elif tsim and tsampling and not tnoise:
+            print("minimizing over parametrized qc-programs with augmented Lagrangian and COBYLA (no derivatives, with sampling, no noise)")
+            optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2)
+            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+        elif not tsim or tnoise:
+            print("minimizing over parametrized qc-programs with augmented Lagrangian and SPSA (no derivatives, with sampling, with noise)")
+            optimizer = SPSA(maxiter=maxiter,second_order=False)#,callback=opt_callback)
+            print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
+            print("calibrating")
+            [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
+            print("learning_rate=",learning_rate)
+            print("perturbation=",perturbation)
+            optimizer = SPSA(maxiter=maxiter,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
+            print("minimizing")
+            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
 
-    x0=point
-    #multiplier and penalty update
-    for i in range(len(constraints)):
-        lagrange[i]=lagrange[i]+penalty*c_qc[i]
-    penalty=penalty*2
-    print("lagrange=",lagrange)
-    print("penalty=",penalty)
+        print("point=",point)
+        print("value=",value)
+        print("nfev=",nfev)
+        v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed,tsim,optimization_level)
+        W_qc=measurements_to_interact(mqcs,v,pauli_interact)
+        c_qc=measurements_to_constraints(mqcs,v,constraints)
+
+        print("constraint violation sum(c^2)=",np.sum(c_qc**2))
+
+        print("Augmented Lagrangian: penalty and multiplier update")
+        x0=point
+        #multiplier and penalty update
+        for i in range(len(constraints)):
+            lagrange[i]=lagrange[i]+penalty*c_qc[i]
+        penalty=penalty*2
+        print("new lagrange multiplier=",lagrange)
+        print("new penalty=",penalty)
 
 
 
