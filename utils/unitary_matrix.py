@@ -17,14 +17,10 @@ alpha = 1
 c=0
 t=1
 
-theta = 0.1 # theta can be anything (pi chosen arbitrarily)
+theta = 0.3 # theta can be anything (pi chosen arbitrarily)
 circ = QuantumCircuit(2)
 
-circ.sdg(0)
-circ.h(0)
-circ.sdg(1)
-circ.h(1)
-circ.cnot(1,0)
+circ.p(theta,0)
 circ.draw()
 print(circ)
 print(circ.decompose())
@@ -33,14 +29,16 @@ print(circ.decompose())
 job = execute(circ, backend)
 result = job.result()
 
-pass_ = Unroller(['u1', 'u2', 'u3', 'cx'])
-pm = PassManager(pass_)
-new_circ = pm.run(circ)
-print(new_circ)
+#pass_ = Unroller(['u1', 'u2', 'u3', 'cx'])
+#pm = PassManager(pass_)
+#new_circ = pm.run(circ)
+#print(new_circ)
 
 #get the unitary matrix from the result object
 u1=result.get_unitary(circ, decimals=3)
+print(u1)
 
+quit()
 circ = QuantumCircuit(2)
 
 circ.cnot(1,0)

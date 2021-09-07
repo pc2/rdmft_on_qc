@@ -525,7 +525,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       for i in range(nq):
         if stabgf2[2*nq,i]==1:
           if config.getboolean("QC","add_Ys_instead_of_separate_signs"):
-            mqc.y(i)
+            mqc.y(io[i])
           else:
             signs[i]=-1
 
