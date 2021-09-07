@@ -39,7 +39,8 @@ import configparser
 import itertools
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
-    print("Opt step:",nfunc,par,f,stepsize,accepted)
+    #print("Opt step:",nfunc,par,f,stepsize,accepted)
+    print("Opt step:",nfunc,f,stepsize,accepted)
 
 def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
     m_op = qubit_converter.convert(m,num_particles=num_particles)
@@ -147,7 +148,9 @@ def rdmf_obj(x):
     c_qc=np.zeros(len(constraints))
     W_qc=0
     L=0
+
     if not tsampling:
+#    if True:
         circ=qc.bind_parameters(x)
         job=execute(circ,backend_check)
         result=job.result()
@@ -158,19 +161,21 @@ def rdmf_obj(x):
                 raise RuntimeError("build_sparse not enabled")
             a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
             c_qc[ic]=a-constraints[ic]['cval']
-            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
+            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
         #build interaction expectation value from result
         if not build_sparse:
             raise RuntimeError("build_sparse not enabled")
         a=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
         W_qc=a
         L=L+W_qc
+        L2=L
     else:
-        v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed+rdmf_obj_eval,tsim,optimization_level)
+        L=0
+        v=measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed+rdmf_obj_eval,tsim,optimization_level)
         W_qc=measurements_to_interact(mqcs,v,pauli_interact)
         c_qc=measurements_to_constraints(mqcs,v,constraints)
         for ic in range(len(constraints)):
-            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*(c_qc[ic])**2
+            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
         L=L+W_qc
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
         print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
@@ -579,7 +584,8 @@ if tsim and tsimcons:
     quit()
 else:
     print("Augmented Lagrangian")
-    penalty=10
+    penalty=5
+    penalty_exponent=1
     print("initial penalty=",penalty)
 
     lagrange=np.zeros(len(constraints))
@@ -599,21 +605,27 @@ else:
             point=res.x
             value=rdmf_obj(point)
             nfev=res.nfev
-        elif tsim and tsampling and not tnoise:
-            print("minimizing over parametrized qc-programs with augmented Lagrangian and COBYLA (no derivatives, with sampling, no noise)")
-            optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2)
-            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
-        elif not tsim or tnoise:
-            print("minimizing over parametrized qc-programs with augmented Lagrangian and SPSA (no derivatives, with sampling, with noise)")
-            optimizer = SPSA(maxiter=maxiter,second_order=False)#,callback=opt_callback)
-            print("stddev(L)=",optimizer.estimate_stddev(rdmf_obj,initial_point,avg=25))
-            print("calibrating")
-            [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
-            print("learning_rate=",learning_rate)
-            print("perturbation=",perturbation)
-            optimizer = SPSA(maxiter=maxiter,second_order=False,perturbation=perturbation,learning_rate=learning_rate)#,callback=opt_callback)
-            print("minimizing")
-            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=initial_point)
+        else:
+            algo=config['QC']['algo']
+            if algo=="COBYLA":
+                print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
+                optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2,callback=opt_callback)
+                [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+            elif algo=="SPSA":
+                print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
+                optimizer = SPSA(maxiter=maxiter,callback=opt_callback)
+                [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+            elif algo=="cal-SPSA":
+                print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
+                optimizer = SPSA(maxiter=maxiter,second_order=False,callback=opt_callback)
+                [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point=x0,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
+                optimizer = SPSA(maxiter=maxiter,second_order=False,perturbation=perturbation,learning_rate=learning_rate)
+                [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+            elif algo=="QNSPSA":
+                print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
+                fidelity = QNSPSA.get_fidelity(ansatz)
+                qnspsa = QNSPSA(fidelity, maxiter=3000,callback=opt_callback)
+                [point,value,nfev] = qnspsa.optimize(ansatz.num_parameters, rdmf_obj, initial_point=x0)
 
         print("point=",point)
         print("value=",value)
