@@ -3,6 +3,24 @@ from dmrgpy import fermionchain
 import numpy as np
 
 def hubbard_chain(n,t,U,mu,Lint,mode="ED"):
+    """
+    Constructs and solves a Hubbard chain with open
+    boundary conditions using ED or DMRG.
+
+    Inputs:
+    `n`: # of sites, i.e. length of the chain
+    `t`: nn-hopping amplitude
+    `U`: interaction amplitude
+    `mu`: chemical potential
+    `Lint`: first `Lint` sites will host a Hubbard interaction
+    `mode` (optional): either "ED" or "DMRG"
+
+    Output:
+    `[E,D,W]` where
+    `E`: groundstate energy
+    `D`: one-particle reduced density matrix
+    `W`: double occupancy
+    """
     fc = fermionchain.Spinful_Fermionic_Chain(n)
 
     if n==2 and Lint==2:
@@ -76,6 +94,24 @@ def hubbard_chain(n,t,U,mu,Lint,mode="ED"):
 
 
 def hubbard_2d(n,t,U,mu,Lint,mode="ED"):
+    """
+    Constructs and solves a 2D Hubbard system with
+    periodic boundary conditions using ED or DMRG.
+
+    Inputs:
+    `n`: total # of sites
+    `t`: nn-hopping amplitude
+    `U`: interaction amplitude
+    `mu`: chemical potential
+    `Lint`: first `Lint` sites will host a Hubbard interaction
+    `mode` (optional): either "ED" or "DMRG"
+
+    Output:
+    `[E,D,W]` where
+    `E`: groundstate energy
+    `D`: one-particle reduced density matrix
+    `W`: double occupancy
+    """
     L=int(math.sqrt(n))
     fc = fermionchain.Spinful_Fermionic_Chain(n)
 
