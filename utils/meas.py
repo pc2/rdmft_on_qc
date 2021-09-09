@@ -9,33 +9,50 @@ from qiskit.quantum_info import Pauli
 from qiskit.opflow.primitive_ops import PauliOp
 
 def cnot(nq,c,t):
-#Changing the simulator 
+    """
+    Unitary `2 ^ (nq) x 2 ^ (nq)` matrix representing
+    the `nq`-qubit circuit with a controlled-X gate.
+
+    Input:
+    `nq`: # of qubits
+    `c`: control qubit
+    `t`: target qubit
+    """
+    #Changing the simulator 
     backend = Aer.get_backend('unitary_simulator')
 
-#The circuit without measurement
+    #The circuit without measurement
     circ = QuantumCircuit(nq)
     circ.cx(c,t)
     job = execute(circ, backend)
     result = job.result()
 
-    pass_ = Unroller(['u1', 'u2', 'u3', 'cx'])
-    pm = PassManager(pass_)
-    new_circ = pm.run(circ)
+    # pass_ = Unroller(['u1', 'u2', 'u3', 'cx'])
+    # pm = PassManager(pass_)
+    # new_circ = pm.run(circ)
     return result.get_unitary(circ, decimals=3)
 
 def h(nq,c):
-#Changing the simulator 
+    """
+    Unitary `2 ^ (nq) x 2 ^ (nq)` matrix representing
+    the `nq`-qubit circuit with a Hadamard gate.
+
+    Input:
+    `nq`: # of qubits
+    `c`: qubit
+    """
+    #Changing the simulator 
     backend = Aer.get_backend('unitary_simulator')
 
-#The circuit without measurement
+    #The circuit without measurement
     circ = QuantumCircuit(nq)
     circ.h(c)
     job = execute(circ, backend)
     result = job.result()
 
-    pass_ = Unroller(['u1', 'u2', 'u3', 'cx'])
-    pm = PassManager(pass_)
-    new_circ = pm.run(circ)
+    # pass_ = Unroller(['u1', 'u2', 'u3', 'cx'])
+    # pm = PassManager(pass_)
+    # new_circ = pm.run(circ)
     return result.get_unitary(circ, decimals=3)
 
 
