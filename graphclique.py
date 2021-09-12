@@ -48,6 +48,7 @@ def cliquecover(elements,commutemode="qubitwise",plotgraph=False,printcliques=Fa
         for j in range(len(elements)):
           if Pauli(elements[i]).commutes(elements[j]):
             g.add_edge(i,j)
+            print("commute",elements[i],elements[j])
     elif commutemode=="anticommute":
       #for i in range(len(elements)):
       #  elements[i]=elements[i].replace("X","Z")

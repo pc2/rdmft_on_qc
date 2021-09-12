@@ -7,20 +7,17 @@ from qiskit.transpiler import PassManager
 from qiskit.transpiler.passes import Unroller
 
 #Changing the simulator 
-backend = Aer.get_backend('unitary_simulator')
+#backend = Aer.get_backend('unitary_simulator')
+backend = Aer.get_backend('statevector_simulator')
 
 #The circuit without measurement
-A = Gate('A', 1, [])
-B = Gate('B', 1, [])
-C = Gate('C', 1, [])
-alpha = 1
-c=0
-t=1
 
 theta = 0.3 # theta can be anything (pi chosen arbitrarily)
-circ = QuantumCircuit(2)
+circ = QuantumCircuit(4)
 
-circ.p(theta,0)
+circ.x(0)
+circ.x(1)
+circ.x(2)
 circ.draw()
 print(circ)
 print(circ.decompose())
@@ -35,17 +32,14 @@ result = job.result()
 #print(new_circ)
 
 #get the unitary matrix from the result object
-u1=result.get_unitary(circ, decimals=3)
-print(u1)
+#u1=result.get_unitary(circ, decimals=3)
+v1=result.get_statevector(circ, decimals=3)
 
-quit()
-circ = QuantumCircuit(2)
+circ = QuantumCircuit(4)
 
-circ.cnot(1,0)
-circ.cz(0,1)
-circ.sdg(1)
-circ.h(0)
-circ.h(1)
+circ.x(0)
+circ.x(1)
+circ.x(3)
 circ.draw()
 print(circ)
 
@@ -54,10 +48,33 @@ job = execute(circ, backend)
 result = job.result()
 
 #get the unitary matrix from the result object
-u2=result.get_unitary(circ, decimals=3)
-print(u1)
-print(u2)
-print(u1-u2)
+#u2=result.get_unitary(circ, decimals=3)
+v2=result.get_statevector(circ, decimals=3)
+#print(u1)
+#print(u2)
+#print(u1-u2)
+
+
+circ = QuantumCircuit(4)
+
+circ.x(0)
+circ.x(1)
+circ.x(3)
+circ.h(2)
+circ.cnot(2,3)
+circ.draw()
+print(circ)
+
+#job execution and getting the result as an object
+job = execute(circ, backend)
+result = job.result()
+
+#get the unitary matrix from the result object
+#u2=result.get_unitary(circ, decimals=3)
+v3=result.get_statevector(circ, decimals=3)
+
+for i in range(len(v1)):
+    print(i,v1[i],v2[i],v3[i])
 
 pass_ = Unroller(['u1', 'u2', 'u3', 'cx'])
 pm = PassManager(pass_)
