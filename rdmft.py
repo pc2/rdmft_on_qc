@@ -349,7 +349,7 @@ mapping=config['QC']['mapping']
 if mapping=="Parity":
     qubit_converter = QubitConverter(mapper=ParityMapper(),two_qubit_reduction=two_qubit_reduction)
 elif mapping=="JordanWigner":
-    quibit_converter = QubitConverter(mapper=JordanWignerMapper(),two_qubit_reduction=two_qubit_reduction)
+    qubit_converter = QubitConverter(mapper=JordanWignerMapper(),two_qubit_reduction=two_qubit_reduction)
 elif mapping=="BravyiKitaev":
     qubit_converter = QubitConverter(mapper=BravyiKitaevMapper(),two_qubit_reduction=two_qubit_reduction)
 else:
