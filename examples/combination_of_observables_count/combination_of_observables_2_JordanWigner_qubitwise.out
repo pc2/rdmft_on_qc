@@ -1,107 +1,111 @@
 E_dimer= 2.5615528128088303
 rho12_dimer= 0.48507125007266594
-GS energy with  DMRG -2.561552812808829
+GS energy with  DMRG -2.5615528128088303
 N= 2.0000000000000004
-E= -2.561552812808829
-D= [[ 5.00000000e-01+0.j -3.46345611e-13+0.j  4.85071250e-01+0.j
-  -3.02229603e-13+0.j]
- [-3.46292583e-13+0.j  5.00000000e-01+0.j  3.02254803e-13+0.j
+E= -2.5615528128088303
+D= [[ 5.00000000e-01+0.j -5.02046993e-14+0.j  4.85071250e-01+0.j
+   3.61478039e-13+0.j]
+ [-5.02101264e-14+0.j  5.00000000e-01+0.j -3.61478438e-13+0.j
    4.85071250e-01+0.j]
- [ 4.85071250e-01+0.j  3.02250924e-13+0.j  5.00000000e-01+0.j
-   3.46323262e-13+0.j]
- [-3.02234264e-13+0.j  4.85071250e-01+0.j  3.46338666e-13+0.j
+ [ 4.85071250e-01+0.j -3.61479757e-13+0.j  5.00000000e-01+0.j
+   5.02125779e-14+0.j]
+ [ 3.61477520e-13+0.j  4.85071250e-01+0.j  5.02103360e-14+0.j
    5.00000000e-01+0.j]]
 W= [0.18936609+0.j 0.18936609+0.j]
 local approximation with  1 sites
 local interactions on sites [[0], [1]]
 Functional for interaction on sites [0]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
 interacting orbitals: [0, 1]
 mapping: [0, 1, 2, 3]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
 orbinteractaca= [0, 1]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
 aca: level 1  norb= 4
-Daca= [[ 5.00000000e-01+0.j -3.46345611e-13+0.j -4.85071250e-01+0.j
-   0.00000000e+00+0.j]
- [-3.46292583e-13+0.j  5.00000000e-01+0.j -2.52000884e-17+0.j
+Daca= [[ 5.00000000e-01+0.j -5.02046993e-14+0.j -4.85071250e-01+0.j
+  -5.04870979e-29+0.j]
+ [-5.02101264e-14+0.j  5.00000000e-01+0.j  3.98700615e-19+0.j
    4.85071250e-01+0.j]
- [-4.85071250e-01+0.j -2.13209968e-17+0.j  5.00000000e-01+0.j
-  -3.46323262e-13+0.j]
- [-4.66167066e-18+0.j  4.85071250e-01+0.j -3.46338666e-13+0.j
+ [-4.85071250e-01+0.j  1.71817240e-18+0.j  5.00000000e-01+0.j
+  -5.02125779e-14+0.j]
+ [-5.19098594e-19+0.j  4.85071250e-01+0.j -5.02103360e-14+0.j
    5.00000000e-01+0.j]]
+rounding Naca1 to integer
+rounding Naca2 to integer
 Naca= (1, 1)
 nq= 4
-interact= NNII * (1+0j)
 variational state:
-      ┌──────────┐┌──────────┐┌──────────┐            ┌───────────┐»
-q0_0: ┤ Ry(y[0]) ├┤ Rz(y[4]) ├┤ Rx(y[8]) ├─────■──────┤ Ry(y[12]) ├»
-      ├──────────┤├──────────┤└────┬─────┘┌────┴─────┐└───────────┘»
-q0_1: ┤ Ry(y[1]) ├┤ Rz(y[5]) ├─────┼──────┤ Rx(y[9]) ├──────■──────»
-      ├──────────┤├──────────┤     │      └──────────┘┌─────┴─────┐»
-q0_2: ┤ Ry(y[2]) ├┤ Rz(y[6]) ├─────┼──────────────────┤ Rx(y[10]) ├»
-      ├──────────┤├──────────┤     │                  └───────────┘»
-q0_3: ┤ Ry(y[3]) ├┤ Rz(y[7]) ├─────■───────────────────────────────»
-      └──────────┘└──────────┘                                     »
-c0: 4/═════════════════════════════════════════════════════════════»
-                                                                   »
-«      ┌───────────┐                          ┌───────────┐             »
-«q0_0: ┤ Rz(y[16]) ├──────────────────────────┤ Rx(y[20]) ├──────■──────»
-«      ├───────────┤┌───────────┐             └─────┬─────┘┌─────┴─────┐»
-«q0_1: ┤ Ry(y[13]) ├┤ Rz(y[17]) ├───────────────────┼──────┤ Rx(y[21]) ├»
-«      └───────────┘├───────────┤┌───────────┐      │      └───────────┘»
-«q0_2: ──────■──────┤ Ry(y[14]) ├┤ Rz(y[18]) ├──────┼───────────────────»
-«      ┌─────┴─────┐├───────────┤├───────────┤      │                   »
-«q0_3: ┤ Rx(y[11]) ├┤ Ry(y[15]) ├┤ Rz(y[19]) ├──────■───────────────────»
-«      └───────────┘└───────────┘└───────────┘                          »
-«c0: 4/═════════════════════════════════════════════════════════════════»
-«                                                                       »
-«      ┌───────────┐┌───────────┐                          ┌───────────┐»
-«q0_0: ┤ Ry(y[24]) ├┤ Rz(y[28]) ├──────────────────────────┤ Rx(y[32]) ├»
-«      └───────────┘├───────────┤┌───────────┐             └─────┬─────┘»
-«q0_1: ──────■──────┤ Ry(y[25]) ├┤ Rz(y[29]) ├───────────────────┼──────»
-«      ┌─────┴─────┐└───────────┘├───────────┤┌───────────┐      │      »
-«q0_2: ┤ Rx(y[22]) ├──────■──────┤ Ry(y[26]) ├┤ Rz(y[30]) ├──────┼──────»
-«      └───────────┘┌─────┴─────┐├───────────┤├───────────┤      │      »
-«q0_3: ─────────────┤ Rx(y[23]) ├┤ Ry(y[27]) ├┤ Rz(y[31]) ├──────■──────»
-«                   └───────────┘└───────────┘└───────────┘             »
-«c0: 4/═════════════════════════════════════════════════════════════════»
-«                                                                       »
-«                   ┌───────────┐┌───────────┐                          
-«q0_0: ──────■──────┤ Ry(y[36]) ├┤ Rz(y[40]) ├──────────────────────────
-«      ┌─────┴─────┐└───────────┘├───────────┤┌───────────┐             
-«q0_1: ┤ Rx(y[33]) ├──────■──────┤ Ry(y[37]) ├┤ Rz(y[41]) ├─────────────
-«      └───────────┘┌─────┴─────┐└───────────┘├───────────┤┌───────────┐
-«q0_2: ─────────────┤ Rx(y[34]) ├──────■──────┤ Ry(y[38]) ├┤ Rz(y[42]) ├
-«                   └───────────┘┌─────┴─────┐├───────────┤├───────────┤
-«q0_3: ──────────────────────────┤ Rx(y[35]) ├┤ Ry(y[39]) ├┤ Rz(y[43]) ├
-«                                └───────────┘└───────────┘└───────────┘
-«c0: 4/═════════════════════════════════════════════════════════════════
-«                                                                       
+      ┌──────────┐┌──────────┐┌───┐     ┌──────────┐┌───────────┐             »
+q0_0: ┤ Ry(y[0]) ├┤ Rz(y[4]) ├┤ X ├──■──┤ Ry(y[8]) ├┤ Rz(y[12]) ├─────────────»
+      ├──────────┤├──────────┤└─┬─┘┌─┴─┐└──────────┘└┬──────────┤┌───────────┐»
+q0_1: ┤ Ry(y[1]) ├┤ Rz(y[5]) ├──┼──┤ X ├─────■───────┤ Ry(y[9]) ├┤ Rz(y[13]) ├»
+      ├──────────┤├──────────┤  │  └───┘   ┌─┴─┐     └──────────┘├───────────┤»
+q0_2: ┤ Ry(y[2]) ├┤ Rz(y[6]) ├──┼──────────┤ X ├──────────■──────┤ Ry(y[10]) ├»
+      ├──────────┤├──────────┤  │          └───┘        ┌─┴─┐    ├───────────┤»
+q0_3: ┤ Ry(y[3]) ├┤ Rz(y[7]) ├──■───────────────────────┤ X ├────┤ Ry(y[11]) ├»
+      └──────────┘└──────────┘                          └───┘    └───────────┘»
+c0: 4/════════════════════════════════════════════════════════════════════════»
+                                                                              »
+«                   ┌───┐     ┌───────────┐┌───────────┐             »
+«q0_0: ─────────────┤ X ├──■──┤ Ry(y[16]) ├┤ Rz(y[20]) ├─────────────»
+«                   └─┬─┘┌─┴─┐└───────────┘├───────────┤┌───────────┐»
+«q0_1: ───────────────┼──┤ X ├──────■──────┤ Ry(y[17]) ├┤ Rz(y[21]) ├»
+«      ┌───────────┐  │  └───┘    ┌─┴─┐    └───────────┘├───────────┤»
+«q0_2: ┤ Rz(y[14]) ├──┼───────────┤ X ├──────────■──────┤ Ry(y[18]) ├»
+«      ├───────────┤  │           └───┘        ┌─┴─┐    ├───────────┤»
+«q0_3: ┤ Rz(y[15]) ├──■────────────────────────┤ X ├────┤ Ry(y[19]) ├»
+«      └───────────┘                           └───┘    └───────────┘»
+«c0: 4/══════════════════════════════════════════════════════════════»
+«                                                                    »
+«                   
+«q0_0: ─────────────
+«                   
+«q0_1: ─────────────
+«      ┌───────────┐
+«q0_2: ┤ Rz(y[22]) ├
+«      ├───────────┤
+«q0_3: ┤ Rz(y[23]) ├
+«      └───────────┘
+«c0: 4/═════════════
+«                   
+ansatz-state is written to ansatz.txt
 building constraints...
 number of constraints= 16
-plain pauliops= 28
-['IIIZ', 'IIIX', 'IIZX', 'IIIY', 'IIZY', 'IZXX', 'IIYY', 'IIYX', 'IZXY', 'ZXXX', 'IYXY', 'IYXX', 'ZXXY', 'IIZZ', 'IIXI', 'IZXZ', 'IZYI', 'IIYZ', 'IYYI', 'ZXXZ', 'ZXYI', 'IYXZ', 'IZZI', 'IXII', 'ZXZI', 'ZYII', 'IYZI', 'ZZII']
-unique pauliops= 28
-commutation mode= qubitwise
+unique pauliops 28
 graphclique-cliquecover: 28 with commutationmode qubitwise
-strategy largest_first 15
-strategy random_sequential 15
-strategy smallest_last 15
-strategy independent_set 15
-strategy connected_sequential_bfs 15
-strategy connected_sequential_dfs 15
-strategy saturation_largest_first 15
-clique 0 ['IIIX', 'IZXX', 'IIXI', 'ZZII']
-clique 1 ['IIIY', 'IZXY']
-clique 2 ['ZXXX', 'IXII']
-clique 3 ['IYXY', 'ZYII']
-clique 4 ['IYXX']
-clique 5 ['ZXXY']
-clique 6 ['IIIZ', 'IZXZ']
-clique 7 ['ZXXZ']
-clique 8 ['IYXZ']
-clique 9 ['IIZX', 'IZZI']
-clique 10 ['IIZY', 'ZXZI']
-clique 11 ['IIYY', 'IZYI']
-clique 12 ['IIYX', 'IYYI']
-clique 13 ['IIZZ', 'IYZI']
-clique 14 ['IIYZ', 'ZXYI']
-groups with own implementation qubitwise 15
+strategy largest_first 16
+strategy random_sequential 16
+strategy smallest_last 16
+strategy independent_set 17
+strategy connected_sequential_bfs 17
+strategy connected_sequential_dfs 16
+strategy saturation_largest_first 16
+number of cliques 16
+clique 0 ['XZZX', 'IIZI', 'IZII']
+clique 1 ['YZZY']
+clique 2 ['YZZX']
+clique 3 ['XZZY']
+clique 4 ['IXZX', 'XXII']
+clique 5 ['IYZY', 'YYII']
+clique 6 ['IYZX', 'XYII']
+clique 7 ['IXZY', 'YXII']
+clique 8 ['IIXX', 'XZXI']
+clique 9 ['IIYY', 'YZYI']
+clique 10 ['IIXY', 'YZXI']
+clique 11 ['IIYX', 'XZYI']
+clique 12 ['IIIZ', 'IXXI', 'ZIII']
+clique 13 ['IYYI']
+clique 14 ['IYXI']
+clique 15 ['IXYI']

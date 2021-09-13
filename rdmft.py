@@ -505,8 +505,11 @@ for c in constraints:
     for cc in c['pauli']['pauliops']:
         pauliops.append(str(cc.primitive))
 unique_pauliops=measurement_circuits.get_unique_pauliops(pauliops)['unique pauliops']
+print("unique pauliops",len(unique_pauliops))
 #compute commuting cliques
 cliques=measurement_circuits.build_cliques(commutation_mode,unique_pauliops)
+if config.getboolean('QC','end_after_cliques'):
+    exit()
 #build measurement circuits for ciques
 print("constructing measurement programs for 1rdm with commutativity mode",commutation_mode)
 mqcs_1rdm=measurement_circuits.build_measurement_circuits(cliques,commutation_mode,nq,config)

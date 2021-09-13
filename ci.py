@@ -112,7 +112,7 @@ def F_hubbard(norbin,U,orbinteract,D,options,tcplx):
     if tcplx:
         nvar=nvar*2
     if nvar>16384:
-        exit()
+        return -1
 
     print("nvar=",nvar)
 

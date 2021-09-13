@@ -15,7 +15,7 @@ set border 31 linewidth 2
 
 #set logscale x 10
 
-set xlabel 'number of one-particle states'
+set xlabel "number of one-particle states $N_\\chi$"
 set ylabel 'number of measurement programs'
 set xrange [:]
 #set xtics ( "256" 256, "1024" 1024, "2048" 2048, "3072" 3072)
@@ -36,18 +36,11 @@ set style line 5 linecolor rgb col2 linewidth 5 dashtype 2 pointtype 2 pointsize
 set style line 6 linecolor rgb col3 linewidth 5 dashtype 2 pointtype 3 pointsize default
 set style line 7 linecolor rgb col4 linewidth 5 dashtype 2 pointtype 4 pointsize default
 
-plot "< grep \"disjointqubits\" data.dat | grep \"JordanWigner \""  u 2:5 with lp ls 1 t "w/o combination", \
-"< grep \"disjointqubits\" data.dat | grep \"JordanWigner \""  u 2:6 with lp ls 2 t "DISJOINT", \
-"< grep \"qubitwise\" data.dat| grep \"JordanWigner \" "  u 2:6 with lp ls 3 t "QWC", \
-"< grep \"commute\" data.dat| grep \"JordanWigner \" "  u 2:6 with lp ls 4 t "GC"
-#"< grep \"disjointqubits\" data.dat | grep \"BravyiKitaev\""  u 2:6 with lp ls 2 t "DISJOINT", \
-#"< grep \"qubitwise\" data.dat| grep \"BravyiKitaev \" "  u 2:6 with lp ls 3 t "QWC", \
-#"< grep \"commute\" data.dat| grep \"Parity \" "  u 2:6 with lp ls 4 t "GC",\
-#"< grep \"disjointqubits\" data.dat | grep \"Parity\""  u 2:6 with lp ls 2 t "DISJOINT", \
-#"< grep \"qubitwise\" data.dat| grep \"Parity \" "  u 2:6 with lp ls 3 t "QWC", \
-#"< grep \"commute\" data.dat| grep \"BravyiKitaev \" "  u 2:6 with lp ls 4 t "GC"
-#"< grep \"qubitwise\" data.dat| grep \"JordanWigner \" "  u 2:7 with lp ls 6 t "QWC,BronKerbosch", \
-#"< grep \"commute\" data.dat| grep \"JordanWigner \" "  u 2:7 with lp ls 7 t "GC,BronKerbosch"
+plot [2:25] "< grep \"disjointqubits\" data.dat | grep \"JordanWigner \""  u 2:5 with p ls 1 t "w/o combination", \
+"< grep \"disjointqubits\" data.dat | grep \"JordanWigner \""  u 2:6 with p ls 2 t "DISJOINT", \
+"< grep \"qubitwise\" data.dat| grep \"JordanWigner \" "  u 2:6 with p ls 3 t "QWC", \
+"< grep \"commute\" data.dat| grep \"JordanWigner \" "  u 2:6 with p ls 4 t "GC", \
+x**2 w l t "$N_\\chi^2$" ls 6,2*x-1 w l ls 7 t "$2N_\\chi$"
 
 
 set output "bla"
@@ -55,5 +48,37 @@ set output "bla"
 !dvips plot.dvi
 !ps2eps -f plot.ps
 !ps2pdf plot.ps
-!mv plot.pdf cliques.pdf
+!mv plot.pdf cliquesJW.pdf
+!rm *.dvi *.aux *.ps *-inc.eps *.tex bla *.log
+set output "plot.tex"
+
+plot [2:25] "< grep \"disjointqubits\" data.dat | grep \"Parity \""  u 2:5 with p ls 1 t "w/o combination", \
+"< grep \"disjointqubits\" data.dat | grep \"Parity \""  u 2:6 with p ls 2 t "DISJOINT", \
+"< grep \"qubitwise\" data.dat| grep \"Parity \" "  u 2:6 with p ls 3 t "QWC", \
+"< grep \"commute\" data.dat| grep \"Parity \" "  u 2:6 with p ls 4 t "GC", \
+x**2 w l t "$N_\\chi^2$" ls 6,2*x-1 w l ls 7 t "$2N_\\chi$"
+
+
+set output "bla"
+!latex plot.tex
+!dvips plot.dvi
+!ps2eps -f plot.ps
+!ps2pdf plot.ps
+!mv plot.pdf cliquesPA.pdf
+!rm *.dvi *.aux *.ps *-inc.eps *.tex bla *.log
+set output "plot.tex"
+
+plot [2:25] "< grep \"disjointqubits\" data.dat | grep \"BravyiKitaev \""  u 2:5 with p ls 1 t "w/o combination", \
+"< grep \"disjointqubits\" data.dat | grep \"BravyiKitaev \""  u 2:6 with p ls 2 t "DISJOINT", \
+"< grep \"qubitwise\" data.dat| grep \"BravyiKitaev \" "  u 2:6 with p ls 3 t "QWC", \
+"< grep \"commute\" data.dat| grep \"BravyiKitaev \" "  u 2:6 with p ls 4 t "GC", \
+x**2 w l t "$N_\\chi^2$" ls 6,2*x-1 w l ls 7 t "$2N_\\chi$"
+
+
+set output "bla"
+!latex plot.tex
+!dvips plot.dvi
+!ps2eps -f plot.ps
+!ps2pdf plot.ps
+!mv plot.pdf cliquesBK.pdf
 !rm *.dvi *.aux *.ps *-inc.eps *.tex bla *.log

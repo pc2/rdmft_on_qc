@@ -18,13 +18,14 @@ for f in sorted(onlyfiles):
         v1=0
         v2=0
         for x in fi:
-            if x.find("unique pauliops= ")>=0:
+            if x.find("unique pauliops")==0:
                 v0=x.split()[2]
-            if x.find("groups with own implementation")>=0:
-                v1=x.split()[5]
-            if x.find("groups with https")>=0:
-                v2=x.split()[4]
+            if x.find("number of cliques")==0:
+                v1=x.split()[3]
+#            if x.find("groups with https")>=0:
+#                v2=x.split()[4]
         fi.close()
-        o.write(f+" "+str(s)+" "+m+" "+l+" "+str(v0)+" "+str(v1)+" "+str(v2)+"\n")
+        o.write(f+" "+str(s)+" "+m+" "+l+" "+str(v0)+" "+str(v1)+"\n ")
+        #+str(v1)+" "+str(v2)+"\n")
 
 o.close()

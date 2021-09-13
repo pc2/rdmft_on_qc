@@ -1,42 +1,48 @@
-GS energy with  DMRG -0.5000000000000001
+GS energy with  DMRG -0.5
 N= 1.0
-E= -0.5000000000000001
-D= [[0.69208896+0.j 0.46162954+0.j]
- [0.46162954+0.j 0.30791104+0.j]]
-W= [5.8080679e-34+0.j]
+E= -0.5
+D= [[0.27186087+0.j 0.44491857+0.j]
+ [0.44491857+0.j 0.72813913+0.j]]
+W= [1.06494354e-32+0.j]
 local approximation with  1 sites
 local interactions on sites [[0]]
 Functional for interaction on sites [0]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
 interacting orbitals: [0, 1]
 mapping: [0, 1]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
 orbinteractaca= [0, 1]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
 aca: level 0  norb= 2
-Daca= [[0.69208896+0.j 0.46162954+0.j]
- [0.46162954+0.j 0.30791104+0.j]]
-Naca= (0.6920889555189771, 0.3079110444810229)
+Daca= [[0.27186087+0.j 0.44491857+0.j]
+ [0.44491857+0.j 0.72813913+0.j]]
+Naca= (0.27186087081360144, 0.7281391291863986)
 nq= 2
-interact= NN * (1+0j)
 variational state:
-      ┌──────────┐┌──────────┐            ┌──────────┐┌──────────┐            »
-q0_0: ┤ Ry(y[0]) ├┤ Rz(y[2]) ├─────■──────┤ Ry(y[5]) ├┤ Rz(y[7]) ├─────■──────»
-      ├──────────┤├──────────┤┌────┴─────┐├──────────┤├──────────┤┌────┴─────┐»
-q0_1: ┤ Ry(y[1]) ├┤ Rz(y[3]) ├┤ Rx(y[4]) ├┤ Ry(y[6]) ├┤ Rz(y[8]) ├┤ Rx(y[9]) ├»
-      └──────────┘└──────────┘└──────────┘└──────────┘└──────────┘└──────────┘»
-c0: 2/════════════════════════════════════════════════════════════════════════»
-                                                                              »
-«      ┌───────────┐┌───────────┐             ┌───────────┐┌───────────┐
-«q0_0: ┤ Ry(y[10]) ├┤ Rz(y[12]) ├──────■──────┤ Ry(y[15]) ├┤ Rz(y[17]) ├
-«      ├───────────┤├───────────┤┌─────┴─────┐├───────────┤├───────────┤
-«q0_1: ┤ Ry(y[11]) ├┤ Rz(y[13]) ├┤ Rx(y[14]) ├┤ Ry(y[16]) ├┤ Rz(y[18]) ├
-«      └───────────┘└───────────┘└───────────┘└───────────┘└───────────┘
-«c0: 2/═════════════════════════════════════════════════════════════════
-«                                                                       
+      ┌──────────┐┌──────────┐     ┌──────────┐┌──────────┐     ┌──────────┐»
+q0_0: ┤ Ry(y[0]) ├┤ Rz(y[2]) ├──■──┤ Ry(y[4]) ├┤ Rz(y[6]) ├──■──┤ Ry(y[8]) ├»
+      ├──────────┤├──────────┤┌─┴─┐├──────────┤├──────────┤┌─┴─┐├──────────┤»
+q0_1: ┤ Ry(y[1]) ├┤ Rz(y[3]) ├┤ X ├┤ Ry(y[5]) ├┤ Rz(y[7]) ├┤ X ├┤ Ry(y[9]) ├»
+      └──────────┘└──────────┘└───┘└──────────┘└──────────┘└───┘└──────────┘»
+c0: 2/══════════════════════════════════════════════════════════════════════»
+                                                                            »
+«      ┌───────────┐
+«q0_0: ┤ Rz(y[10]) ├
+«      ├───────────┤
+«q0_1: ┤ Rz(y[11]) ├
+«      └───────────┘
+«c0: 2/═════════════
+«                   
+ansatz-state is written to ansatz.txt
 building constraints...
 number of constraints= 4
-plain pauliops= 6
-['IZ', 'IX', 'ZX', 'IY', 'ZY', 'ZZ']
-unique pauliops= 6
-commutation mode= qubitwise
+unique pauliops 6
 graphclique-cliquecover: 6 with commutationmode qubitwise
 strategy largest_first 3
 strategy random_sequential 3
@@ -45,7 +51,7 @@ strategy independent_set 3
 strategy connected_sequential_bfs 3
 strategy connected_sequential_dfs 3
 strategy saturation_largest_first 3
+number of cliques 3
 clique 0 ['IZ', 'ZZ']
 clique 1 ['IX', 'ZX']
 clique 2 ['IY', 'ZY']
-groups with own implementation qubitwise 3

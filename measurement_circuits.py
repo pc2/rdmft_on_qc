@@ -92,8 +92,12 @@ def build_measurement_circuits_none(nq,cc,config):
   transpiler_gates=config["QC"]["transpiler_gates"].split(",")
   transpiler_seed=int(config["QC"]["transpiler_seed"])
   transpiler_couplings=[]
-  for c in config["QC"]["transpiler_couplings"].split(","):
-    transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
+  if config["QC"]["transpiler_couplings"]=="linear":
+    for i in range(nq-1):
+      transpiler_couplings.append([i,i+1])
+  else:
+    for c in config["QC"]["transpiler_couplings"].split(","):
+      transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
   gatew=dict()
   for c in config["QC"]["gate_weights"].split(","):
     gatew[c.split("_")[0]]=int(c.split("_")[1])
@@ -300,8 +304,12 @@ def build_measurement_circuits_commute(nq,cc_in,config):
   transpiler_gates=config["QC"]["transpiler_gates"].split(",")
   transpiler_seed=int(config["QC"]["transpiler_seed"])
   transpiler_couplings=[]
-  for c in config["QC"]["transpiler_couplings"].split(","):
-    transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
+  if config["QC"]["transpiler_couplings"]=="linear":
+    for i in range(nq-1):
+      transpiler_couplings.append([i,i+1])
+  else:
+    for c in config["QC"]["transpiler_couplings"].split(","):
+      transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
   gatew=dict()
   for c in config["QC"]["gate_weights"].split(","):
     gatew[c.split("_")[0]]=int(c.split("_")[1])
@@ -617,8 +625,12 @@ def build_measurement_circuit(mode,nq,cc,config):
   transpiler_gates=config["QC"]["transpiler_gates"].split(",")
   transpiler_seed=int(config["QC"]["transpiler_seed"])
   transpiler_couplings=[]
-  for c in config["QC"]["transpiler_couplings"].split(","):
-    transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
+  if config["QC"]["transpiler_couplings"]=="linear":
+    for i in range(nq-1):
+      transpiler_couplings.append([i,i+1])
+  else:
+    for c in config["QC"]["transpiler_couplings"].split(","):
+      transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
   gatew=dict()
   for c in config["QC"]["gate_weights"].split(","):
     gatew[c.split("_")[0]]=int(c.split("_")[1])
