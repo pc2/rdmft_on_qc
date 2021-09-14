@@ -328,7 +328,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
   tqc=QuantumCircuit(qreg,creg)
   rand_sv=random_statevector(2**nq,seed=2344)
 
-  #cc_in=['IIIYYX', 'XXYIXY', 'IIIZXI', 'YIYIXZ', 'XYYXZI', 'XZXIII']
+  #cc_in=['IYZX', 'IXZY', 'YZXI', 'XZYI']
 
   cc_reordered=[]
   for c in cc_in:  
@@ -378,8 +378,13 @@ def build_measurement_circuits_commute(nq,cc_in,config):
         if not(stab[i,i]==1 or stab[nq+i,i]==1): 
           exclude=True
           break
+      #don't exclude if not permuted
+      notexclude=True
+      for i in range(len(c)):
+        if o[i]!=i:
+          notexclude=False
 
-      if exclude:
+      if exclude and not notexclude:
         if tprint:
           print("excluded because reorder_measurement_qubits_restricted=T and not every measurement qubit has a pauli-operator")
         continue
@@ -613,22 +618,19 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       
       m={"mqc":mqc,"mqubits":mqubits,"signs":signs}
 
-      transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
-      constructed_complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
-      transpiled_complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
       complexity=0
       if criterion_for_qc_optimality=="constructed":
-          complexity=constructed_complexity
+        complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
       elif criterion_for_qc_optimality=="transpiled":
-          complexity=transpiled_complexity
+        transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
+        complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
       else:
           raise RuntimeError('criterion_for_qc_optimality not known')
-      print("ordering",c,"constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
+      print("ordering",c,"Hadamards",initialH,"complexity=",complexity," (complexity=",complexity_measure,")")
       if complexity<complexity_min:
           complexity_min=complexity
           #mqubit=mq
           mmin=copy.deepcopy(m)
-
   return mmin
 
 
@@ -667,10 +669,7 @@ def build_measurement_circuit(mode,nq,cc,config):
     if config.getboolean('QC','print_measurement_circuits'):
       print("constructed measurement program")
       print(m["mqc"])
-
       m["mqc"].draw(output='latex',filename="_".join(cc)+".pdf")
-
-
       print("transpiled measurement program")
       print(transpiled_mqc)
 
