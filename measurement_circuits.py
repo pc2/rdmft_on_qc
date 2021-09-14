@@ -1,3 +1,4 @@
+from logging import Handler
 import os
 import copy
 import math
@@ -317,14 +318,13 @@ def build_measurement_circuits_commute(nq,cc_in,config):
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
   tprint=config.getboolean('QC','print_construction_of_measurement_circuits')
 
-  #first reduce to Pauli-z 
   mqubit=-1
   mqc=[]
 
   if tprint:
     print("input",cc_in)
-  qreg = QuantumRegister(nq)
-  creg = ClassicalRegister(nq)
+  qreg = QuantumRegister(nq,name='q')
+  creg = ClassicalRegister(nq,name='c')
   tqc=QuantumCircuit(qreg,creg)
   rand_sv=random_statevector(2**nq,seed=2344)
 
@@ -339,6 +339,10 @@ def build_measurement_circuits_commute(nq,cc_in,config):
   cc=copy.deepcopy(cc_reordered)
   if tprint:
     print("cc with qiskit ordering",cc)
+    for i in range(len(cc)):
+      for j in range(len(cc)):
+        print("commute of reordered",cc[i],cc[j],graphclique.commutecheck("commute",cc[i],cc[j]))
+
 
   order=list(range(nq))
   orders=[list(range(nq))]
@@ -389,10 +393,18 @@ def build_measurement_circuits_commute(nq,cc_in,config):
 
     initialH=[]
     initialH_found=False
+    
     #make X-matrix maximal rank by adding Hs
     for p in itertools.product([0,1],repeat=nq):
-      if initialH_found and not config.getboolean('QC','try_all_initial_H_combinations'):
+      if not config.getboolean('QC','try_all_initial_H_combinations') and initialH_found:
         break
+
+      if not config.getboolean('QC','try_all_initial_H_combinations'):
+        stab2=clique2stab(nq,c)
+        stabgf2=mat_gf2(stab2)
+        p=getH_for_X_rank(nq,stabgf2)
+        initialH_found=True
+      
       mqc=QuantumCircuit(qreg,creg)
       tqc=QuantumCircuit(qreg,creg)
       stab2=clique2stab(nq,c)
@@ -653,8 +665,12 @@ def build_measurement_circuit(mode,nq,cc,config):
     print("measure "+str(cc)+" at",m["mqubits"])
             
     if config.getboolean('QC','print_measurement_circuits'):
-      print("constrcuted measurement program")
+      print("constructed measurement program")
       print(m["mqc"])
+
+      m["mqc"].draw(output='latex',filename="_".join(cc)+".pdf")
+
+
       print("transpiled measurement program")
       print(transpiled_mqc)
 
@@ -702,3 +718,36 @@ def build_measurement_circuits(cliques,mode,nq,config):
       m=build_measurement_circuit(mode,nq,cc,config)
       mqcs.append({"mqc":m['mqc'],"mqubits":m['mqubits'],"ops":cc,"signs":m['signs']})
   return mqcs
+
+def getH_for_X_rank(nq,stab):
+  rk1=rk_gf2(stab[0:2*nq,0:nq])
+  rk2=rk_gf2(stab[nq:2*nq,0:nq])
+  print("maxrk rk1",rk1)
+  print("maxrk rk2",rk2)
+  H=[]
+  for i in range(nq):
+    H.append(0)
+  
+  if rk1==rk2:
+    return H
+  
+  stab2=copy.deepcopy(stab)
+  for i in range(nq):
+    k=getH_for_rk_increase(nq,stab2)
+    stab2=stab_H(nq,stab2,k)
+    rk=rk_gf2(stab2[nq:2*nq,0:nq])
+    print("maxrk",i,k,rk)
+    H[k]=1
+    if rk==rk1:
+      return H
+
+def getH_for_rk_increase(nq,stab):
+  rk2=rk_gf2(stab[nq:2*nq,0:nq])
+  for i in range(nq):
+    stab2=copy.deepcopy(stab)
+    stab2=stab_H(nq,stab2,i)
+    rk=rk_gf2(stab2[nq:2*nq,0:nq])
+    if rk>rk2:
+      return i
+
+
