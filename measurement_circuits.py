@@ -326,7 +326,9 @@ def build_measurement_circuits_commute(nq,cc_in,config):
   qreg = QuantumRegister(nq,name='q')
   creg = ClassicalRegister(nq,name='c')
   tqc=QuantumCircuit(qreg,creg)
-  rand_sv=random_statevector(2**nq,seed=2344)
+
+  if config.getboolean('QC','test_construction_of_measurement_circuits'):
+    rand_sv=random_statevector(2**nq,seed=2344)
 
   #cc_in=['IYZX', 'IXZY', 'YZXI', 'XZYI']
 
@@ -415,7 +417,8 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       stab2=clique2stab(nq,c)
       stabgf2=mat_gf2(stab2)
 
-      tqc.initialize(rand_sv.data,list(range(nq)))
+      if config.getboolean('QC','test_construction_of_measurement_circuits'):
+        tqc.initialize(rand_sv.data,list(range(nq)))
 
       if tprint:
         print("initial")
@@ -721,8 +724,8 @@ def build_measurement_circuits(cliques,mode,nq,config):
 def getH_for_X_rank(nq,stab):
   rk1=rk_gf2(stab[0:2*nq,0:nq])
   rk2=rk_gf2(stab[nq:2*nq,0:nq])
-  print("maxrk rk1",rk1)
-  print("maxrk rk2",rk2)
+  #print("maxrk rk1",rk1)
+  #print("maxrk rk2",rk2)
   H=[]
   for i in range(nq):
     H.append(0)
@@ -735,7 +738,7 @@ def getH_for_X_rank(nq,stab):
     k=getH_for_rk_increase(nq,stab2)
     stab2=stab_H(nq,stab2,k)
     rk=rk_gf2(stab2[nq:2*nq,0:nq])
-    print("maxrk",i,k,rk)
+    #print("maxrk",i,k,rk)
     H[k]=1
     if rk==rk1:
       return H
