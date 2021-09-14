@@ -79,11 +79,13 @@ def measure_complexity(qc,mode="depth",gate_weights=None):
         return qc.depth()
     elif mode=="gate_weights":
         ngq=0
-        for gw in gatew:
+        for gw in qc.count_ops():
             try:
-                ngq+=gatew[gw]*qc.count_ops()[gw]
+                ngq+=gate_weights[gw]*qc.count_ops()[gw]
             except KeyError:
-                ngq+=0
+                print(gw)
+                raise RuntimeError("")
+                ngq+=-1000000
         return ngq
     else:
       raise RuntimeError("complexity_measure "+str(mode)+" not known")
