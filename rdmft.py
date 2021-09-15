@@ -28,6 +28,7 @@ from qiskit.quantum_info import Pauli
 from qiskit.opflow.gradients import Gradient, NaturalGradient, QFI, Hessian
 from qiskit.opflow import Z, X, I, StateFn, CircuitStateFn, SummedOp
 from qiskit.providers.aer.noise import NoiseModel
+from qiskit.visualization import plot_histogram
 import qiskit_nature
 from qiskit_nature.circuit.library import HartreeFock
 from qiskit_nature.converters.second_quantization import QubitConverter
@@ -78,6 +79,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 optimization_level=optimization_level
             )
     else:
+        print("EXECUTING WITH NOISE!")
         jobs = execute(
             qcs_par,
             backend=backend,
@@ -100,6 +102,10 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
 
     if jobs.done():
         res=jobs.result().results
+        for j in range(len(mqcs)):
+            counts = jobs.result().get_counts(j)
+            print("NOISE count %i:" % j)
+            plot_histogram(counts).savefig("counts_%i.png" % j)
 
         Vs=[]
         #loop over programs
@@ -595,7 +601,11 @@ if tcheck:
     circ=ansatz.bind_parameters(initial_point)
     job=execute(circ,backend_check)
     result=job.result()
+    counts = result.get_counts(0)
+    plot_histogram(counts).savefig("tcheck_counts.png")
+
     psi=result.get_statevector()
+    print("NONOISE STATE VECTOR:", psi)
 
     W_exact=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
     print("W_exact=",W_exact,"W_qc=",W_qc)
@@ -605,7 +615,7 @@ if tcheck:
         c_exact=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real-constraints[ic]['cval']
         print("constraints exact=",c_exact,"qc=",c_qc[ic])
 
-
+exit()
 rdmf_obj_eval=0
 rdmf_cons_eval=0
 tprintevals=True
