@@ -7,36 +7,34 @@ import aca
 import ci
 import time
 import measurement_circuits
-from scipy import sparse
-from scipy.optimize import minimize,BFGS
-from math import pi
 import numpy as np
 import dotenv
 import matplotlib.pyplot as plt
+import pylatexenc
+import configparser
+import itertools
 import qiskit
-from qiskit.circuit.library import TwoLocal,EfficientSU2
+from scipy import sparse
+from scipy.optimize import minimize, BFGS
+from math import pi
+from qiskit.circuit.library import TwoLocal, EfficientSU2
 from qiskit.circuit import Parameter, ParameterVector, ParameterExpression
-from qiskit import execute
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from qiskit import IBMQ, assemble, transpile, Aer, BasicAer, execute, QuantumRegister, ClassicalRegister, QuantumCircuit
 from qiskit.algorithms import VQE
-from qiskit.algorithms.optimizers import L_BFGS_B,SPSA,COBYLA,QNSPSA
+from qiskit.algorithms.optimizers import L_BFGS_B, SPSA, COBYLA, QNSPSA
 from qiskit.opflow.primitive_ops import PauliOp
 from qiskit.opflow.state_fns import CircuitStateFn
 from qiskit.quantum_info import Pauli
 from qiskit.opflow.gradients import Gradient, NaturalGradient, QFI, Hessian
 from qiskit.opflow import Z, X, I, StateFn, CircuitStateFn, SummedOp
+from qiskit.providers.aer.noise import NoiseModel
 import qiskit_nature
-from qiskit import IBMQ, assemble, transpile,Aer
-from qiskit import BasicAer
 from qiskit_nature.circuit.library import HartreeFock
 from qiskit_nature.converters.second_quantization import QubitConverter
 from qiskit_nature.mappers.second_quantization import ParityMapper
 from qiskit_nature.converters.second_quantization import QubitConverter
-from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper    
+from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper
 from qiskit_nature.operators.second_quantization import FermionicOp
-import pylatexenc
-import configparser
-import itertools
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     #print("Opt step:",nfunc,par,f,stepsize,accepted)
@@ -69,7 +67,29 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
         qc=qc.compose(ansatz)
         qc=qc.compose(mqc['mqc'])
         qcs_par.append(qc.bind_parameters(x))
-    jobs=execute(qcs_par,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed,optimization_level=optimization_level)
+    if not tnoise:
+        jobs = execute(
+                qcs_par,
+                backend=backend,
+                backend_properties=backend.properties(), # why not use backend_ibmq_manila.properties() here?
+                shots=shots,
+                seed_simulator=seed,
+                seed_transpiler=seed,
+                optimization_level=optimization_level
+            )
+    else:
+        jobs = execute(
+            qcs_par,
+            backend=backend,
+            backend_properties=ibmq_backend_props,  # ibmq_manila or simulator backend?
+            shots=shots, # ?
+            seed_simulator=seed, # ?
+            seed_transpiler=seed, # ?
+            optimization_level=optimization_level, # ?,
+            coupling_map=ibmq_coupling_map,
+            basis_gates=ibmq_basis_gates,
+            noise_model=ibmq_noise_model
+        )
     
     if not tsim: 
         print("waiting for job to finish: ",jobs.job_id())
@@ -369,12 +389,36 @@ if entanglement=="map":
 
 
 # set the backend for the quantum computation
-backend = BasicAer.get_backend('qasm_simulator')
-optimization_level=2
 if tnoise:
-    backend = BasicAer.get_backend('qasm_simulator')
+    # Build noise model from backend properties
+    provider = IBMQ.load_account()
+    # >>> [b.name() for b in provider.backends()]
+    # ['ibmq_qasm_simulator', 'ibmq_armonk', 'ibmq_santiago', 'ibmq_bogota', 'ibmq_lima', 'ibmq_belem', 'ibmq_quito', 'simulator_statevector', 'simulator_mps', 'simulator_extended_stabilizer', 'simulator_stabilizer', 'ibmq_manila']
+    ibmq_backend = provider.get_backend('ibmq_quito')
+    ibmq_backend_config = ibmq_backend.configuration()
+    # >>> backend_config.basis_gates
+    # ['id', 'rz', 'sx', 'x', 'cx', 'reset']
+    ibmq_coupling_map = ibmq_backend_config.coupling_map
+    # [[0, 1], [1, 0], [1, 2], [1, 3], [2, 1], [3, 1], [3, 4], [4, 3]]
+    # Below: directed graph specifying fixed coupling. Nodes correspond to physical qubits (integers) and directed edges correspond to permitted CNOT gates.
+    # cm = qiskit.transpiler.CouplingMap(coupling_map)
+    # >>> cm.distance_matrix
+    # array([[0., 1., 2., 2., 3.],
+    #        [1., 0., 1., 1., 2.],
+    #        [2., 1., 0., 2., 3.],
+    #        [2., 1., 2., 0., 1.],
+    #        [3., 2., 3., 1., 0.]])
+    ibmq_backend_props = ibmq_backend.properties()
+    # nqubits = len(backend_props.qubits)
+
+    # Noise....
+    ibmq_noise_model = NoiseModel.from_backend(ibmq_backend)
+    ibmq_basis_gates = ibmq_noise_model.basis_gates
+    # ibmq_quito: ['cx', 'id', 'reset', 'rz', 'sx', 'x'] ('cx' ist the only two-qubit gate)
+
+    #backend = BasicAer.get_backend('qasm_simulator')
+    backend = Aer.get_backend('qasm_simulator')
     optimization_level=2
-    raise RuntimeError("Noise model is not properly set")
 else:
     #backend = BasicAer.get_backend('statevector_simulator')
     backend = Aer.get_backend('aer_simulator_statevector')
