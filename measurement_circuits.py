@@ -79,11 +79,13 @@ def measure_complexity(qc,mode="depth",gate_weights=None):
         return qc.depth()
     elif mode=="gate_weights":
         ngq=0
-        for gw in gatew:
+        for gw in qc.count_ops():
             try:
-                ngq+=gatew[gw]*qc.count_ops()[gw]
+                ngq+=gate_weights[gw]*qc.count_ops()[gw]
             except KeyError:
-                ngq+=0
+                print(gw)
+                raise RuntimeError("")
+                ngq+=-1000000
         return ngq
     else:
       raise RuntimeError("complexity_measure "+str(mode)+" not known")
@@ -326,9 +328,11 @@ def build_measurement_circuits_commute(nq,cc_in,config):
   qreg = QuantumRegister(nq,name='q')
   creg = ClassicalRegister(nq,name='c')
   tqc=QuantumCircuit(qreg,creg)
-  rand_sv=random_statevector(2**nq,seed=2344)
 
-  #cc_in=['IIIYYX', 'XXYIXY', 'IIIZXI', 'YIYIXZ', 'XYYXZI', 'XZXIII']
+  if config.getboolean('QC','test_construction_of_measurement_circuits'):
+    rand_sv=random_statevector(2**nq,seed=2344)
+
+  #cc_in=['IYZX', 'IXZY', 'YZXI', 'XZYI']
 
   cc_reordered=[]
   for c in cc_in:  
@@ -378,8 +382,13 @@ def build_measurement_circuits_commute(nq,cc_in,config):
         if not(stab[i,i]==1 or stab[nq+i,i]==1): 
           exclude=True
           break
+      #don't exclude if not permuted
+      notexclude=True
+      for i in range(len(c)):
+        if o[i]!=i:
+          notexclude=False
 
-      if exclude:
+      if exclude and not notexclude:
         if tprint:
           print("excluded because reorder_measurement_qubits_restricted=T and not every measurement qubit has a pauli-operator")
         continue
@@ -410,7 +419,8 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       stab2=clique2stab(nq,c)
       stabgf2=mat_gf2(stab2)
 
-      tqc.initialize(rand_sv.data,list(range(nq)))
+      if config.getboolean('QC','test_construction_of_measurement_circuits'):
+        tqc.initialize(rand_sv.data,list(range(nq)))
 
       if tprint:
         print("initial")
@@ -613,22 +623,357 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       
       m={"mqc":mqc,"mqubits":mqubits,"signs":signs}
 
-      transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
-      constructed_complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
-      transpiled_complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
       complexity=0
       if criterion_for_qc_optimality=="constructed":
-          complexity=constructed_complexity
+        complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
       elif criterion_for_qc_optimality=="transpiled":
-          complexity=transpiled_complexity
+        transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
+        complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
       else:
           raise RuntimeError('criterion_for_qc_optimality not known')
-      print("ordering",c,"constructed_complexity=",constructed_complexity,"transpiled_complexity=",transpiled_complexity," (complexity=",complexity_measure,")")
+      print("ordering",c,"Hadamards",initialH,"complexity=",complexity," (complexity=",complexity_measure,")")
       if complexity<complexity_min:
           complexity_min=complexity
           #mqubit=mq
           mmin=copy.deepcopy(m)
+  return mmin
 
+def build_measurement_circuits_commute2(nq,cc_in,config):
+  #options
+  transpiler_gates=config["QC"]["transpiler_gates"].split(",")
+  transpiler_seed=int(config["QC"]["transpiler_seed"])
+  transpiler_couplings=[]
+  if config["QC"]["transpiler_couplings"]=="linear":
+    for i in range(nq-1):
+      transpiler_couplings.append([i,i+1])
+  else:
+    for c in config["QC"]["transpiler_couplings"].split(","):
+      transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
+  gatew=dict()
+  for c in config["QC"]["gate_weights"].split(","):
+    gatew[c.split("_")[0]]=int(c.split("_")[1])
+  complexity_measure=config["QC"]["complexity_measure"]
+  criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
+  tprint=config.getboolean('QC','print_construction_of_measurement_circuits')
+
+  mqubit=-1
+  mqc=[]
+
+  if tprint:
+    print("input",cc_in)
+  qreg = QuantumRegister(nq,name='q')
+  creg = ClassicalRegister(nq,name='c')
+  tqc=QuantumCircuit(qreg,creg)
+
+  if config.getboolean('QC','test_construction_of_measurement_circuits'):
+    rand_sv=random_statevector(2**nq,seed=2344)
+
+  #cc_in=['IYZX', 'IXZY', 'YZXI', 'XZYI']
+
+  cc_reordered=[]
+  for c in cc_in:  
+      cc2=list(c)
+      cc2.reverse()
+      cc_reordered.append("".join(cc2))
+  
+  cc=copy.deepcopy(cc_reordered)
+  if tprint:
+    print("cc with qiskit ordering",cc)
+    for i in range(len(cc)):
+      for j in range(len(cc)):
+        print("commute of reordered",cc[i],cc[j],graphclique.commutecheck("commute",cc[i],cc[j]))
+
+
+  order=list(range(nq))
+  orders=[list(range(nq))]
+  if config.getboolean('QC','reorder_measurement_qubits'):
+    orders=itertools.permutations(order)
+
+  #get order from swaps
+  c=[]
+  for ci in cc:
+    c2=[]
+    for i in range(nq):
+      c2.append(ci[i])
+    c.append("".join(c2))
+  stab2=clique2stab(nq,c)
+  stabgf2=mat_gf2(stab2)
+  p=getH_for_X_rank(nq,stabgf2)
+  initialH_found=True
+  for i in range(nq):
+    if p[i]==1:
+      stabgf2=stab_H(nq,stabgf2,i)
+  GF2 = galois.GF(2)
+  L,U,P=GF2.lup_decompose(stabgf2[nq:2*nq,:])
+
+      
+  #permute columns
+  perm=[]
+  for i in range(nq):
+    for j in range(nq):
+      if P[i,j]==1:
+        perm.append(j)
+  print(perm)
+  orders=[perm]
+  
+  initialH=[]
+  for i in range(nq):
+    initialH.append(0)
+
+  for i in range(nq):
+    initialH[i]=p[perm[i]]
+
+  complexity_min=10000000
+  mmin={}
+
+  io=perm[:] #inv_perm(o)
+  o=io[:]
+
+  #permute measurements with order o
+  c=[]
+  for ci in cc:
+    c2=[]
+    for i in range(nq):
+      c2.append(ci[o[i]])
+    c.append("".join(c2))
+  if tprint:
+    print("after qubit-reordering")
+    print(c)
+
+  stab=clique2stab(nq,c)
+  if tprint:
+    print(stab)
+
+  rk1=rk_gf2(stab[0:2*nq,0:nq])
+  if tprint:
+    print("GF2-rank stab=",rk1)
+  rk2=rk_gf2(stab[nq:2*nq,0:nq])
+  if tprint:
+    print("GF2-rank X=",rk2)
+
+  
+  #make X-matrix maximal rank by adding Hs
+  
+  mqc=QuantumCircuit(qreg,creg)
+  tqc=QuantumCircuit(qreg,creg)
+  stab2=clique2stab(nq,c)
+  stabgf2=mat_gf2(stab2)
+
+  if config.getboolean('QC','test_construction_of_measurement_circuits'):
+    tqc.initialize(rand_sv.data,list(range(nq)))
+
+  if tprint:
+    print("initial")
+    print(stabgf2)
+  for i in range(nq):
+    if initialH[i]==1:
+      stabgf2=stab_H(nq,stabgf2,i)
+
+  #apply 
+  rk1H=rk_gf2(stabgf2[0:2*nq,0:nq])
+  rk2H=rk_gf2(stabgf2[nq:2*nq,0:nq])
+  if tprint:
+    print(p,"GF2-ranks=",rk1H,rk2H)
+  if rk2H!=rk1:
+    print(p,"GF2-ranks=",rk1H,rk2H)
+    raise RuntimeError("assumption mismatch")
+
+  print("maximal X-rank with Hs at ",initialH)
+  if tprint:
+    print(stabgf2)
+    
+  mqc=QuantumCircuit(qreg,creg)
+  for i in range(nq):
+    if initialH[i]==1:
+      mqc.h(io[i])
+  
+  #reduce X-matrix to unit matrix
+  GF2 = galois.GF(2)
+  L,U,P=GF2.lup_decompose(stabgf2[nq:2*nq,:])
+  if tprint:
+    print(np.array_equal(P @ stabgf2[nq:2*nq,:], L @ U))
+    print("L=")
+    print(L)
+    print("U=")
+    print(U)
+    print("P=")
+    print(P)
+  
+  #permute columns
+  perm=[]
+  for i in range(nq):
+    for j in range(nq):
+      if P[i,j]==1:
+        perm.append(j)
+  if tprint:
+    print(perm)
+
+  p = Permutation(perm)
+  ts = p.transpositions()
+  if tprint:
+    print(ts)
+
+  for t in ts:
+    if tprint:
+      print("swap(",t[0],",",t[1],")")
+    mqc.swap(io[t[0]],io[t[1]])
+    stabgf2=stab_swap(nq,stabgf2,t[0],t[1]).copy()
+
+  if tprint:
+    print("after permutation")
+    print(stabgf2)
+
+  Linv=np.linalg.inv(L)
+  for i in range(nq-1,-1,-1):
+    for j in range(nq):
+      if i!=j:
+        if Linv[j,i]==1:
+          if tprint:
+            print("cnot(",i,",",j,")")
+          mqc.cnot(io[i],io[j])
+          stabgf2=stab_cnot(nq,stabgf2,i,j).copy()
+  if tprint:
+    print(stabgf2)
+  
+  #check if X-matrix is diagonal
+  isdiag=True
+  isU=True
+  for i in range(nq):
+    for j in range(nq):
+      if i!=j:
+        if stabgf2[i+nq,j]!=0:
+          isdiag=False
+      if j<i:
+        if stabgf2[i+nq,j]!=0:
+          isU=False
+  if tprint:
+    print("X is upper triangular :",isU)
+  if not isU:
+    raise RuntimeError("X-matrix is not upper triangular. Something went wrong.")
+  
+  if tprint:
+    print("X is diag:",isdiag)
+  if not isdiag:
+    #reduce X to diagonal form
+    for i in range(nq-2,-1,-1):
+      if stabgf2[i+nq,i]!=0:
+        if tprint:
+          print("starting at row ",i)
+        for j in range(nq-1,i,-1):
+          if stabgf2[i+nq,j]==1:
+            if tprint:
+              print("cnot(",j,",",i,")")
+            mqc.cnot(io[j],io[i])
+            stabgf2=stab_cnot(nq,stabgf2,j,i).copy()
+  if tprint:
+    print("final after reduction")
+    print(stabgf2)
+
+  #reduce Z to zero matrix with CZ and S
+  for i in range(nq):
+    for j in range(nq):
+      if stabgf2[i,j]==1 and i!=j:
+        if tprint:
+          print("CZ(",i,",",j,")")
+        mqc.cz(io[i],io[j])
+        stabgf2=stab_cz(nq,stabgf2,i,j).copy()
+  for i in range(nq):
+    if stabgf2[i,i]==1:
+      if tprint:
+        print("S(",i,")")
+      mqc.s(io[i])
+      stabgf2=stab_s(nq,stabgf2,i)
+
+  if tprint:
+    print(stabgf2)
+    print("final after Hs")
+
+  for i in range(nq):
+    mqc.h(io[i])
+    stabgf2=stab_H(nq,stabgf2,i).copy()
+
+  if tprint:
+    print(stabgf2)
+  
+  #get sign from phase row
+  signs=np.ones(nq,dtype=int)
+  for i in range(nq):
+    if stabgf2[2*nq,i]==1:
+      if True: #config.getboolean("QC","add_Ys_instead_of_separate_signs"):
+        mqc.y(io[i])
+      else:
+        signs[i]=-1
+
+  for ic in range(len(cc)):
+    if tprint:
+      print(cc[ic],"is measured at",io[ic])
+    mqc.measure(ic,ic)
+  if tprint:
+    print("depth=",mqc.depth())
+
+  if tprint:
+    print("signs=",signs)
+
+  ##construction of https://arxiv.org/pdf/1907.13623.pdf
+  #stab=clique2stab(nq,c)
+  #q=_get_measurement_circuit(stab,nq)
+  #tqc=tqc.compose(q.circuit)
+  
+  if config.getboolean('QC','test_construction_of_measurement_circuits'):
+    tqc=tqc.compose(mqc)
+    #test with example vector 
+    backend = Aer.get_backend('aer_simulator_statevector')
+    shots=int(config['QC']['shots'])
+    seed=int(config['rnd']['seed'])
+    jobs=execute(tqc,backend=backend,backend_properties=backend.properties(),shots=shots,seed_simulator=seed,seed_transpiler=seed)#,optimization_level=3)
+    jobs.wait_for_final_state(wait=0.05)
+
+    if jobs.done():
+      res=jobs.result().results
+      if tprint:
+        print("result=",res[0].data.counts)
+
+    for r in res[0].data.counts:
+      if tprint:
+        print(r,bin(int(r, base=16))[2:].zfill(nq),res[0].data.counts[r]/shots)
+
+    for ic in range(len(cc)):
+      if tprint:
+        print(cc_in[ic],"is measured as Z at",io[ic])
+      V=0
+      for r in res[0].data.counts:
+        b=bin(int(r, base=16))[2:].zfill(nq)
+        v=res[0].data.counts[r]/shots
+        if b[nq-1-io[ic]]=='1':
+          V=V-v
+        else:
+          V=V+v
+      V=V*signs[ic]
+      
+      #check result
+      mop=PauliOp(Pauli(cc_in[ic]))
+      msparse=sparse.csr_matrix(mop.to_matrix())
+      exp=np.dot(np.conj(rand_sv.data),msparse.dot(rand_sv.data)).real
+      print("value=",cc_in[ic],V,exp,abs(V-exp))
+  mqubits=[]
+  for ic in range(len(cc)):
+    mqubits.append(io[ic])
+  
+  m={"mqc":mqc,"mqubits":mqubits,"signs":signs}
+
+  complexity=0
+  if criterion_for_qc_optimality=="constructed":
+    complexity=measure_complexity(m["mqc"],mode=complexity_measure,gate_weights=gatew)
+  elif criterion_for_qc_optimality=="transpiled":
+    transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
+    complexity=measure_complexity(transpiled_mqc,mode=complexity_measure,gate_weights=gatew)
+  else:
+      raise RuntimeError('criterion_for_qc_optimality not known')
+  print("ordering",c,"Hadamards",initialH,"complexity=",complexity," (complexity=",complexity_measure,")")
+  if complexity<complexity_min:
+      complexity_min=complexity
+      #mqubit=mq
+      mmin=copy.deepcopy(m)
   return mmin
 
 
@@ -650,11 +995,11 @@ def build_measurement_circuit(mode,nq,cc,config):
   complexity_measure=config["QC"]["complexity_measure"]
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
 
-  if mode=="none" or len(cc)==1:
+  if mode=="none": # or len(cc)==1:
     #one measurement per program
     m=build_measurement_circuits_none(nq,cc,config)
   elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
-    m=build_measurement_circuits_commute(nq,cc,config)
+    m=build_measurement_circuits_commute2(nq,cc,config)
 
   if m is not None:
     transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)
@@ -667,10 +1012,7 @@ def build_measurement_circuit(mode,nq,cc,config):
     if config.getboolean('QC','print_measurement_circuits'):
       print("constructed measurement program")
       print(m["mqc"])
-
       m["mqc"].draw(output='latex',filename="_".join(cc)+".pdf")
-
-
       print("transpiled measurement program")
       print(transpiled_mqc)
 
@@ -722,8 +1064,8 @@ def build_measurement_circuits(cliques,mode,nq,config):
 def getH_for_X_rank(nq,stab):
   rk1=rk_gf2(stab[0:2*nq,0:nq])
   rk2=rk_gf2(stab[nq:2*nq,0:nq])
-  print("maxrk rk1",rk1)
-  print("maxrk rk2",rk2)
+  #print("maxrk rk1",rk1)
+  #print("maxrk rk2",rk2)
   H=[]
   for i in range(nq):
     H.append(0)
@@ -736,7 +1078,7 @@ def getH_for_X_rank(nq,stab):
     k=getH_for_rk_increase(nq,stab2)
     stab2=stab_H(nq,stab2,k)
     rk=rk_gf2(stab2[nq:2*nq,0:nq])
-    print("maxrk",i,k,rk)
+    #print("maxrk",i,k,rk)
     H[k]=1
     if rk==rk1:
       return H

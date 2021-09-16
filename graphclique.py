@@ -90,8 +90,8 @@ def cliquecover(elements,commutemode="qubitwise",plotgraph=False,printcliques=Fa
         lmin=len(cliques2)
 
 
-    a=approximation.clique_removal(g)[1]
-    print("clique_removal",len(a))
+    #a=approximation.clique_removal(g)[1]
+    #print("clique_removal",len(a))
 
     #try to combine cliques
     comb=[]
