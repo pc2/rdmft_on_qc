@@ -1013,7 +1013,10 @@ def build_measurement_circuit(mode,nq,cc,config):
     if config.getboolean('QC','print_measurement_circuits'):
       print("constructed measurement program")
       print(m["mqc"])
-      m["mqc"].draw(output='latex',filename="_".join(cc)+".pdf")
+      try:
+        m["mqc"].draw(output='latex',filename="_".join(cc)+".pdf")
+      except OSError:
+        print("circuit not drawn")
       print("transpiled measurement program")
       print(transpiled_mqc)
 
