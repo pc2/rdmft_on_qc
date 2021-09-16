@@ -1000,7 +1000,10 @@ def build_measurement_circuit(mode,nq,cc,config):
     #one measurement per program
     m=build_measurement_circuits_none(nq,cc,config)
   elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
-    m=build_measurement_circuits_commute2(nq,cc,config)
+    if config.getboolean('QC','fixed_order_measurement_qubits'): 
+      m=build_measurement_circuits_commute2(nq,cc,config)
+    else:
+      m=build_measurement_circuits_commute(nq,cc,config)
 
   if m is not None:
     transpiled_mqc = transpile(m["mqc"], basis_gates=transpiler_gates,coupling_map=transpiler_couplings, optimization_level=3,seed_transpiler=transpiler_seed)

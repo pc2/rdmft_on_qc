@@ -36,6 +36,7 @@ from qiskit_nature.mappers.second_quantization import ParityMapper
 from qiskit_nature.converters.second_quantization import QubitConverter
 from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper
 from qiskit_nature.operators.second_quantization import FermionicOp
+import pickle
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     #print("Opt step:",nfunc,par,f,stepsize,accepted)
@@ -105,13 +106,19 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
             )
     
     if not tsim: 
-        print("waiting for job to finish: ",jobs.job_id())
+        print("waiting for job to finish: https://quantum-computing.ibm.com/jobs/"+str(jobs.job_id()))
         jobs.wait_for_final_state(wait=1)
-        print("job finished: ",jobs.job_id())
     else:
         jobs.wait_for_final_state(wait=0.01)
 
     if jobs.done():
+        if not tsim:
+            #write measurement result to file
+            with open('experiment_'+jobs.job_id()+"_qcs", 'wb') as outfile:
+                pickle.dump(qcs_par, outfile)
+            with open('experiment_'+jobs.job_id()+"_job", 'wb') as outfile:
+                pickle.dump(jobs, outfile)
+
         res=jobs.result().results
         for j in range(len(mqcs)):
             counts = jobs.result().get_counts(j)
