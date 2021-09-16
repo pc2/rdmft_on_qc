@@ -394,15 +394,6 @@ else:
     exit()
 
 
-entanglement=config['QC']['entanglement']
-reps=int(config['QC']['reps'])
-entanglement_blocks=config['QC']['entanglement_blocks']
-rotation_blocks=config['QC']['rotation_blocks'].split(",")
-if entanglement=="map":
-    entanglement_map=config['QC']['entanglement_map']
-    entanglement=[]
-    for e in entanglement_map.split(","):
-        entanglement.append((int(e.split("_")[0]),int(e.split("_")[1])))
 
 
 # set the backend for the quantum computation
@@ -459,6 +450,30 @@ else:
     #backend = BasicAer.get_backend('statevector_simulator')
     backend = Aer.get_backend('aer_simulator_statevector')
     optimization_level=2
+
+#set entangler map in hardware-effcieint trial state
+entanglement=config['QC']['entanglement']
+reps=int(config['QC']['reps'])
+entanglement_blocks=config['QC']['entanglement_blocks']
+rotation_blocks=config['QC']['rotation_blocks'].split(",")
+if entanglement=="map":
+    entanglement_map=config['QC']['entanglement_map']
+    entanglement=[]
+    for e in entanglement_map.split(","):
+        entanglement.append((int(e.split("_")[0]),int(e.split("_")[1])))
+
+if entanglement=="qc":
+    #get entangler from hardware coupling map
+    if not tnoise:
+        raise RuntimeError("entanglement=qc requires tnoise=True")
+    entanglement=[]
+    for c in ibmq_coupling_map:
+        if [c[1],c[0]] in entanglement:
+            continue
+        if c[0]<norb_aca and c[1]<norb_aca:
+            entanglement.append([c[0],c[1]])
+    print("using entangler=",entanglement)
+
 
 backend_check = BasicAer.get_backend('statevector_simulator')
 #backend_check = Aer.get_backend('aer_simulator_statevector')
