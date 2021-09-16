@@ -85,7 +85,6 @@ def measure_complexity(qc,mode="depth",gate_weights=None):
             except KeyError:
                 print(gw)
                 raise RuntimeError("")
-                ngq+=-1000000
         return ngq
     else:
       raise RuntimeError("complexity_measure "+str(mode)+" not known")

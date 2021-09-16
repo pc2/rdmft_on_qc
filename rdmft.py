@@ -79,7 +79,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 optimization_level=optimization_level
             )
     else:
-        print("EXECUTING WITH NOISE!")
+        #print("EXECUTING WITH NOISE!")
         jobs = execute(
             qcs_par,
             backend=backend,
@@ -104,8 +104,8 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
         res=jobs.result().results
         for j in range(len(mqcs)):
             counts = jobs.result().get_counts(j)
-            print("NOISE count %i:" % j)
-            plot_histogram(counts).savefig("counts_%i.png" % j)
+            #print("NOISE count %i:" % j)
+            #plot_histogram(counts).savefig("counts_%i.png" % j)
 
         Vs=[]
         #loop over programs
@@ -602,10 +602,10 @@ if tcheck:
     job=execute(circ,backend_check)
     result=job.result()
     counts = result.get_counts(0)
-    plot_histogram(counts).savefig("tcheck_counts.png")
+    #plot_histogram(counts).savefig("tcheck_counts.png")
 
     psi=result.get_statevector()
-    print("NONOISE STATE VECTOR:", psi)
+    #print("NONOISE STATE VECTOR:", psi)
 
     W_exact=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
     print("W_exact=",W_exact,"W_qc=",W_qc)
@@ -615,7 +615,38 @@ if tcheck:
         c_exact=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real-constraints[ic]['cval']
         print("constraints exact=",c_exact,"qc=",c_qc[ic])
 
-exit()
+
+tstddev=config.getboolean('QC','tstddev')
+if tstddev:
+    #compute stddev
+    stddev_count=int(config['QC']['stddev_count'])
+    res=[]
+    for i in range(stddev_count):
+        v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed+i,tsim,optimization_level)
+        W_qc=measurements_to_interact(mqcs,v,pauli_interact)
+        c_qc=measurements_to_constraints(mqcs,v,constraints)
+        res.append([W_qc,c_qc])
+    W_qc_sum=0
+    c_qc_sum=np.zeros(len(constraints))
+    W2_qc_sum=0
+    c2_qc_sum=np.zeros(len(constraints))
+    for i in range(stddev_count):
+        W_qc_sum+=res[i][0]
+        c_qc_sum[:]+=res[i][1][:]
+        W2_qc_sum+=res[i][0]**2
+        c2_qc_sum[:]+=res[i][1][:]**2
+    
+    W_qc_sum=W_qc_sum/stddev_count
+    c_qc_sum[:]=c_qc_sum[:]/stddev_count
+    W2_qc_sum=W2_qc_sum/stddev_count
+    c2_qc_sum[:]=c2_qc_sum[:]/stddev_count
+
+    print("stddev W=",math.sqrt(W2_qc_sum-W_qc_sum**2))
+    for i in range(len(constraints)):
+        print("stddev c[",i,"]=",math.sqrt(c2_qc_sum[i]-c_qc_sum[i]**2))
+
+
+#exit()
 rdmf_obj_eval=0
 rdmf_cons_eval=0
 tprintevals=True

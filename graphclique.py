@@ -63,8 +63,8 @@ def cliquecover(elements,commutemode="qubitwise",plotgraph=False,printcliques=Fa
     #(clique covering number=chromatic number of complement graph)
 
     g2=nx.complement(g)
-    nx.drawing.nx_pydot.write_dot(g2,"graph2.dot")
     if plotgraph:
+      nx.drawing.nx_pydot.write_dot(g2,"graph2.dot")
       f = plt.figure()
       nx.draw(g2, ax=f.add_subplot(111),with_labels=True)
       f.savefig("graph_"+commutemode+"_complement.png")                
