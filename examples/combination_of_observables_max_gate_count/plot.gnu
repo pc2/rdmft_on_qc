@@ -1,4 +1,4 @@
-set terminal epslatex standalone size 4.5in,3.2in color
+set terminal epslatex standalone size 4.5in,3.3in color
 
 set output "plot.tex"
 
@@ -16,7 +16,7 @@ set border 31 linewidth 2
 #set logscale x 10
 
 set xlabel "number of qubits"
-set ylabel 'maximal gate count of measurement programs'
+set ylabel 'maximal gate count of measurement circuits'
 set xrange [:]
 #set xtics ( "256" 256, "1024" 1024, "2048" 2048, "3072" 3072)
 set yrange [:]
@@ -46,5 +46,5 @@ set output "bla"
 !dvips plot.dvi
 !ps2eps -f plot.ps
 !ps2pdf plot.ps
-!mv plot.pdf maxdepth_unopt.pdf
+!mv plot.pdf max_gate_count_unopt.pdf
 !rm *.dvi *.aux *.ps *-inc.eps *.tex bla *.log
