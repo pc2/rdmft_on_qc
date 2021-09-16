@@ -139,6 +139,8 @@ def build_measurement_circuits_none(nq,cc,config):
               #iterate over leaves and try a local reduction for every leaf
               for cl in [v for v, d in reduction_graph.out_degree() if d == 0]:
                   for coupling in transpiler_couplings:
+                      if coupling[0]>=len(cl) or coupling[1]>=len(cl):
+                        continue
                       if cl[coupling[0]]=="Z" and cl[coupling[1]]=="Z":
                           #two reduction directions are possible
                           c=list(cl[:])
@@ -994,7 +996,7 @@ def build_measurement_circuit(mode,nq,cc,config):
   complexity_measure=config["QC"]["complexity_measure"]
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
 
-  if mode=="none": # or len(cc)==1:
+  if mode=="none" or len(cc)==1:
     #one measurement per program
     m=build_measurement_circuits_none(nq,cc,config)
   elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":

@@ -80,18 +80,29 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
             )
     else:
         #print("EXECUTING WITH NOISE!")
-        jobs = execute(
-            qcs_par,
-            backend=backend,
-            backend_properties=ibmq_backend_props,  # ibmq_manila or simulator backend?
-            shots=shots, # ?
-            seed_simulator=seed, # ?
-            seed_transpiler=seed, # ?
-            optimization_level=optimization_level, # ?,
-            coupling_map=ibmq_coupling_map,
-            basis_gates=ibmq_basis_gates,
-            noise_model=ibmq_noise_model
-        )
+        if tsim:
+            jobs = execute(
+                qcs_par,
+                backend=backend,
+                backend_properties=ibmq_backend_props,  # ibmq_manila or simulator backend?
+                shots=shots, # ?
+                seed_simulator=seed, # ?
+                seed_transpiler=seed, # ?
+                optimization_level=optimization_level, # ?,
+                coupling_map=ibmq_coupling_map,
+                basis_gates=ibmq_basis_gates,
+                noise_model=ibmq_noise_model
+            )
+        else:
+            jobs = execute(
+                qcs_par,
+                backend=backend,
+                backend_properties=ibmq_backend_props,  # ibmq_manila or simulator backend?
+                shots=shots, # ?
+                seed_simulator=seed, # ?
+                seed_transpiler=seed, # ?
+                optimization_level=optimization_level
+            )
     
     if not tsim: 
         print("waiting for job to finish: ",jobs.job_id())
@@ -400,11 +411,30 @@ if tnoise:
     provider = IBMQ.load_account()
     # >>> [b.name() for b in provider.backends()]
     # ['ibmq_qasm_simulator', 'ibmq_armonk', 'ibmq_santiago', 'ibmq_bogota', 'ibmq_lima', 'ibmq_belem', 'ibmq_quito', 'simulator_statevector', 'simulator_mps', 'simulator_extended_stabilizer', 'simulator_stabilizer', 'ibmq_manila']
-    ibmq_backend = provider.get_backend('ibmq_quito')
+
+    ibmq_backend = provider.get_backend(config['QC']['qc'])
     ibmq_backend_config = ibmq_backend.configuration()
+
+    if ibmq_backend_config.n_qubits < norb_aca:
+        raise RuntimeError("chosen qc doesn't have enough qubits")
+
     # >>> backend_config.basis_gates
     # ['id', 'rz', 'sx', 'x', 'cx', 'reset']
     ibmq_coupling_map = ibmq_backend_config.coupling_map
+
+    #set coupling map for transpiler that is used in the construction of measurement circuits
+    couplingstring=""
+    for ic in range(len(ibmq_coupling_map)-1):
+        couplingstring+=str(ibmq_coupling_map[ic][0])+"_"+str(ibmq_coupling_map[ic][1])+","
+    ic=len(ibmq_coupling_map)-1
+    couplingstring+=str(ibmq_coupling_map[ic][0])+"_"+str(ibmq_coupling_map[ic][1])
+    config['QC']['transpiler_couplings']=couplingstring
+    print("setting transpiler_couplings to",couplingstring)
+    
+    #set gates for transpiler that is used in the construction of measurement circuits
+    config['QC']['transpiler_gates']=",".join(ibmq_backend_config.basis_gates)
+    print("setting transpiler_gates to",",".join(ibmq_backend_config.basis_gates))
+
     # [[0, 1], [1, 0], [1, 2], [1, 3], [2, 1], [3, 1], [3, 4], [4, 3]]
     # Below: directed graph specifying fixed coupling. Nodes correspond to physical qubits (integers) and directed edges correspond to permitted CNOT gates.
     # cm = qiskit.transpiler.CouplingMap(coupling_map)
@@ -432,11 +462,18 @@ else:
 
 backend_check = BasicAer.get_backend('statevector_simulator')
 #backend_check = Aer.get_backend('aer_simulator_statevector')
+
 if not tsim:
-    IBMQ.save_account(apikey,overwrite=True)
+    #IBMQ.save_account(apikey,overwrite=True)
     provider = IBMQ.load_account()
-    print(provider.backends(n_qubits=5, operational=True))
-    backend = provider.backend.ibmq_quito
+    backend = provider.get_backend(config['QC']['qc'])
+    backend_config = ibmq_backend.configuration()
+    status = backend.status()
+    
+    if backend_config.n_qubits < norb_aca:
+        raise RuntimeError("chosen qc doesn't have enough qubits")
+    if not status.operational:
+        raise RuntimeError("chosen qc is not operational")
 
 num_particles=Naca
 
