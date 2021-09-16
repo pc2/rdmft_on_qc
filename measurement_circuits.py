@@ -995,7 +995,7 @@ def build_measurement_circuit(mode,nq,cc,config):
   complexity_measure=config["QC"]["complexity_measure"]
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
 
-  if mode=="none" or len(cc)==1:
+  if mode=="none": # or len(cc)==1:
     #one measurement per program
     m=build_measurement_circuits_none(nq,cc,config)
   elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
