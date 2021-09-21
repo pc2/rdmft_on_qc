@@ -2,6 +2,8 @@ import os
 import copy
 import math
 import sys
+
+from networkx.generators.directed import random_uniform_k_out_graph
 import groundstate
 import aca
 import ci
@@ -37,6 +39,8 @@ from qiskit_nature.converters.second_quantization import QubitConverter
 from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper, BravyiKitaevMapper
 from qiskit_nature.operators.second_quantization import FermionicOp
 import pickle
+import logging
+import h5py
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     #print("Opt step:",nfunc,par,f,stepsize,accepted)
@@ -60,6 +64,8 @@ def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
 
 
 def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_level=3):
+    global measurement_counter
+    measurement_counter+=1
     #measure all quantum programs
     qcs_par=[]
     for mqc in mqcs:
@@ -148,6 +154,12 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 Va.append(V)
             Vs.append(Va)
             #print(mqcs[im]['ops'],Va)
+        if thdf5_out:
+            h5f = h5py.File('measurements.h5', 'a')
+            h5f.create_dataset('opt_x_'+str(measurement_counter), data=x)
+            for i in range(len(Vs)):
+                h5f.create_dataset('opt_V_'+str(measurement_counter)+"_"+str(i), data=Vs[i])
+            h5f.close()
     return Vs
 
 def measurements_to_interact(mqcs,v,pauli_interact):
@@ -194,7 +206,6 @@ def rdmf_obj(x):
     L=0
 
     if texact_expect:
-#    if True:
         circ=qc.bind_parameters(x)
         job=execute(circ,backend_check)
         result=job.result()
@@ -221,6 +232,18 @@ def rdmf_obj(x):
         for ic in range(len(constraints)):
             L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
         L=L+W_qc
+
+        if thdf5_out:
+            h5f = h5py.File('opt_iter.h5', 'a')
+            h5f.create_dataset('opt_x_'+str(rdmf_obj_eval), data=x)
+            h5f.create_dataset('opt_seed_'+str(rdmf_obj_eval), data=seed+rdmf_obj_eval)
+            h5f.create_dataset('opt_cqc_'+str(rdmf_obj_eval), data=c_qc)
+            h5f.create_dataset('opt_wqc_'+str(rdmf_obj_eval), data=W_qc)
+            h5f.create_dataset('opt_L_'+str(rdmf_obj_eval), data=L)
+            h5f.create_dataset('opt_penalty_'+str(rdmf_obj_eval), data=penalty)
+            h5f.create_dataset('opt_lagrange_'+str(rdmf_obj_eval), data=lagrange)
+            h5f.create_dataset('opt_measurement_'+str(rdmf_obj_eval), data=measurement_counter)
+            h5f.close()
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
         print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
     return L
@@ -251,6 +274,8 @@ def rdmf_cons(x):
 dotenv.load_dotenv()
 apikey=os.getenv("QISKIT_APIKEY")
 
+measurement_counter=0
+
 config = configparser.ConfigParser()
 config.sections()
 config.read(sys.argv[1])
@@ -268,6 +293,7 @@ tnoise=config.getboolean('QC','tnoise')
 if tnoise:
     tsampling=True
 
+thdf5_out=config.getboolean('QC','hdf5_out')
 tcheck=config.getboolean('QC','tcheck')
 tobj=config.getboolean('QC','tobj')
 shots=int(config['QC']['shots'])
@@ -406,8 +432,12 @@ else:
 # set the backend for the quantum computation
 if tnoise:
     # Build noise model from backend properties
-    provider = IBMQ.load_account()
-    # >>> [b.name() for b in provider.backends()]
+    IBMQ.load_account()
+    print("providers=",IBMQ.providers())
+    provider = IBMQ.get_provider(hub=config["QC"]['hub'],group=config["QC"]['group'])
+    print("backends=")
+    for b in provider.backends():
+        print(b.name())
     # ['ibmq_qasm_simulator', 'ibmq_armonk', 'ibmq_santiago', 'ibmq_bogota', 'ibmq_lima', 'ibmq_belem', 'ibmq_quito', 'simulator_statevector', 'simulator_mps', 'simulator_extended_stabilizer', 'simulator_stabilizer', 'ibmq_manila']
 
     ibmq_backend = provider.get_backend(config['QC']['qc'])
@@ -452,11 +482,11 @@ if tnoise:
 
     #backend = BasicAer.get_backend('qasm_simulator')
     backend = Aer.get_backend('qasm_simulator')
-    optimization_level=2
+    optimization_level=3
 else:
     #backend = BasicAer.get_backend('statevector_simulator')
     backend = Aer.get_backend('aer_simulator_statevector')
-    optimization_level=2
+    optimization_level=3
 
 #set entangler map in hardware-effcieint trial state
 entanglement=config['QC']['entanglement']
@@ -755,6 +785,8 @@ for oiter in range(100):
         value=rdmf_obj(point)
         nfev=res.nfev
     else:
+        logging.getLogger('qiskit.algorithms.optimizers.spsa').setLevel('INFO')
+        spsa_blocking=config.getboolean('QC','spsa_blocking')
         texact_expect=False
         algo=config['QC']['algo']
         if algo=="COBYLA":
@@ -763,18 +795,18 @@ for oiter in range(100):
             [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
         elif algo=="SPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
-            optimizer = SPSA(maxiter=maxiter,callback=opt_callback)
+            optimizer = SPSA(maxiter=maxiter,callback=opt_callback,blocking=spsa_blocking)
             [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
         elif algo=="cal-SPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
-            optimizer = SPSA(maxiter=maxiter,second_order=False,callback=opt_callback)
+            optimizer = SPSA(maxiter=maxiter,second_order=False,callback=opt_callback,blocking=spsa_blocking)
             [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point=x0,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
-            optimizer = SPSA(maxiter=maxiter,second_order=False,perturbation=perturbation,learning_rate=learning_rate)
+            optimizer = SPSA(maxiter=maxiter,second_order=False,perturbation=perturbation,learning_rate=learning_rate,blocking=spsa_blocking)
             [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
         elif algo=="QNSPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
             fidelity = QNSPSA.get_fidelity(ansatz)
-            qnspsa = QNSPSA(fidelity, maxiter=3000,callback=opt_callback)
+            qnspsa = QNSPSA(fidelity, maxiter=maxiter,callback=opt_callback,blocking=spsa_blocking)
             [point,value,nfev] = qnspsa.optimize(ansatz.num_parameters, rdmf_obj, initial_point=x0)
 
     print("point=",point)

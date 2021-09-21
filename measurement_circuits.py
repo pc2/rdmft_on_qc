@@ -170,6 +170,8 @@ def build_measurement_circuits_none(nq,cc,config):
               #iterate over leaves
               for cl in [v for v, d in reduction_graph.out_degree() if d == 0]:
                   for coupling in transpiler_couplings:
+                      if coupling[0]>=len(cl) or coupling[1]>=len(cl):
+                        continue
                       if (cl[coupling[0]]=="I" and cl[coupling[1]]=="Z") or (cl[coupling[0]]=="Z" and cl[coupling[1]]=="I"):
                           c=list(cl[:])
                           tmp=c[coupling[0]]
