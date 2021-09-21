@@ -156,11 +156,14 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
             Vs.append(Va)
             #print(mqcs[im]['ops'],Va)
         if thdf5_out:
-            h5f = h5py.File('measurements.h5', 'a')
-            h5f.create_dataset('opt_x_'+str(measurement_counter), data=x)
-            for i in range(len(Vs)):
-                h5f.create_dataset('opt_V_'+str(measurement_counter)+"_"+str(i), data=Vs[i])
-            h5f.close()
+            try:
+                h5f = h5py.File('measurements.h5', 'a')
+                h5f.create_dataset('opt_x_'+str(measurement_counter), data=x)
+                for i in range(len(Vs)):
+                    h5f.create_dataset('opt_V_'+str(measurement_counter)+"_"+str(i), data=Vs[i])
+                h5f.close()
+            except BlockingIOError:
+                print("hdf5 output is blocking")
     return Vs
 
 def measurements_to_interact(mqcs,v,pauli_interact):
@@ -235,16 +238,19 @@ def rdmf_obj(x):
         L=L+W_qc
 
         if thdf5_out:
-            h5f = h5py.File('opt_iter.h5', 'a')
-            h5f.create_dataset('opt_x_'+str(rdmf_obj_eval), data=x)
-            h5f.create_dataset('opt_seed_'+str(rdmf_obj_eval), data=seed+rdmf_obj_eval)
-            h5f.create_dataset('opt_cqc_'+str(rdmf_obj_eval), data=c_qc)
-            h5f.create_dataset('opt_wqc_'+str(rdmf_obj_eval), data=W_qc)
-            h5f.create_dataset('opt_L_'+str(rdmf_obj_eval), data=L)
-            h5f.create_dataset('opt_penalty_'+str(rdmf_obj_eval), data=penalty)
-            h5f.create_dataset('opt_lagrange_'+str(rdmf_obj_eval), data=lagrange)
-            h5f.create_dataset('opt_measurement_'+str(rdmf_obj_eval), data=measurement_counter)
-            h5f.close()
+            try:
+                h5f = h5py.File('opt_iter.h5', 'a')
+                h5f.create_dataset('opt_x_'+str(rdmf_obj_eval), data=x)
+                h5f.create_dataset('opt_seed_'+str(rdmf_obj_eval), data=seed+rdmf_obj_eval)
+                h5f.create_dataset('opt_cqc_'+str(rdmf_obj_eval), data=c_qc)
+                h5f.create_dataset('opt_wqc_'+str(rdmf_obj_eval), data=W_qc)
+                h5f.create_dataset('opt_L_'+str(rdmf_obj_eval), data=L)
+                h5f.create_dataset('opt_penalty_'+str(rdmf_obj_eval), data=penalty)
+                h5f.create_dataset('opt_lagrange_'+str(rdmf_obj_eval), data=lagrange)
+                h5f.create_dataset('opt_measurement_'+str(rdmf_obj_eval), data=measurement_counter)
+                h5f.close()
+            except BlockingIOError:
+                print("hdf5 output is blocking")
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
         print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
     return L
