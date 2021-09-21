@@ -42,6 +42,7 @@ import pickle
 import logging
 import h5py
 import shutil
+from qiskit.test.mock import FakeBelem
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     #print("Opt step:",nfunc,par,f,stepsize,accepted)
@@ -66,16 +67,19 @@ def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
 
 def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_level=3):
     global measurement_counter
+    t0=time.time()
     measurement_counter+=1
     #measure all quantum programs
     qcs_par=[]
+    q = QuantumRegister(nq)
+    c = ClassicalRegister(nq)
+    qc=QuantumCircuit(q,c)
+    qc=qc.compose(ansatz.bind_parameters(x))
+    t1=time.time()
+
     for mqc in mqcs:
-        q = QuantumRegister(nq)
-        c = ClassicalRegister(nq)
-        qc=QuantumCircuit(q,c)
-        qc=qc.compose(ansatz)
-        qc=qc.compose(mqc['mqc'])
-        qcs_par.append(qc.bind_parameters(x))
+        qcs_par.append(qc.compose(mqc['mqc']))
+    t2=time.time()
     if not tnoise:
         jobs = execute(
                 qcs_par,
@@ -87,8 +91,8 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 optimization_level=optimization_level
             )
     else:
-        #print("EXECUTING WITH NOISE!")
         if tsim:
+            backend.set_options(method="density_matrix") #,max_parallel_threads=5,max_parallel_shots=8,max_parallel_experiments=5)
             jobs = execute(
                 qcs_par,
                 backend=backend,
@@ -96,7 +100,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 shots=shots, # ?
                 seed_simulator=seed, # ?
                 seed_transpiler=seed, # ?
-                optimization_level=optimization_level, # ?,
+                optimization_level=0,#optimization_level, # ?,
                 coupling_map=ibmq_coupling_map,
                 basis_gates=ibmq_basis_gates,
                 noise_model=ibmq_noise_model
@@ -111,6 +115,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 seed_transpiler=seed, # ?
                 optimization_level=optimization_level
             )
+    t3=time.time()
     
     if not tsim: 
         print("waiting for job to finish: https://quantum-computing.ibm.com/jobs/"+str(jobs.job_id()))
@@ -119,6 +124,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
         jobs.wait_for_final_state(wait=0.01)
 
     if jobs.done():
+        t4=time.time()
         if not tsim:
             #write measurement result to file
             with open('experiment_'+jobs.job_id()+"_qcs", 'wb') as outfile:
@@ -164,6 +170,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 h5f.close()
             except BlockingIOError:
                 print("hdf5 output is blocking")
+        print("t_measure",t1-t0,t2-t1,t3-t2,t4-t3)
     return Vs
 
 def measurements_to_interact(mqcs,v,pauli_interact):
@@ -205,6 +212,7 @@ def measurements_to_constraints(mqcs,v,constraints):
 def rdmf_obj(x):
     global rdmf_obj_eval
     rdmf_obj_eval+=1
+    t0 = time.time()
     c_qc=np.zeros(len(constraints))
     W_qc=0
     L=0
@@ -236,23 +244,24 @@ def rdmf_obj(x):
         for ic in range(len(constraints)):
             L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
         L=L+W_qc
-
-        if thdf5_out:
-            try:
-                h5f = h5py.File('opt_iter.h5', 'a')
-                h5f.create_dataset('opt_x_'+str(rdmf_obj_eval), data=x)
-                h5f.create_dataset('opt_seed_'+str(rdmf_obj_eval), data=seed+rdmf_obj_eval)
-                h5f.create_dataset('opt_cqc_'+str(rdmf_obj_eval), data=c_qc)
-                h5f.create_dataset('opt_wqc_'+str(rdmf_obj_eval), data=W_qc)
-                h5f.create_dataset('opt_L_'+str(rdmf_obj_eval), data=L)
-                h5f.create_dataset('opt_penalty_'+str(rdmf_obj_eval), data=penalty)
-                h5f.create_dataset('opt_lagrange_'+str(rdmf_obj_eval), data=lagrange)
-                h5f.create_dataset('opt_measurement_'+str(rdmf_obj_eval), data=measurement_counter)
-                h5f.close()
-            except BlockingIOError:
-                print("hdf5 output is blocking")
+    
+    t1 = time.time()
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
-        print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
+        print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t1-t0)
+    if thdf5_out and not texact_expect:
+        try:
+            h5f = h5py.File('opt_iter.h5', 'a')
+            h5f.create_dataset('opt_x_'+str(rdmf_obj_eval), data=x)
+            h5f.create_dataset('opt_seed_'+str(rdmf_obj_eval), data=seed+rdmf_obj_eval)
+            h5f.create_dataset('opt_cqc_'+str(rdmf_obj_eval), data=c_qc)
+            h5f.create_dataset('opt_wqc_'+str(rdmf_obj_eval), data=W_qc)
+            h5f.create_dataset('opt_L_'+str(rdmf_obj_eval), data=L)
+            h5f.create_dataset('opt_penalty_'+str(rdmf_obj_eval), data=penalty)
+            h5f.create_dataset('opt_lagrange_'+str(rdmf_obj_eval), data=lagrange)
+            h5f.create_dataset('opt_measurement_'+str(rdmf_obj_eval), data=measurement_counter)
+            h5f.close()
+        except BlockingIOError:
+            print("hdf5 output is blocking")
     return L
 
 def rdmf_cons(x):
@@ -296,7 +305,8 @@ for f in ["measurements.h5","opt_iter.h5"]:
         shutil.move(f,f2)
 
 build_sparse=config.getboolean('QC','build_sparse')
-commutation_mode=config['QC']['commutation']
+commutation_mode_1rdm=config['QC']['commutation_1rdm']
+commutation_mode_W=config['QC']['commutation_W']
 two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
 tdoqc=config.getboolean('QC','tdoqc')
 tsim=config.getboolean('QC','tsim')
@@ -445,15 +455,24 @@ else:
 # set the backend for the quantum computation
 if tnoise:
     # Build noise model from backend properties
-    IBMQ.load_account()
-    print("providers=",IBMQ.providers())
-    provider = IBMQ.get_provider(hub=config["QC"]['hub'],group=config["QC"]['group'])
-    print("backends=")
-    for b in provider.backends():
-        print(b.name())
+    #IBMQ.save_account(apikey,overwrite=True)
     # ['ibmq_qasm_simulator', 'ibmq_armonk', 'ibmq_santiago', 'ibmq_bogota', 'ibmq_lima', 'ibmq_belem', 'ibmq_quito', 'simulator_statevector', 'simulator_mps', 'simulator_extended_stabilizer', 'simulator_stabilizer', 'ibmq_manila']
 
-    ibmq_backend = provider.get_backend(config['QC']['qc'])
+    if config['QC']['qc'].find("fake")==0:
+        if config['QC']['qc']=="fake_belem":
+            ibmq_backend = FakeBelem()
+        else:
+            raise RuntimeError("fake qc not known please add in rdmft.py")
+    else:
+        IBMQ.load_account()
+        print("providers=",IBMQ.providers())
+        provider = IBMQ.get_provider(hub=config["QC"]['hub'],group=config["QC"]['group'])
+        print("backends=")
+        for b in provider.backends():
+            print(b.name())
+        ibmq_backend = provider.get_backend(config['QC']['qc'])
+
+
     ibmq_backend_config = ibmq_backend.configuration()
 
     if ibmq_backend_config.n_qubits < norb_aca:
@@ -495,6 +514,7 @@ if tnoise:
 
     #backend = BasicAer.get_backend('qasm_simulator')
     backend = Aer.get_backend('qasm_simulator')
+    #backend = QasmSimulator.from_backend(ibmq_backend)
     optimization_level=3
 else:
     #backend = BasicAer.get_backend('statevector_simulator')
@@ -529,7 +549,6 @@ backend_check = BasicAer.get_backend('statevector_simulator')
 #backend_check = Aer.get_backend('aer_simulator_statevector')
 
 if not tsim:
-    #IBMQ.save_account(apikey,overwrite=True)
     provider = IBMQ.load_account()
     backend = provider.get_backend(config['QC']['qc'])
     backend_config = ibmq_backend.configuration()
@@ -659,12 +678,12 @@ for c in constraints:
 unique_pauliops=measurement_circuits.get_unique_pauliops(pauliops)['unique pauliops']
 print("unique pauliops",len(unique_pauliops))
 #compute commuting cliques
-cliques=measurement_circuits.build_cliques(commutation_mode,unique_pauliops)
+cliques=measurement_circuits.build_cliques(commutation_mode_1rdm,unique_pauliops)
 if config.getboolean('QC','end_after_cliques'):
     exit()
 #build measurement circuits for ciques
-print("constructing measurement programs for 1rdm with commutativity mode",commutation_mode)
-mqcs_1rdm=measurement_circuits.build_measurement_circuits(cliques,commutation_mode,nq,config)
+print("constructing measurement programs for 1rdm with commutativity mode",commutation_mode_1rdm)
+mqcs_1rdm=measurement_circuits.build_measurement_circuits(cliques,commutation_mode_1rdm,nq,config)
 
 ############################################################################
 #build measurement programs for interaction
@@ -673,10 +692,10 @@ for cc in pauli_interact['pauliops']:
     pauliops.append(str(cc.primitive))
 unique_pauliops=measurement_circuits.get_unique_pauliops(pauliops)['unique pauliops']
 #compute commuting cliques
-cliques=measurement_circuits.build_cliques(commutation_mode,unique_pauliops)
+cliques=measurement_circuits.build_cliques(commutation_mode_W,unique_pauliops)
 #build measurement circuits for ciques
-print("constructing measurement programs for interaction with commutativity mode",commutation_mode)
-mqcs_interact=measurement_circuits.build_measurement_circuits(cliques,commutation_mode,nq,config)
+print("constructing measurement programs for interaction with commutativity mode",commutation_mode_W)
+mqcs_interact=measurement_circuits.build_measurement_circuits(cliques,commutation_mode_W,nq,config)
 
 #############################################################################
 #combine measurement programs for 1rdm and interaction

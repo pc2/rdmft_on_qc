@@ -336,6 +336,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
     rand_sv=random_statevector(2**nq,seed=2344)
 
   #cc_in=['IYZX', 'IXZY', 'YZXI', 'XZYI']
+#  cc_in=['XXII',"YYII","ZZII"]
 
   cc_reordered=[]
   for c in cc_in:  
@@ -399,6 +400,8 @@ def build_measurement_circuits_commute(nq,cc_in,config):
     rk1=rk_gf2(stab[0:2*nq,0:nq])
     if tprint:
       print("GF2-rank stab=",rk1)
+#    if len(cc_in)>rk1:
+#      raise RuntimeError("more Pauli strings in clique than independent measurements")
     rk2=rk_gf2(stab[nq:2*nq,0:nq])
     if tprint:
       print("GF2-rank X=",rk2)
@@ -463,6 +466,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
         print(U)
         print("P=")
         print(P)
+        print(np.array_equal(stabgf2[nq:2*nq,:], L @ U @ P))
       
       #permute columns
       perm=[]
@@ -547,7 +551,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
           if tprint:
             print("S(",i,")")
           mqc.s(io[i])
-          stabgf2=stab_s(nq,stabgf2,i)
+          stabgf2=stab_s(nq,stabgf2,i).copy()
 
       if tprint:
         print(stabgf2)
@@ -559,6 +563,25 @@ def build_measurement_circuits_commute(nq,cc_in,config):
 
       if tprint:
         print(stabgf2)
+
+      #check
+      isdiag=True
+      for i in range(nq):
+        for j in range(nq):
+          if i!=j and stabgf2[i,j]!=0:
+            isdiag=False
+            break
+      if not isdiag:
+        raise RuntimeError("Z-matrix is not diagonal")
+      iszero=True
+      for i in range(nq):
+        for j in range(nq):
+          if stabgf2[i+nq,j]!=0:
+            iszero=False
+            break
+      if not iszero:
+        raise RuntimeError("X-matrix is not zero")
+
       
       #get sign from phase row
       signs=np.ones(nq,dtype=int)
@@ -572,6 +595,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       for ic in range(len(cc)):
         if tprint:
           print(cc[ic],"is measured at",io[ic])
+      for ic in range(nq):
         mqc.measure(ic,ic)
       if tprint:
         print("depth=",mqc.depth())
@@ -619,7 +643,9 @@ def build_measurement_circuits_commute(nq,cc_in,config):
           mop=PauliOp(Pauli(cc_in[ic]))
           msparse=sparse.csr_matrix(mop.to_matrix())
           exp=np.dot(np.conj(rand_sv.data),msparse.dot(rand_sv.data)).real
-          print("value=",cc_in[ic],V,exp,abs(V-exp))
+          print("value=",cc_in[ic],"\t",V,"\t",exp,"\t",abs(V-exp))
+          if abs(V-exp)>0.1:
+            raise RuntimeError("something went wrong")
       mqubits=[]
       for ic in range(len(cc)):
         mqubits.append(io[ic])
@@ -716,7 +742,6 @@ def build_measurement_circuits_commute2(nq,cc_in,config):
     for j in range(nq):
       if P[i,j]==1:
         perm.append(j)
-  print(perm)
   orders=[perm]
   
   initialH=[]
@@ -724,13 +749,16 @@ def build_measurement_circuits_commute2(nq,cc_in,config):
     initialH.append(0)
 
   for i in range(nq):
-    initialH[i]=p[perm[i]]
+    initialH[i]=p[orders[0][i]]
 
   complexity_min=10000000
   mmin={}
 
-  io=perm[:] #inv_perm(o)
-  o=io[:]
+  o=orders[0] #inv_perm(o)
+  io=inv_perm(o)
+  if tprint:
+    print("o= ",o)
+    print("io=",io)
 
   #permute measurements with order o
   c=[]
@@ -750,6 +778,8 @@ def build_measurement_circuits_commute2(nq,cc_in,config):
   rk1=rk_gf2(stab[0:2*nq,0:nq])
   if tprint:
     print("GF2-rank stab=",rk1)
+  if len(cc_in)>rk1:
+    raise RuntimeError("more Pauli strings in clique than independent measurements")
   rk2=rk_gf2(stab[nq:2*nq,0:nq])
   if tprint:
     print("GF2-rank X=",rk2)
@@ -898,6 +928,25 @@ def build_measurement_circuits_commute2(nq,cc_in,config):
   if tprint:
     print(stabgf2)
   
+  #check
+  isdiag=True
+  for i in range(nq):
+    for j in range(nq):
+      if i!=j and stabgf2[i,j]!=0:
+        isdiag=False
+        break
+  if not isdiag:
+    raise RuntimeError("Z-matrix is not diagonal")
+  iszero=True
+  for i in range(nq):
+    for j in range(nq):
+      if stabgf2[i+nq,j]!=0:
+        iszero=False
+        break
+  if not iszero:
+    raise RuntimeError("X-matrix is not zero")
+
+  
   #get sign from phase row
   signs=np.ones(nq,dtype=int)
   for i in range(nq):
@@ -910,6 +959,7 @@ def build_measurement_circuits_commute2(nq,cc_in,config):
   for ic in range(len(cc)):
     if tprint:
       print(cc[ic],"is measured at",io[ic])
+  for ic in range(nq):
     mqc.measure(ic,ic)
   if tprint:
     print("depth=",mqc.depth())
@@ -954,10 +1004,22 @@ def build_measurement_circuits_commute2(nq,cc_in,config):
       V=V*signs[ic]
       
       #check result
+      #for i in range(nq):
+      #  sp=[]
+      #  for j in range(nq):
+      #    sp.append("I")
+      #  sp[i]="Z"
+      #  mop=PauliOp(Pauli("".join(sp)))
+      #  msparse=sparse.csr_matrix(mop.to_matrix())
+      #  exp=np.dot(np.conj(rand_sv.data),msparse.dot(rand_sv.data)).real
+      #  print("Z",i,exp)
+
       mop=PauliOp(Pauli(cc_in[ic]))
       msparse=sparse.csr_matrix(mop.to_matrix())
       exp=np.dot(np.conj(rand_sv.data),msparse.dot(rand_sv.data)).real
-      print("value=",cc_in[ic],V,exp,abs(V-exp))
+      print("value=",cc_in[ic],"\t",V,"\t",exp,"\t",abs(V-exp))
+      if abs(V-exp)>0.1:
+        raise RuntimeError("something went wrong")
   mqubits=[]
   for ic in range(len(cc)):
     mqubits.append(io[ic])
@@ -1066,8 +1128,9 @@ def build_measurement_circuits(cliques,mode,nq,config):
       cc=cliques[ic]
       variants=[cc]
       print("clique=",cc)
-      m=build_measurement_circuit(mode,nq,cc,config)
-      mqcs.append({"mqc":m['mqc'],"mqubits":m['mqubits'],"ops":cc,"signs":m['signs']})
+      cc2=Pauli_dep(nq,cc)
+      m=build_measurement_circuit(mode,nq,cc2,config)
+      mqcs.append({"mqc":m['mqc'],"mqubits":m['mqubits'],"ops":cc2,"signs":m['signs']})
   return mqcs
 
 def getH_for_X_rank(nq,stab):
@@ -1102,3 +1165,11 @@ def getH_for_rk_increase(nq,stab):
       return i
 
 
+def Pauli_dep(nq,cc):
+  stab=clique2stab(nq,cc)
+  rk=rk_gf2(stab[0:2*nq,0:nq])
+  if rk<len(cc):
+    print("some measurements are dependent: rk=",rk," m=",len(cc))
+    raise RuntimeError("split clique or add code to identify dependence of Paulis here")
+  else:
+    return cc
