@@ -1,6 +1,6 @@
 *.png
 aca
-*.h5
+*.h5*
 *.pdf
 experiment_*
 out*

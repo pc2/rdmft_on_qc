@@ -41,6 +41,7 @@ from qiskit_nature.operators.second_quantization import FermionicOp
 import pickle
 import logging
 import h5py
+import shutil
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     #print("Opt step:",nfunc,par,f,stepsize,accepted)
@@ -245,7 +246,7 @@ def rdmf_obj(x):
             h5f.create_dataset('opt_measurement_'+str(rdmf_obj_eval), data=measurement_counter)
             h5f.close()
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
-        print("L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
+        print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2))
     return L
 
 def rdmf_cons(x):
@@ -281,6 +282,12 @@ config.sections()
 config.read(sys.argv[1])
 
 seed=int(config['rnd']['seed'])
+
+for f in ["measurements.h5","opt_iter.h5"]:
+    t=time.time()
+    if os.path.isfile(f):
+        f2=f+"_"+str(t)
+        shutil.move(f,f2)
 
 build_sparse=config.getboolean('QC','build_sparse')
 commutation_mode=config['QC']['commutation']
@@ -768,6 +775,7 @@ print("initial penalty=",penalty)
 
 lagrange=np.zeros(len(constraints))
 tprintevals=True
+rdmf_obj_eval=0
 
 #augmented Lagrangian
 for oiter in range(100):
