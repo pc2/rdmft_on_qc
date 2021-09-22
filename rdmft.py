@@ -832,9 +832,11 @@ for oiter in range(100):
             [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
         elif algo=="cal-SPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
+            print("calibrating")
             optimizer = SPSA(maxiter=maxiter,second_order=False,callback=opt_callback,blocking=spsa_blocking)
             [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point=x0,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
-            optimizer = SPSA(maxiter=maxiter,second_order=False,perturbation=perturbation,learning_rate=learning_rate,blocking=spsa_blocking)
+            print("minimizing")
+            optimizer = SPSA(maxiter=maxiter,second_order=False,callback=opt_callback,perturbation=perturbation,learning_rate=learning_rate,blocking=spsa_blocking)
             [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
         elif algo=="QNSPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
