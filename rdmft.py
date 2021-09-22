@@ -795,7 +795,7 @@ if tsim and tsimcons:
     print(res)
     
 print("Augmented Lagrangian")
-penalty=5
+penalty=1
 print("initial penalty=",penalty)
 
 lagrange=np.zeros(len(constraints))
@@ -852,7 +852,7 @@ for oiter in range(100):
     print("constraint violation sum(c^2)=",np.sum(c_qc**2))
 
     print("Augmented Lagrangian: penalty and multiplier update")
-    x0=point
+    x0=point[:]
     #multiplier and penalty update
     for i in range(len(constraints)):
         lagrange[i]=lagrange[i]+penalty*c_qc[i]
