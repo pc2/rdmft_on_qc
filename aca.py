@@ -105,6 +105,43 @@ def aca_reorder(norb,orbinteract,Din,Win):
     return [Dout,Wout]
 
 def aca(norb,ninteract,Din):
+    coll=True
+    for a in range(norb):
+        for b in range(norb):
+            if (a%2==0 and b%2==1) or (a%2==1 and b%2==0):
+                if abs(Din[a,b])>1e-6:
+                    coll=False
+                    break
+    if not coll:
+        #non-collinear case
+        return aca_base(norb,ninteract,Din)
+    else:
+        #collinear
+        Dout=np.zeros((norb,norb),dtype=np.complex_)
+        norb2=int(norb/2)
+        
+        Din2=np.zeros((norb2,norb2),dtype=np.complex_)
+        for a in range(norb2):
+            for b in range(norb2):
+                Din2[a,b]=Din[2*a,2*b]
+        Dout2=aca_base(norb2,int(ninteract/2),Din2)
+        for a in range(norb2):
+            for b in range(norb2):
+                Dout[2*a,2*b]=Dout2[a,b]
+        
+        Din2=np.zeros((norb2,norb2),dtype=np.complex_)
+        for a in range(norb2):
+            for b in range(norb2):
+                Din2[a,b]=Din[2*a+1,2*b+1]
+        Dout2=aca_base(norb2,int(ninteract/2),Din2)
+        for a in range(norb2):
+            for b in range(norb2):
+                Dout[2*a+1,2*b+1]=Dout2[a,b]
+        return Dout
+
+
+
+def aca_base(norb,ninteract,Din):
     Dout=np.zeros((norb,norb),dtype=np.complex_)
     #print("norb=",norb,np.shape(Din)) 
     #print("ninteract=",ninteract) 

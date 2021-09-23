@@ -42,14 +42,30 @@ import pickle
 import logging
 import h5py
 import shutil
-from qiskit.test.mock import FakeBelem
+from qiskit.test.mock import FakeBelem,FakeBogota
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
     #print("Opt step:",nfunc,par,f,stepsize,accepted)
     print("Opt step:",nfunc,f,stepsize,accepted)
 
-def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
+def qubit_convert_and_map(m,qubit_converter,num_particles,qubit_map): 
+    #qubit_converter
     m_op = qubit_converter.convert(m,num_particles=num_particles)
+    #qubit mapping
+    p=m_op.to_pauli_op()
+    newsummedop=SummedOp([])
+    for op in p:
+        #map op with qubit_map
+        s=str(op.primitive)
+        n=list(str(op.primitive))
+        for i in range(len(s)):
+            n[len(s)-qubit_map[i]-1]=s[len(s)-i-1]
+        op=PauliOp(Pauli("".join(n)),op.coeff)
+        newsummedop+=op
+    return newsummedop
+
+def paulis_for_op(m,qubit_converter,qc,qubit_map,num_particles=0):
+    m_op = qubit_convert_and_map(m,qubit_converter,num_particles,qubit_map)
     pauliops=[]
     coeff=[]
     const=0
@@ -57,11 +73,12 @@ def paulis_for_op(m,qubit_converter,qc,num_particles=0,tmeasure=True):
     #build measuring programs here
     p=m_op.to_pauli_op()
     for op in p:
-        if op.to_circuit().depth()>0:
+        if str(op).count('I')<len(str(op.primitive)):
             coeff.append(op.coeff)
             pauliops.append(op)
         else:
             const+=op.coeff
+
     return {"pauliops":pauliops,"coeff":coeff,"const":const}
 
 
@@ -84,7 +101,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
         jobs = execute(
                 qcs_par,
                 backend=backend,
-                backend_properties=backend.properties(), # why not use backend_ibmq_manila.properties() here?
+                backend_properties=backend.properties(),
                 shots=shots,
                 seed_simulator=seed,
                 seed_transpiler=seed,
@@ -96,11 +113,11 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
             jobs = execute(
                 qcs_par,
                 backend=backend,
-                backend_properties=ibmq_backend_props,  # ibmq_manila or simulator backend?
-                shots=shots, # ?
-                seed_simulator=seed, # ?
-                seed_transpiler=seed, # ?
-                optimization_level=0,#optimization_level, # ?,
+                backend_properties=ibmq_backend_props,
+                shots=shots,
+                seed_simulator=seed,
+                seed_transpiler=seed,
+                optimization_level=0,#optimization_level, 
                 coupling_map=ibmq_coupling_map,
                 basis_gates=ibmq_basis_gates,
                 noise_model=ibmq_noise_model
@@ -109,10 +126,10 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
             jobs = execute(
                 qcs_par,
                 backend=backend,
-                backend_properties=ibmq_backend_props,  # ibmq_manila or simulator backend?
-                shots=shots, # ?
-                seed_simulator=seed, # ?
-                seed_transpiler=seed, # ?
+                backend_properties=ibmq_backend_props,
+                shots=shots,
+                seed_simulator=seed,
+                seed_transpiler=seed,
                 optimization_level=optimization_level
             )
     t3=time.time()
@@ -170,7 +187,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 h5f.close()
             except BlockingIOError:
                 print("hdf5 output is blocking")
-        print("t_measure",t1-t0,t2-t1,t3-t2,t4-t3)
+        #print("t_measure",t1-t0,t2-t1,t3-t2,t4-t3)
     return Vs
 
 def measurements_to_interact(mqcs,v,pauli_interact):
@@ -217,26 +234,29 @@ def rdmf_obj(x):
     W_qc=0
     L=0
 
-    if texact_expect:
-        circ=qc.bind_parameters(x)
-        job=execute(circ,backend_check)
-        result=job.result()
-        psi=result.get_statevector()
-        #build constraint values from results
-        for ic in range(len(constraints)):
-            if not build_sparse:
-                raise RuntimeError("build_sparse not enabled")
-            a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
-            c_qc[ic]=a-constraints[ic]['cval']
-            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
-        #build interaction expectation value from result
+    circ=qc.bind_parameters(x)
+    job=execute(circ,backend_check)
+    result=job.result()
+    psi=result.get_statevector()
+    #build constraint values from results
+    for ic in range(len(constraints)):
         if not build_sparse:
             raise RuntimeError("build_sparse not enabled")
-        a=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
-        W_qc=a
-        L=L+W_qc
-        L2=L
-    else:
+        a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
+        c_qc[ic]=a-constraints[ic]['cval']
+        L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
+    #build interaction expectation value from result
+    if not build_sparse:
+        raise RuntimeError("build_sparse not enabled")
+    a=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
+    W_qc=a
+    L=L+W_qc
+
+    L2=L
+    W2_qc=W_qc
+    c2_qc=copy.deepcopy(c_qc)
+
+    if not texact_expect:
         L=0
         v=measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed+rdmf_obj_eval,tsim,optimization_level)
         W_qc=measurements_to_interact(mqcs,v,pauli_interact)
@@ -247,7 +267,7 @@ def rdmf_obj(x):
     
     t1 = time.time()
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
-        print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t1-t0)
+        print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t1-t0,"exact=","L=",L2,"W=",W2_qc,"sum(c^2)=",np.sum(c2_qc**2))
     if thdf5_out and not texact_expect:
         try:
             h5f = h5py.File('opt_iter.h5', 'a')
@@ -307,7 +327,10 @@ for f in ["measurements.h5","opt_iter.h5"]:
 build_sparse=config.getboolean('QC','build_sparse')
 commutation_mode_1rdm=config['QC']['commutation_1rdm']
 commutation_mode_W=config['QC']['commutation_W']
-two_qubit_reduction=config.getboolean('QC','two_qubit_reduction')
+if config.getboolean('QC','two_qubit_reduction'):
+    raise RuntimeError("two_qubit_reduction no longer implemented")
+two_qubit_reduction=False
+
 tdoqc=config.getboolean('QC','tdoqc')
 tsim=config.getboolean('QC','tsim')
 tsimcons=config.getboolean('QC','tsimcons')
@@ -316,9 +339,10 @@ tnoise=config.getboolean('QC','tnoise')
 if tnoise:
     tsampling=True
 
+no_multipliers_for_up_down=config.getboolean('QC','no_multipliers_for_up_down')
+
 thdf5_out=config.getboolean('QC','hdf5_out')
 tcheck=config.getboolean('QC','tcheck')
-tobj=config.getboolean('QC','tobj')
 shots=int(config['QC']['shots'])
 systemtype=config['system']['type']
 L=int(config['system']['L'])
@@ -328,6 +352,10 @@ if Lint==-1:
 Llocal=int(config['LocalApprox']['Llocal'])
 ilocal=int(config['LocalApprox']['ilocal'])
 np.random.seed(seed)
+
+    
+
+
 
 #GS of system to get a physical density matrix
 if systemtype=='hubbard_chain':
@@ -424,18 +452,21 @@ if abs(Naca2-round(Naca2))<1e-4:
 Naca=(Naca1,Naca2)    
 print("Naca=",Naca)
 
+
+
 tdoci=config.getboolean('CI','tdoci')
+tder=config.getboolean('CI','tder')
 if tdoci:
     tcplx=config.getboolean('CI','tcplx')
-    options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
+    options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter']),"tder":tder}
     Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
-    print("F_aca (full space)=",Faca_local)
+    print("F_aca (full CI space)=",Faca_local)
 
 if tdoci:
     tcplx=config.getboolean('CI','tcplx')
-    options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter'])}
+    options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter']),"tder":False}
     Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Dreordered,options,tcplx)
-    print("F_reordered (full space)=",Faca_local)
+    print("F_reordered (full CI space)=",Faca_local)
 
 qubit_converter = QubitConverter(mapper=ParityMapper())
 mapping=config['QC']['mapping']
@@ -461,6 +492,8 @@ if tnoise:
     if config['QC']['qc'].find("fake")==0:
         if config['QC']['qc']=="fake_belem":
             ibmq_backend = FakeBelem()
+        elif config['QC']['qc']=="fake_bogota":
+            ibmq_backend = FakeBogota()
         else:
             raise RuntimeError("fake qc not known please add in rdmft.py")
     else:
@@ -521,18 +554,46 @@ else:
     backend = Aer.get_backend('aer_simulator_statevector')
     optimization_level=3
 
+#get number of qubits
+nq=config["QC"]["nq"]
+if nq=="qc":
+    if not tnoise:
+        raise RuntimeError("nq=qc only possible for tnoise=True")
+    nq=ibmq_backend_config.n_qubits
+else:
+    nq=int(nq)
+
+print("nq=",nq)    
+
+#get qubit mapping
+qmap=config['QC']['qubit_map']
+qubit_map=[]
+if qmap=="none":
+    for i in range(nq):
+        qubit_map.append(i)
+else:
+    for i in range(nq):
+        qubit_map.append(int(qmap.split(",")[i]))
+print("qubit_map",qubit_map)
+
+print("only physical qubits",qubit_map[0:norb_aca],"are used")
+
 #set entangler map in hardware-effcieint trial state
 entanglement=config['QC']['entanglement']
 reps=int(config['QC']['reps'])
 entanglement_blocks=config['QC']['entanglement_blocks']
 rotation_blocks=config['QC']['rotation_blocks'].split(",")
+
 if entanglement=="map":
     entanglement_map=config['QC']['entanglement_map']
     entanglement=[]
     for e in entanglement_map.split(","):
-        entanglement.append((int(e.split("_")[0]),int(e.split("_")[1])))
+        a=int(e.split("_")[0])
+        b=int(e.split("_")[1])
+        if a in qubit_map[0:norb_aca] and b in qubit_map[0:norb_aca]:
+            entanglement.append((a,b))
 
-if entanglement=="qc":
+elif entanglement=="qc":
     #get entangler from hardware coupling map
     if not tnoise:
         raise RuntimeError("entanglement=qc requires tnoise=True")
@@ -540,10 +601,9 @@ if entanglement=="qc":
     for c in ibmq_coupling_map:
         if [c[1],c[0]] in entanglement:
             continue
-        if c[0]<norb_aca and c[1]<norb_aca:
+        if c[0] in qubit_map[0:norb_aca] and c[1] in qubit_map[0:norb_aca]:
             entanglement.append([c[0],c[1]])
-    print("using entangler=",entanglement)
-
+    print("using entangler (physical qubits) =",entanglement)
 
 backend_check = BasicAer.get_backend('statevector_simulator')
 #backend_check = Aer.get_backend('aer_simulator_statevector')
@@ -566,7 +626,7 @@ dn=1
 
 c_ops=[]
 for i in range(norb_aca):
-    c_ops.append(FermionicOp("-_"+str(i),register_length=norb_aca))
+    c_ops.append(FermionicOp("-_"+str(i),register_length=nq))
 
 #build interaction operator 
 interact=0
@@ -575,22 +635,11 @@ for i in range(int(len(orbinteract)/2)):
     Waca.append(i)
 
 for i in Waca:
-    if not tobj:
-        #FIXME
-        interact+=0.000001*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
-    else:
-        interact+=U*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
+    interact+=U*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
 
-
-#get number of qubits
-nq=norb_aca
-if two_qubit_reduction:
-    m_op = qubit_converter.convert(interact,num_particles=num_particles)
-    nq=len(m_op.to_pauli_op()[0].primitive)
-print("nq=",nq)    
 
 # setup the initial state for the ansatz
-ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y',insert_barriers=False)
+ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y',insert_barriers=False,skip_unentangled_qubits=True)
 #ansatz = HartreeFock(nq,Naca,qubit_converter)
 
 #define registers
@@ -625,10 +674,11 @@ if False:
         print("grad=",params[i],grad[i])
     exit()
 
-pauli_interact=paulis_for_op(interact,qubit_converter,qc,num_particles)
-interact_op=qubit_converter.convert(interact,num_particles=num_particles)
+pauli_interact=paulis_for_op(interact,qubit_converter,qc,qubit_map,num_particles)
+interact_op=qubit_convert_and_map(interact,qubit_converter,num_particles,qubit_map) 
+#interact_op=qubit_converter.convert(interact,num_particles=num_particles)
 if build_sparse:
-    interact_sparse=sparse.csr_matrix(interact_op.to_matrix())
+    interact_sparse=sparse.csr_matrix(interact_op.to_pauli_op().to_matrix())
 
 #build list of constraints
 print("building constraints...")
@@ -641,28 +691,38 @@ for i in range(norb_aca):
         c={}
         c['observable']='1RDM'
         c['type']='real'
+        if (i%2==0 and j%2!=0) or (i%2!=0 and j%2==0):
+            c['updown']=True
+        else:
+            c['updown']=False
         c['i']=i
         c['j']=j
         m=~c_ops[i]@ c_ops[j]
         c['op']=0.5*(m+~m)
-        op=qubit_converter.convert(c['op'],num_particles=num_particles)
+        op=qubit_convert_and_map(c['op'],qubit_converter,num_particles,qubit_map) 
+        #op=qubit_converter.convert(c['op'],num_particles=num_particles)
         if build_sparse:
             c['opsparse']=sparse.csr_matrix(op.to_matrix())
-        c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,num_particles)
+        c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,qubit_map,num_particles)
         c['cval']=0.5*(Daca[i,j]+np.conjugate(Daca[i,j])).real
         constraints.append(c)
         if i!=j:
             c={}
             c['observable']='1RDM'
             c['type']='imag'
+            if (i%2==0 and j%2!=0) or (i%2!=0 and j%2==0):
+                c['updown']=True
+            else:
+                c['updown']=False
             c['i']=i
             c['j']=j
             m=~c_ops[i]@ c_ops[j]
             c['op']=0.5/1j*(m-~m)
-            op=qubit_converter.convert(c['op'],num_particles=num_particles)
+            #op=qubit_converter.convert(c['op'],num_particles=num_particles)
+            op=qubit_convert_and_map(c['op'],qubit_converter,num_particles,qubit_map) 
             if build_sparse:
                 c['opsparse']=sparse.csr_matrix(op.to_matrix())
-            c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,num_particles)
+            c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,qubit_map,num_particles)
             c['cval']=(0.5/1j*(Daca[i,j]-np.conjugate(Daca[i,j]))).real
             constraints.append(c)
         #print("constraint",i,j,c['pauli'])
@@ -711,6 +771,8 @@ np.random.seed(seed)
 initial_point = np.random.random(ansatz.num_parameters)
 print("number of parameters:",ansatz.num_parameters)
 
+#initial_point=[ 1.57979748e+00,  1.82172669e-01,  5.12471810e+00, -1.57079633e+00,      -4.25179493e+00,  3.61868826e+00,  1.28628651e+00, -3.14159265e+00,       -3.23954700e+00,  3.11289071e+00, -1.70165477e+00, -3.14159265e+00,       -2.62189757e+00,  3.15828064e+00,  2.51831032e+00, -8.64445037e-11,        2.09072450e+00, -1.60959460e+00, -6.98497491e-02, -4.71238898e+00,        3.14349434e+00,  1.57445916e+00,  3.14068939e+00,  6.75998462e-01,       -1.60304937e+00,  1.10298395e-10, -3.12223364e+00,  3.14159265e+00,       -1.35362935e-01,  3.30172159e+00, -4.80779283e+00,  3.46606507e+00]
+
 if not tdoqc:
     exit()
 
@@ -734,7 +796,7 @@ if tcheck:
     c_exact=np.zeros(len(constraints))
     for ic in range(len(constraints)):
         c_exact=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real-constraints[ic]['cval']
-        print("constraints exact=",c_exact,"qc=",c_qc[ic])
+        print("constraint",ic," exact=",c_exact,"qc=",c_qc[ic],constraints[ic]['i'],constraints[ic]['j'],constraints[ic]['type'],constraints[ic]['cval'])
 
 
 tstddev=config.getboolean('QC','tstddev')
@@ -793,14 +855,16 @@ if tsim and tsimcons:
     else:
         res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 3,'iprint':2,'disp': True})
     print(res)
+    texact_expect=False
     
 print("Augmented Lagrangian")
-penalty=1
+penalty=10
 print("initial penalty=",penalty)
 
 lagrange=np.zeros(len(constraints))
 tprintevals=True
 rdmf_obj_eval=0
+
 
 #augmented Lagrangian
 for oiter in range(100):
@@ -813,7 +877,7 @@ for oiter in range(100):
         texact_expect=True
         print("minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS_B (numerical derivatives, no sampling, no noise, i.e., exact expectation values)")
         method="BFGS"
-        res=minimize(rdmf_obj, x0, method=method,tol=1e-2,options={'maxiter':10000,'verbose': 2,'disp': True})
+        res=minimize(rdmf_obj, x0, method=method,tol=1e-2,options={'maxiter':maxiter,'verbose': 2,'disp': True})
         point=res.x
         value=rdmf_obj(point)
         nfev=res.nfev
@@ -857,10 +921,12 @@ for oiter in range(100):
     x0=point[:]
     #multiplier and penalty update
     for i in range(len(constraints)):
-        lagrange[i]=lagrange[i]+penalty*c_qc[i]
-    penalty=penalty*2
-    print("new lagrange multiplier=",lagrange)
-    print("new penalty=",penalty)
+        if not (no_multipliers_for_up_down and constraints[i]['updown']):
+        #if not no_multipliers_for_up_down: 
+            lagrange[i]=lagrange[i]+penalty*c_qc[i]
+    penalty=penalty*1.5
+    for i in range(len(constraints)):
+        print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"lagrange=",lagrange[i],"penalty=",penalty)
 
 
 

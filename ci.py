@@ -92,7 +92,38 @@ def cons_der_cplx(x):
             J.append(y)
     return J;
 
+
 def F_hubbard(norbin,U,orbinteract,D,options,tcplx):
+    F=F_hubbard_single(norbin,U,orbinteract,D,options,tcplx)
+    dx=1e-3
+
+    if options['tder']:
+        for a in range(norb):
+            for b in range(a,norb):
+                D2=copy.deepcopy(D)
+                D2[a,b]=D[a,b]+dx               
+                if a!=b: 
+                    D2[b,a]=D[b,a]+dx                
+                Fp=F_hubbard_single(norbin,U,orbinteract,D2,options,tcplx)
+                D2=copy.deepcopy(D)
+                D2[a,b]=D[a,b]-dx                
+                if a!=b: 
+                    D2[b,a]=D[b,a]-dx                
+                Fm=F_hubbard_single(norbin,U,orbinteract,D2,options,tcplx)
+                print("dF_dD real",a,b,(Fp-Fm)/(2*dx),D[a,b])
+                if a!=b:
+                    D2=copy.deepcopy(D)
+                    D2[a,b]=D[a,b]+dx*1j                
+                    D2[b,a]=D[b,a]-dx*1j
+                    Fp=F_hubbard_single(norbin,U,orbinteract,D2,options,tcplx)
+                    D2=copy.deepcopy(D)
+                    D2[a,b]=D[a,b]-dx*1j                
+                    D2[b,a]=D[b,a]+dx*1j             
+                    Fm=F_hubbard_single(norbin,U,orbinteract,D2,options,tcplx)
+                    print("dF_dD imag",a,b,(Fp-Fm)/(2*dx),D[a,b])
+    return F
+
+def F_hubbard_single(norbin,U,orbinteract,D,options,tcplx):
     print("WARNING: This is a completely UNoptimized simple variant for the constrained minimization, for larger number of orbitals please use the optimized Fortan implementation.")
     #constrained minimization for density-matrix functional
     F=0
@@ -178,4 +209,5 @@ def F_hubbard(norbin,U,orbinteract,D,options,tcplx):
            'jac' : lambda x: cons_der(x)}
         res=minimize(obj_val, x0, jac=obj_der, method='trust-constr', constraints=[eq_cons],tol=options['tol'],options={'maxiter':options['maxiter'],'verbose': 2,'disp': True},hess=BFGS())
     F=res.fun
+
     return F
