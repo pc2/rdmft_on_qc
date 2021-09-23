@@ -60,6 +60,7 @@ def qubit_convert_and_map(m,qubit_converter,num_particles,qubit_map):
         n=list(str(op.primitive))
         for i in range(len(s)):
             n[len(s)-qubit_map[i]-1]=s[len(s)-i-1]
+        print("map",s,n,qubit_map)
         op=PauliOp(Pauli("".join(n)),op.coeff)
         newsummedop+=op
     return newsummedop
@@ -111,7 +112,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
         if tsim:
             #FIXME: eventuell python threading rundrum?
             #FIXME: Bedeutung und wirkung der qikit-Parameter klären
-            backend.set_options(method="density_matrix") #,max_parallel_threads=5,max_parallel_shots=8,max_parallel_experiments=5)
+            #backend.set_options(method="density_matrix") #,max_parallel_threads=5,max_parallel_shots=8,max_parallel_experiments=5)
             jobs = execute(
                 qcs_par,
                 backend=backend,
@@ -353,6 +354,7 @@ if Lint==-1:
     Lint=L
 Llocal=int(config['LocalApprox']['Llocal'])
 ilocal=int(config['LocalApprox']['ilocal'])
+mitigate_extreme_offdiagonal_1rdm_values=config.getboolean('QC','mitigate_extreme_offdiagonal_1rdm_values')
 np.random.seed(seed)
 
     
@@ -363,12 +365,19 @@ np.random.seed(seed)
 if systemtype=='hubbard_chain':
     U=float(config['system']['U'])
     t=float(config['system']['t'])
-    mu=float(config['system']['mu'])
+
+    if config['system']['mu']=="mU2":
+        mu=-U/2
+    else:
+        mu=float(config['system']['mu'])
     [E,D,W]=groundstate.hubbard_chain(L,t,U,mu,Lint,mode="DMRG")
 elif systemtype=='hubbard_2d':
     U=float(config['system']['U'])
     t=float(config['system']['t'])
-    mu=float(config['system']['mu'])
+    if config['system']['mu']=="mU2":
+        mu=-U/2
+    else:
+        mu=float(config['system']['mu'])
     [E,D,W]=groundstate.hubbard_2d(L,t,U,mu,Lint,mode="DMRG")
 else:
     print("system type not implemented")
@@ -437,6 +446,13 @@ aca.printmat(norb_aca,norb_aca,"D_aca_used_",Daca)
 print("aca: level",l," norb=",norb_aca)
 
 print("Daca=",Daca)
+
+if mitigate_extreme_offdiagonal_1rdm_values:
+    print("trying to mitigate extreme off-diagonal values in the 1rdm between the impurity and bath and in the bath")
+    Din=copy.deepcopy(Daca)
+    Daca=aca.mitigate_extreme(norb_aca,ninteract,Din)
+    print("Daca after mitigation=",Daca)
+
 
 #count spin-up and spin-down electrons
 Naca1=0
@@ -785,6 +801,8 @@ np.random.seed(seed)
 initial_point = np.random.random(ansatz.num_parameters)
 print("number of parameters:",ansatz.num_parameters)
 
+#initial_point=[1.06640208e+00,1.45607800e+00,7.34931531e-01,1.57367261e+00,-1.99480644e-01,-3.38610089e-01,2.84460785e+00,5.54690036e-05,4.77836694e-01,1.36731971e+00,1.04295359e+00,1.58973393e+00,-7.54861556e-01,7.87469873e-01,5.91415152e-01,5.84946121e-01,2.68335750e+00,-3.15965247e-03,-1.54766714e-01,3.35359740e-02,5.84140565e-01,1.01616537e+00,-1.30547619e-02,-6.28220323e-01]
+
 #initial_point=[ 1.57979748e+00,  1.82172669e-01,  5.12471810e+00, -1.57079633e+00,      -4.25179493e+00,  3.61868826e+00,  1.28628651e+00, -3.14159265e+00,       -3.23954700e+00,  3.11289071e+00, -1.70165477e+00, -3.14159265e+00,       -2.62189757e+00,  3.15828064e+00,  2.51831032e+00, -8.64445037e-11,        2.09072450e+00, -1.60959460e+00, -6.98497491e-02, -4.71238898e+00,        3.14349434e+00,  1.57445916e+00,  3.14068939e+00,  6.75998462e-01,       -1.60304937e+00,  1.10298395e-10, -3.12223364e+00,  3.14159265e+00,       -1.35362935e-01,  3.30172159e+00, -4.80779283e+00,  3.46606507e+00]
 
 if not tdoqc:
@@ -854,7 +872,7 @@ maxiter=int(config['QC']['maxiter'])
 
 x0=initial_point
 tprintevals=False
-penalty_exponent=2
+penalty_exponent=int(config["QC"]["penalty_exponent"])
 
 if tsim and tsimcons:
     texact_expect=True
@@ -872,7 +890,7 @@ if tsim and tsimcons:
     texact_expect=False
     
 print("Augmented Lagrangian")
-penalty=10
+penalty=int(config["QC"]["initial_penalty"])
 print("initial penalty=",penalty)
 
 lagrange=np.zeros(len(constraints))
@@ -881,7 +899,7 @@ rdmf_obj_eval=0
 
 
 #augmented Lagrangian
-for oiter in range(100):
+for oiter in range(int(config['QC']['auglag_iter_max'])):
     value=0
     point=[]
     nfev=0
@@ -941,7 +959,7 @@ for oiter in range(100):
         if not (no_multipliers_for_up_down and constraints[i]['updown']):
         #if not no_multipliers_for_up_down: 
             lagrange[i]=lagrange[i]+penalty*c_qc[i]
-    penalty=penalty*1.5
+    penalty=penalty*float(config["QC"]["penalty_factor"])
     for i in range(len(constraints)):
         print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"lagrange=",lagrange[i],"penalty=",penalty)
 

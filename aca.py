@@ -4,6 +4,10 @@ import math
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.lib.type_check import real
+from scipy import sparse
+from scipy.linalg import expm
+from scipy.optimize import minimize, BFGS
 
 def printmat(n,m,name,A):
     try:
@@ -159,7 +163,7 @@ def aca_base(norb,ninteract,Din):
     for i in range(ninteract):
         U[i,i]=1.0
     U[ninteract::,ninteract::]=q
-    Dout=np.matmul(np.matmul(np.transpose(U),Din),U)
+    Dout=np.matmul(np.matmul(np.transpose(np.conj(U)),Din),U)
     Iout=np.matmul(np.transpose(U),U)
 
     for i in range(norb):
@@ -168,4 +172,61 @@ def aca_base(norb,ninteract,Din):
     #printmat(norb,norb,"ACA_I_",Iout)
     #printmat(norb,norb,"ACA_D2_",Dout)     
     return Dout
+
+D0=[]
+norb=0
+ninteract=0
+
+def mitigate_extreme(norb0,ninteract0,Din):
+    print(norb0,ninteract0)
+    print(Din)
+    global D0
+    global norb
+    global ninteract
+    D0=copy.deepcopy(Din)
+    norb=norb0
+    ninteract=ninteract0
+    #find unitary transform so that off-diagonal elements of 1rdm are away from +-0.5
+
+    neff=norb-ninteract
+    x0=0.00*np.random.random(neff**2)
+    
+    method="BFGS"
+    res=minimize(mitigate_obj, x0, method=method,tol=1e-9,options={'maxiter':1000,'verbose': 2,'disp': True})
+    point=res.x
+    nfev=res.nfev
+    Dout=mitigate_trans(point,Din,norb,ninteract)
+    print(Dout)
+    return Dout
+
+def mitigate_trans(x,Din,norb,ninteract):
+    neff=norb-ninteract
+    H=np.zeros((norb,norb),dtype=np.complex_)
+    for i in range(ninteract):
+        H[i,i]=1.0
+    I=0
+    for i in range(neff):
+        for j in range(i,neff):
+            if i==j:
+                H[ninteract+i,ninteract+j]=x[I]+1.0
+                I=I+1
+            if i!=j:
+                H[ninteract+i,ninteract+j]=x[I]+1j*x[I+1]
+                H[ninteract+j,ninteract+i]=x[I]-1j*x[I+1]
+                I=I+2
+    U=expm(1j*H)
+    return np.matmul(np.matmul(np.transpose(np.conj(U)),Din),U)
+
+def mitigate_obj(x):
+    D2=mitigate_trans(x,D0,norb,ninteract)
+    v=0
+    for i in range(norb):
+        for j in range(norb):
+            if i!=j:
+                v=v+1.0/abs(np.real(D2[i,j])-0.5)
+                v=v+1.0/abs(np.real(D2[i,j])+0.5)
+                v=v+1.0/abs(np.imag(D2[i,j])-0.5)
+                v=v+1.0/abs(np.imag(D2[i,j])+0.5)
+    return v
+
 
