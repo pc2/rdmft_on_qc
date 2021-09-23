@@ -109,6 +109,8 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
             )
     else:
         if tsim:
+            #FIXME: eventuell python threading rundrum?
+            #FIXME: Bedeutung und wirkung der qikit-Parameter klären
             backend.set_options(method="density_matrix") #,max_parallel_threads=5,max_parallel_shots=8,max_parallel_experiments=5)
             jobs = execute(
                 qcs_par,
@@ -117,7 +119,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 shots=shots,
                 seed_simulator=seed,
                 seed_transpiler=seed,
-                optimization_level=0,#optimization_level, 
+                optimization_level=optimization_level, 
                 coupling_map=ibmq_coupling_map,
                 basis_gates=ibmq_basis_gates,
                 noise_model=ibmq_noise_model
@@ -729,6 +731,7 @@ for i in range(norb_aca):
 
 print("number of constraints=",len(constraints))
 
+
 ############################################################################
 #build measurement programs for 1rdm
 pauliops=[]
@@ -764,6 +767,17 @@ mqcs.extend(mqcs_interact)
 
 print("Number of quantum programs:",len(mqcs_1rdm),"for 1rdm and ",len(mqcs_interact),"for interaction")
 print(mqcs)
+
+for i in range(len(constraints)):
+    print("constraint",i)
+    print("constraint observable",constraints[i]['observable'])
+    print("constraint i         ",constraints[i]['i'])
+    print("constraint j         ",constraints[i]['j'])
+    print("constraint type      ",constraints[i]['type'])
+    print("constraint cval      ",constraints[i]['cval'])
+    print("constraint op        ",constraints[i]['op'])
+    print("constraint pauli     ")
+    print(constraints[i]['pauli'])
 
 
 #set intial parameters
@@ -884,7 +898,10 @@ for oiter in range(100):
     else:
         logging.getLogger('qiskit.algorithms.optimizers.spsa').setLevel('INFO')
         spsa_blocking=config.getboolean('QC','spsa_blocking')
-        texact_expect=False
+        if config.getboolean('QC','min_without_noise'):
+            texact_expect=True
+        else:
+            texact_expect=False
         algo=config['QC']['algo']
         if algo=="COBYLA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
