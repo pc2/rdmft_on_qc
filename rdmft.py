@@ -3,6 +3,8 @@ import copy
 import math
 import sys
 
+os.environ['QISKIT_PARALLEL'] = 'true'
+
 from networkx.generators.directed import random_uniform_k_out_graph
 import groundstate
 import aca
@@ -44,11 +46,12 @@ import h5py
 import shutil
 from qiskit.test.mock import FakeBelem,FakeBogota
 
+
 def opt_callback(nfunc,par,f,stepsize,accepted):
     #print("Opt step:",nfunc,par,f,stepsize,accepted)
     print("Opt step:",nfunc,f,stepsize,accepted)
 
-def qubit_convert_and_map(m,qubit_converter,num_particles,qubit_map): 
+def qubit_convert_and_map(m,qubit_converter,num_particles,qubit_map):
     #qubit_converter
     m_op = qubit_converter.convert(m,num_particles=num_particles)
     #qubit mapping
@@ -110,8 +113,6 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
     else:
         if tsim:
             #FIXME: eventuell python threading rundrum?
-            #FIXME: Bedeutung und wirkung der qikit-Parameter klären
-            backend.set_options(method="density_matrix") #,max_parallel_threads=5,max_parallel_shots=8,max_parallel_experiments=5)
             jobs = execute(
                 qcs_par,
                 backend=backend,
@@ -119,7 +120,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 shots=shots,
                 seed_simulator=seed,
                 seed_transpiler=seed,
-                optimization_level=optimization_level, 
+                optimization_level=optimization_level,
                 coupling_map=ibmq_coupling_map,
                 basis_gates=ibmq_basis_gates,
                 noise_model=ibmq_noise_model
@@ -135,8 +136,8 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 optimization_level=optimization_level
             )
     t3=time.time()
-    
-    if not tsim: 
+
+    if not tsim:
         print("waiting for job to finish: https://quantum-computing.ibm.com/jobs/"+str(jobs.job_id()))
         jobs.wait_for_final_state(wait=1)
     else:
@@ -266,7 +267,7 @@ def rdmf_obj(x):
         for ic in range(len(constraints)):
             L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
         L=L+W_qc
-    
+
     t1 = time.time()
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
         print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t1-t0,"exact=","L=",L2,"W=",W2_qc,"sum(c^2)=",np.sum(c2_qc**2))
@@ -290,7 +291,7 @@ def rdmf_cons(x):
     global rdmf_cons_eval
     c_qc=np.zeros(len(constraints))
     rdmf_cons_eval+=1
-    
+
     L=0
     if texact_expect:
         circ=qc.bind_parameters(x)
@@ -355,7 +356,7 @@ Llocal=int(config['LocalApprox']['Llocal'])
 ilocal=int(config['LocalApprox']['ilocal'])
 np.random.seed(seed)
 
-    
+
 
 
 
@@ -451,7 +452,7 @@ if abs(Naca1-round(Naca1))<1e-4:
 if abs(Naca2-round(Naca2))<1e-4:
     print("rounding Naca2 to integer")
     Naca2=round(Naca2)
-Naca=(Naca1,Naca2)    
+Naca=(Naca1,Naca2)
 print("Naca=",Naca)
 
 
@@ -525,7 +526,7 @@ if tnoise:
     couplingstring+=str(ibmq_coupling_map[ic][0])+"_"+str(ibmq_coupling_map[ic][1])
     config['QC']['transpiler_couplings']=couplingstring
     print("setting transpiler_couplings to",couplingstring)
-    
+
     #set gates for transpiler that is used in the construction of measurement circuits
     config['QC']['transpiler_gates']=",".join(ibmq_backend_config.basis_gates)
     print("setting transpiler_gates to",",".join(ibmq_backend_config.basis_gates))
@@ -549,6 +550,12 @@ if tnoise:
 
     #backend = BasicAer.get_backend('qasm_simulator')
     backend = Aer.get_backend('qasm_simulator')
+    backend.set_options(
+            method="density_matrix",
+            max_parallel_threads=0,
+            max_parallel_experiments=0,
+            max_parallel_shots=1
+    )
     #backend = QasmSimulator.from_backend(ibmq_backend)
     optimization_level=3
 else:
@@ -565,7 +572,7 @@ if nq=="qc":
 else:
     nq=int(nq)
 
-print("nq=",nq)    
+print("nq=",nq)
 
 #get qubit mapping
 qmap=config['QC']['qubit_map']
@@ -615,7 +622,7 @@ if not tsim:
     backend = provider.get_backend(config['QC']['qc'])
     backend_config = ibmq_backend.configuration()
     status = backend.status()
-    
+
     if backend_config.n_qubits < norb_aca:
         raise RuntimeError("chosen qc doesn't have enough qubits")
     if not status.operational:
@@ -630,7 +637,7 @@ c_ops=[]
 for i in range(norb_aca):
     c_ops.append(FermionicOp("-_"+str(i),register_length=nq))
 
-#build interaction operator 
+#build interaction operator
 interact=0
 Waca=[]
 for i in range(int(len(orbinteract)/2)):
@@ -677,7 +684,7 @@ if False:
     exit()
 
 pauli_interact=paulis_for_op(interact,qubit_converter,qc,qubit_map,num_particles)
-interact_op=qubit_convert_and_map(interact,qubit_converter,num_particles,qubit_map) 
+interact_op=qubit_convert_and_map(interact,qubit_converter,num_particles,qubit_map)
 #interact_op=qubit_converter.convert(interact,num_particles=num_particles)
 if build_sparse:
     interact_sparse=sparse.csr_matrix(interact_op.to_pauli_op().to_matrix())
@@ -701,7 +708,7 @@ for i in range(norb_aca):
         c['j']=j
         m=~c_ops[i]@ c_ops[j]
         c['op']=0.5*(m+~m)
-        op=qubit_convert_and_map(c['op'],qubit_converter,num_particles,qubit_map) 
+        op=qubit_convert_and_map(c['op'],qubit_converter,num_particles,qubit_map)
         #op=qubit_converter.convert(c['op'],num_particles=num_particles)
         if build_sparse:
             c['opsparse']=sparse.csr_matrix(op.to_matrix())
@@ -721,7 +728,7 @@ for i in range(norb_aca):
             m=~c_ops[i]@ c_ops[j]
             c['op']=0.5/1j*(m-~m)
             #op=qubit_converter.convert(c['op'],num_particles=num_particles)
-            op=qubit_convert_and_map(c['op'],qubit_converter,num_particles,qubit_map) 
+            op=qubit_convert_and_map(c['op'],qubit_converter,num_particles,qubit_map)
             if build_sparse:
                 c['opsparse']=sparse.csr_matrix(op.to_matrix())
             c['pauli']=paulis_for_op(c['op'],qubit_converter,qc,qubit_map,num_particles)
@@ -832,7 +839,7 @@ if tstddev:
         c_qc_sum[:]+=res[i][1][:]
         W2_qc_sum+=res[i][0]**2
         c2_qc_sum[:]+=res[i][1][:]**2
-    
+
     W_qc_sum=W_qc_sum/stddev_count
     c_qc_sum[:]=c_qc_sum[:]/stddev_count
     W2_qc_sum=W2_qc_sum/stddev_count
@@ -850,7 +857,7 @@ tprintevals=True
 printevalsevery=1
 
 qiskit.utils.algorithm_globals.random_seed=seed
-maxiter=int(config['QC']['maxiter'])    
+maxiter=int(config['QC']['maxiter'])
 
 x0=initial_point
 tprintevals=False
@@ -870,7 +877,7 @@ if tsim and tsimcons:
         res=minimize(rdmf_obj, x0, method=method, constraints=[eq_cons],tol=1e-4,options={'maxiter':10000,'verbose': 3,'iprint':2,'disp': True})
     print(res)
     texact_expect=False
-    
+
 print("Augmented Lagrangian")
 penalty=10
 print("initial penalty=",penalty)
@@ -939,7 +946,7 @@ for oiter in range(100):
     #multiplier and penalty update
     for i in range(len(constraints)):
         if not (no_multipliers_for_up_down and constraints[i]['updown']):
-        #if not no_multipliers_for_up_down: 
+        #if not no_multipliers_for_up_down:
             lagrange[i]=lagrange[i]+penalty*c_qc[i]
     penalty=penalty*1.5
     for i in range(len(constraints)):
