@@ -180,7 +180,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 V=V*mqcs[im]['signs'][ic]
                 Va.append(V)
             Vs.append(Va)
-            #print(mqcs[im]['ops'],Va)
+            print(mqcs[im]['ops'],Va)
         if thdf5_out:
             try:
                 h5f = h5py.File('measurements.h5', 'a')
@@ -230,7 +230,7 @@ def measurements_to_constraints(mqcs,v,constraints):
     return c
 
 def rdmf_obj(x):
-    global rdmf_obj_eval
+    global rdmf_obj_eval,c_qc,W_qc
     rdmf_obj_eval+=1
     t0 = time.time()
     c_qc=np.zeros(len(constraints))
@@ -247,7 +247,7 @@ def rdmf_obj(x):
             raise RuntimeError("build_sparse not enabled")
         a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
         c_qc[ic]=a-constraints[ic]['cval']
-        L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
+        L=L+lagrange[ic]*c_qc[ic]+0.5*penalty[ic]*abs(c_qc[ic])**penalty_exponent
     #build interaction expectation value from result
     if not build_sparse:
         raise RuntimeError("build_sparse not enabled")
@@ -265,7 +265,7 @@ def rdmf_obj(x):
         W_qc=measurements_to_interact(mqcs,v,pauli_interact)
         c_qc=measurements_to_constraints(mqcs,v,constraints)
         for ic in range(len(constraints)):
-            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty*abs(c_qc[ic])**penalty_exponent
+            L=L+lagrange[ic]*c_qc[ic]+0.5*penalty[ic]*abs(c_qc[ic])**penalty_exponent
         L=L+W_qc
     
     t1 = time.time()
@@ -383,9 +383,23 @@ else:
     print("system type not implemented")
     exit();
 
+
 print("E=",E)
 print("D=",D)
 print("W=",W)
+
+norb=2*L
+
+if False:
+    for i in range(norb):
+        for j in range(i,norb):
+            if i==j:
+                D[i,i]=D[i,i]+0.01*(np.random.random(1)-0.5)
+            else:
+                D[i,j]=D[i,j]+0.01*(np.random.random(1)-0.5)
+                D[i,j]=D[i,j]+0.01j*(np.random.random(1)-0.5)
+                D[j,i]=np.conj(D[i,j])
+    
 
 #apply local approximation and ACA
 print("local approximation with ",Llocal,"sites")
@@ -407,7 +421,6 @@ orbinteract=[]
 
 #set up functional to be solved
 #reorder orbitals
-norb=2*L
 
 orbinteract=[]
 ninteract=0
@@ -890,7 +903,8 @@ if tsim and tsimcons:
     texact_expect=False
     
 print("Augmented Lagrangian")
-penalty=int(config["QC"]["initial_penalty"])
+penalty=np.zeros(len(constraints))
+penalty[:]=penalty[:]+int(config["QC"]["initial_penalty"])
 print("initial penalty=",penalty)
 
 lagrange=np.zeros(len(constraints))
@@ -946,9 +960,39 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
     print("point=",point)
     print("value=",value)
     print("nfev=",nfev)
-    v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed,tsim,optimization_level)
-    W_qc=measurements_to_interact(mqcs,v,pauli_interact)
-    c_qc=measurements_to_constraints(mqcs,v,constraints)
+
+    if not texact_expect: 
+        stddev_count=int(config['QC']['stddev_count'])
+        res=[]
+        for i in range(stddev_count):
+            v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed+i,tsim,optimization_level)
+            W_qc=measurements_to_interact(mqcs,v,pauli_interact)
+            c_qc=measurements_to_constraints(mqcs,v,constraints)
+            res.append([W_qc,c_qc])
+        W_qc_sum=0
+        c_qc_sum=np.zeros(len(constraints))
+        W2_qc_sum=0
+        c2_qc_sum=np.zeros(len(constraints))
+        for i in range(stddev_count):
+            W_qc_sum+=res[i][0]
+            c_qc_sum[:]+=res[i][1][:]
+            W2_qc_sum+=res[i][0]**2
+            c2_qc_sum[:]+=res[i][1][:]**2
+        
+        W_qc_sum=W_qc_sum/stddev_count
+        c_qc_sum[:]=c_qc_sum[:]/stddev_count
+        W2_qc_sum=W2_qc_sum/stddev_count
+        c2_qc_sum[:]=c2_qc_sum[:]/stddev_count
+
+        print("stddev W=",math.sqrt(W2_qc_sum-W_qc_sum**2))
+        for i in range(len(constraints)):
+            print("stddev c[",i,"]=",math.sqrt(c2_qc_sum[i]-c_qc_sum[i]**2))
+        #v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed,tsim,optimization_level)
+        #W_qc=measurements_to_interact(mqcs,v,pauli_interact)
+        #c_qc=measurements_to_constraints(mqcs,v,constraints)
+
+        c_qc=c_qc_sum[:]
+        W_qc=W_qc_sum
 
     print("constraint violation sum(c^2)=",np.sum(c_qc**2))
 
@@ -956,12 +1000,14 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
     x0=point[:]
     #multiplier and penalty update
     for i in range(len(constraints)):
-        if not (no_multipliers_for_up_down and constraints[i]['updown']):
-        #if not no_multipliers_for_up_down: 
-            lagrange[i]=lagrange[i]+penalty*c_qc[i]
-    penalty=penalty*float(config["QC"]["penalty_factor"])
+        if abs(c_qc[i])<0.1:
+            if not (no_multipliers_for_up_down and constraints[i]['updown']):
+                lagrange[i]=lagrange[i]+penalty[i]*c_qc[i]
+        else:
+            penalty[i]=penalty[i]*float(config["QC"]["penalty_factor"])
+    #penalty=penalty*float(config["QC"]["penalty_factor"])
     for i in range(len(constraints)):
-        print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"lagrange=",lagrange[i],"penalty=",penalty)
+        print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"lagrange=",lagrange[i],"penalty=",penalty[i])
 
 
 

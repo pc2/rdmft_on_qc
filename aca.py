@@ -189,7 +189,7 @@ def mitigate_extreme(norb0,ninteract0,Din):
     #find unitary transform so that off-diagonal elements of 1rdm are away from +-0.5
 
     neff=norb-ninteract
-    x0=0.00*np.random.random(neff**2)
+    x0=0.1*np.random.random(neff**2)
     
     method="BFGS"
     res=minimize(mitigate_obj, x0, method=method,tol=1e-9,options={'maxiter':1000,'verbose': 2,'disp': True})
@@ -227,6 +227,7 @@ def mitigate_obj(x):
                 v=v+1.0/abs(np.real(D2[i,j])+0.5)
                 v=v+1.0/abs(np.imag(D2[i,j])-0.5)
                 v=v+1.0/abs(np.imag(D2[i,j])+0.5)
+                #v=max(v,abs(D2[i,j]))
     return v
 
 
