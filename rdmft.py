@@ -8,6 +8,7 @@ os.environ['QISKIT_PARALLEL'] = 'true'
 from networkx.generators.directed import random_uniform_k_out_graph
 import groundstate
 import aca
+import mueller
 import ci
 import time
 import measurement_circuits
@@ -122,7 +123,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 shots=shots,
                 seed_simulator=seed,
                 seed_transpiler=seed,
-                optimization_level=optimization_level,
+                optimization_level=0,#optimization_level,
                 coupling_map=ibmq_coupling_map,
                 basis_gates=ibmq_basis_gates,
                 noise_model=ibmq_noise_model
@@ -494,6 +495,9 @@ if tdoci:
     options={'tol': float(config['CI']['tol']),'maxiter': int(config['CI']['maxiter']),"tder":tder}
     Faca_local=ci.F_hubbard(norb_aca,U,orbinteractaca,Daca,options,tcplx)
     print("F_aca (full CI space)=",Faca_local)
+
+print("FM=",mueller.mueller_hubbard(norb_aca,ninteract,U,Daca))
+mueller.mueller_hubbard_der(norb_aca,ninteract,U,Daca)
 
 if tdoci:
     tcplx=config.getboolean('CI','tcplx')
@@ -916,6 +920,11 @@ penalty[:]=penalty[:]+int(config["QC"]["initial_penalty"])
 print("initial penalty=",penalty)
 
 lagrange=np.zeros(len(constraints))
+if config.getboolean('QC','initial_lagrange_from_mueller'):
+    der=mueller.mueller_hubbard_der(norb_aca,ninteract,U,Daca)
+    for i in range(len(constraints)):
+        lagrange[i]=-der[i]
+print("initial lagrange=",lagrange)
 tprintevals=True
 rdmf_obj_eval=0
 
@@ -1011,8 +1020,7 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
         if abs(c_qc[i])<0.1:
             if not (no_multipliers_for_up_down and constraints[i]['updown']):
                 lagrange[i]=lagrange[i]+penalty[i]*c_qc[i]
-        else:
-            penalty[i]=penalty[i]*float(config["QC"]["penalty_factor"])
+        penalty[i]=penalty[i]*float(config["QC"]["penalty_factor"])
     #penalty=penalty*float(config["QC"]["penalty_factor"])
     for i in range(len(constraints)):
         print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"lagrange=",lagrange[i],"penalty=",penalty[i])
