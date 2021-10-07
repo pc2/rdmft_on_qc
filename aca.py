@@ -227,6 +227,7 @@ def mitigate_obj(x):
                 v=v+1.0/abs(np.real(D2[i,j])+0.5)
                 v=v+1.0/abs(np.imag(D2[i,j])-0.5)
                 v=v+1.0/abs(np.imag(D2[i,j])+0.5)
+                #v=v+100*abs(np.imag(D2[i,j]))
                 #v=max(v,abs(D2[i,j]))
     return v
 

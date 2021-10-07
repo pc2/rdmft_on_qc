@@ -115,7 +115,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
     else:
         if tsim:
             #FIXME: eventuell python threading rundrum?
-            backend.set_options(method="density_matrix",max_parallel_threads=0,max_parallel_shots=1,max_parallel_experiments=0)
+            backend.set_options(method="density_matrix",max_parallel_threads=max_parallel_threads,max_parallel_shots=max_parallel_shots,max_parallel_experiments=max_parallel_experiments)
             jobs = execute(
                 qcs_par,
                 backend=backend,
@@ -213,6 +213,9 @@ def measurements_to_interact(mqcs,v,pauli_interact):
                     break
     return W
 
+Urot_D=[]
+Urot_constraints=[]
+
 def measurements_to_constraints(mqcs,v,constraints):
     c=np.zeros(len(constraints))
     for ic in range(len(constraints)):
@@ -230,7 +233,78 @@ def measurements_to_constraints(mqcs,v,constraints):
                         found=True
                         break
         c[ic]=cv
+
+    if True:
+      #find unitary transformation of bath so that constraint violation is minimal
+      #build 1rdm from constraint values
+      #print(c)
+      print("before Urot",np.sum(c**2))
+      D=c_to_rdm(constraints,c)
+      #print(D)
+
+      #find unitary transformation so that constraint violation is minimal
+
+      neff=norb-ninteract
+      x0=0.01*np.random.random(neff**2)
+
+      global Urot_D,Urot_constraints
+      Urot_D=copy.deepcopy(D)
+      Urot_constraints=copy.deepcopy(constraints)
+    
+      method="BFGS"
+      res=minimize(Urot_obj, x0, method=method,tol=1e-9,options={'maxiter':10000,'verbose': 2,'disp': True})
+      point=res.x
+      nfev=res.nfev
+
+      D2=aca.mitigate_trans(point,D,4,2)
+      #build constraint values from transformed 1rdm
+      c=rdm_to_c(constraints,D2)
+      print("after Urot",np.sum(c**2))
+      #print(c)
     return c
+
+
+def Urot_obj(x):
+      D2=aca.mitigate_trans(x,Urot_D,4,2)
+      c=rdm_to_c(Urot_constraints,D2)
+      L=0
+      for ic in range(len(Urot_constraints)):
+        L=L+lagrange[ic]*c[ic]+0.5*penalty[ic]*abs(c[ic])**penalty_exponent
+      return L
+
+
+def c_to_rdm(constraints,c):
+    D=np.zeros((4,4),dtype=np.complex_)
+    for ic in range(len(constraints)):
+      if constraints[ic]['observable']=="1RDM":
+        if constraints[ic]['type']=="real":
+          i=constraints[ic]['i']
+          j=constraints[ic]['j']
+          D[i,j]=D[i,j]+c[ic]+constraints[ic]['cval']
+          if i!=j:
+            D[j,i]=D[j,i]+c[ic]+constraints[ic]['cval']
+        elif constraints[ic]['type']=="imag":
+          i=constraints[ic]['i']
+          j=constraints[ic]['j']
+          D[i,j]=D[i,j]+1j*(c[ic]+constraints[ic]['cval'])
+          D[j,i]=D[j,i]-1j*(c[ic]+constraints[ic]['cval'])
+    return D
+
+def rdm_to_c(constraints,D):
+    c=np.zeros(len(constraints))
+    for ic in range(len(constraints)):
+      if constraints[ic]['observable']=="1RDM":
+        if constraints[ic]['type']=="real":
+          i=constraints[ic]['i']
+          j=constraints[ic]['j']
+          c[ic]=D[i,j].real-constraints[ic]['cval']
+        elif constraints[ic]['type']=="imag":
+          i=constraints[ic]['i']
+          j=constraints[ic]['j']
+          c[ic]=D[i,j].imag-constraints[ic]['cval']
+    return c
+
+
 
 def rdmf_obj(x):
     global rdmf_obj_eval,c_qc,W_qc
@@ -358,8 +432,12 @@ if Lint==-1:
 Llocal=int(config['LocalApprox']['Llocal'])
 ilocal=int(config['LocalApprox']['ilocal'])
 mitigate_extreme_offdiagonal_1rdm_values=config.getboolean('QC','mitigate_extreme_offdiagonal_1rdm_values')
+auto_opt_bath_U=config.getboolean('QC','auto_opt_bath_U')
 np.random.seed(seed)
 
+max_parallel_threads=int(config['QC']['max_parallel_threads'])
+max_parallel_experiments=int(config['QC']['max_parallel_experiments'])
+max_parallel_shots=int(config['QC']['max_parallel_shots'])
 
 
 
@@ -824,6 +902,7 @@ for i in range(len(constraints)):
 #set intial parameters
 np.random.seed(seed)
 initial_point = np.random.random(ansatz.num_parameters)
+#initial_point = np.zeros(ansatz.num_parameters)
 print("number of parameters:",ansatz.num_parameters)
 
 #initial_point=[1.06640208e+00,1.45607800e+00,7.34931531e-01,1.57367261e+00,-1.99480644e-01,-3.38610089e-01,2.84460785e+00,5.54690036e-05,4.77836694e-01,1.36731971e+00,1.04295359e+00,1.58973393e+00,-7.54861556e-01,7.87469873e-01,5.91415152e-01,5.84946121e-01,2.68335750e+00,-3.15965247e-03,-1.54766714e-01,3.35359740e-02,5.84140565e-01,1.01616537e+00,-1.30547619e-02,-6.28220323e-01]
@@ -832,6 +911,10 @@ print("number of parameters:",ansatz.num_parameters)
 
 if not tdoqc:
     exit()
+
+penalty_exponent=int(config["QC"]["penalty_exponent"])
+penalty=np.zeros(len(constraints))
+lagrange=np.zeros(len(constraints))
 
 v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed,tsim,optimization_level)
 W_qc=measurements_to_interact(mqcs,v,pauli_interact)
@@ -897,11 +980,10 @@ maxiter=int(config['QC']['maxiter'])
 
 x0=initial_point
 tprintevals=False
-penalty_exponent=int(config["QC"]["penalty_exponent"])
 
 if tsim and tsimcons:
     texact_expect=True
-    penalty=0
+    penalty=np.zeros(len(constraints))
     lagrange=np.zeros(len(constraints))
     method="trust-constr"
 #    method="SLSQP"
@@ -915,11 +997,9 @@ if tsim and tsimcons:
     texact_expect=False
 
 print("Augmented Lagrangian")
-penalty=np.zeros(len(constraints))
-penalty[:]=penalty[:]+int(config["QC"]["initial_penalty"])
+penalty[:]=0*penalty[:]+int(config["QC"]["initial_penalty"])
 print("initial penalty=",penalty)
 
-lagrange=np.zeros(len(constraints))
 if config.getboolean('QC','initial_lagrange_from_mueller'):
     der=mueller.mueller_hubbard_der(norb_aca,ninteract,U,Daca)
     for i in range(len(constraints)):
@@ -952,6 +1032,10 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
         else:
             texact_expect=False
         algo=config['QC']['algo']
+        if algo=="LBFGS":
+            print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
+            optimizer = L_BFGS_B(maxiter=maxiter,tol=1e-2)
+            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
         if algo=="COBYLA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
             optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2,callback=opt_callback)
@@ -978,39 +1062,40 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
     print("value=",value)
     print("nfev=",nfev)
 
+    #measure with noise
+    stddev_count=int(config['QC']['stddev_count'])
+    res=[]
+    for i in range(stddev_count):
+        v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed+i,tsim,optimization_level)
+        W_qc_noise=measurements_to_interact(mqcs,v,pauli_interact)
+        c_qc_noise=measurements_to_constraints(mqcs,v,constraints)
+        res.append([W_qc_noise,c_qc_noise])
+    W_qc_sum=0
+    c_qc_sum=np.zeros(len(constraints))
+    W2_qc_sum=0
+    c2_qc_sum=np.zeros(len(constraints))
+    for i in range(stddev_count):
+        W_qc_sum+=res[i][0]
+        c_qc_sum[:]+=res[i][1][:]
+        W2_qc_sum+=res[i][0]**2
+        c2_qc_sum[:]+=res[i][1][:]**2
+    
+    W_qc_sum=W_qc_sum/stddev_count
+    c_qc_sum[:]=c_qc_sum[:]/stddev_count
+    W2_qc_sum=W2_qc_sum/stddev_count
+    c2_qc_sum[:]=c2_qc_sum[:]/stddev_count
+
+    print("stddev W=",math.sqrt(W2_qc_sum-W_qc_sum**2))
+    for i in range(len(constraints)):
+        print("stddev c[",i,"]=",math.sqrt(c2_qc_sum[i]-c_qc_sum[i]**2))
+
     if not texact_expect: 
-        stddev_count=int(config['QC']['stddev_count'])
-        res=[]
-        for i in range(stddev_count):
-            v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed+i,tsim,optimization_level)
-            W_qc=measurements_to_interact(mqcs,v,pauli_interact)
-            c_qc=measurements_to_constraints(mqcs,v,constraints)
-            res.append([W_qc,c_qc])
-        W_qc_sum=0
-        c_qc_sum=np.zeros(len(constraints))
-        W2_qc_sum=0
-        c2_qc_sum=np.zeros(len(constraints))
-        for i in range(stddev_count):
-            W_qc_sum+=res[i][0]
-            c_qc_sum[:]+=res[i][1][:]
-            W2_qc_sum+=res[i][0]**2
-            c2_qc_sum[:]+=res[i][1][:]**2
-        
-        W_qc_sum=W_qc_sum/stddev_count
-        c_qc_sum[:]=c_qc_sum[:]/stddev_count
-        W2_qc_sum=W2_qc_sum/stddev_count
-        c2_qc_sum[:]=c2_qc_sum[:]/stddev_count
-
-        print("stddev W=",math.sqrt(W2_qc_sum-W_qc_sum**2))
-        for i in range(len(constraints)):
-            print("stddev c[",i,"]=",math.sqrt(c2_qc_sum[i]-c_qc_sum[i]**2))
-        #v=measure_all_programs(nq,ansatz,mqcs,point,backend,shots,seed,tsim,optimization_level)
-        #W_qc=measurements_to_interact(mqcs,v,pauli_interact)
-        #c_qc=measurements_to_constraints(mqcs,v,constraints)
-
         c_qc=c_qc_sum[:]
         W_qc=W_qc_sum
+    else:
+      rdmf_obj(point)
 
+    print("W=",W_qc,"W_noise=",W_qc_sum)
     print("constraint violation sum(c^2)=",np.sum(c_qc**2))
 
     print("Augmented Lagrangian: penalty and multiplier update")
@@ -1018,12 +1103,10 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
     #multiplier and penalty update
     for i in range(len(constraints)):
         if abs(c_qc[i])<0.1:
-            if not (no_multipliers_for_up_down and constraints[i]['updown']):
-                lagrange[i]=lagrange[i]+penalty[i]*c_qc[i]
+          lagrange[i]=lagrange[i]+penalty[i]*c_qc[i]
         penalty[i]=penalty[i]*float(config["QC"]["penalty_factor"])
-    #penalty=penalty*float(config["QC"]["penalty_factor"])
     for i in range(len(constraints)):
-        print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"lagrange=",lagrange[i],"penalty=",penalty[i])
+        print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"viol_noise=",c_qc_sum[i],"lagrange=",lagrange[i],"penalty=",penalty[i])
 
 
 
