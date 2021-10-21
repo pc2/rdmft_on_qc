@@ -234,7 +234,47 @@ def build_measurement_circuits_none(nq,cc,config):
       mqc.measure(mqubit,0)
       mqubit=0
   signs=[1]
-  return {"mqc":mqc,"mqubits":[mqubit],"signs":signs}
+  return {"mqc":mqc,"mqubits":[mqubit],"signs":signs,"mode":"single_qubit"}
+
+def build_measurement_circuits_none_bitstring(nq,cc,config):
+  #options
+  transpiler_gates=config["QC"]["transpiler_gates"].split(",")
+  transpiler_seed=int(config["QC"]["transpiler_seed"])
+  transpiler_couplings=[]
+  if config["QC"]["transpiler_couplings"]=="linear":
+    for i in range(nq-1):
+      transpiler_couplings.append([i,i+1])
+  else:
+    for c in config["QC"]["transpiler_couplings"].split(","):
+      transpiler_couplings.append([int(c.split("_")[0]),int(c.split("_")[1])])
+  gatew=dict()
+  for c in config["QC"]["gate_weights"].split(","):
+    gatew[c.split("_")[0]]=int(c.split("_")[1])
+  complexity_measure=config["QC"]["complexity_measure"]
+  criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
+ 
+  #build combined preprocessing pauli-string
+
+  comb=list(c)
+  for c in cc:
+    cc2=list(c)
+    cc2.reverse()
+    cc_reordered="".join(cc2)
+    for i in range(len(c)):
+        if cc_reordered[i]!="I":
+            comb[i]=cc_reordered[i]
+
+  #first reduce to Pauli-z 
+  cc2,preqc=paulis_to_zs(nq,["".join(comb)])
+
+  q = QuantumRegister(nq)
+  c = ClassicalRegister(nq)
+  mqc=QuantumCircuit(q,c)
+  mqc=mqc.compose(preqc)
+  for m in range(nq):
+      mqc.measure(m,m)
+  signs=[1]
+  return {"mqc":mqc,"mqubits":list(range(nq)),"signs":signs,"mode":"bitstring"}
 
 def rk_gf2(mat):
   return np.linalg.matrix_rank(mat_gf2(mat))
@@ -650,7 +690,7 @@ def build_measurement_circuits_commute(nq,cc_in,config):
       for ic in range(len(cc)):
         mqubits.append(io[ic])
       
-      m={"mqc":mqc,"mqubits":mqubits,"signs":signs}
+      m={"mqc":mqc,"mqubits":mqubits,"signs":signs,"mode":"single_qubit"}
 
       complexity=0
       if criterion_for_qc_optimality=="constructed":
@@ -1024,7 +1064,7 @@ def build_measurement_circuits_commute2(nq,cc_in,config):
   for ic in range(len(cc)):
     mqubits.append(io[ic])
   
-  m={"mqc":mqc,"mqubits":mqubits,"signs":signs}
+  m={"mqc":mqc,"mqubits":mqubits,"signs":signs,"mode":"single_qubit"}
 
   complexity=0
   if criterion_for_qc_optimality=="constructed":
@@ -1059,10 +1099,12 @@ def build_measurement_circuit(mode,nq,cc,config):
 
   complexity_measure=config["QC"]["complexity_measure"]
   criterion_for_qc_optimality=config["QC"]["criterion_for_qc_optimality"]
-
-  if mode=="none" or len(cc)==1:
+  
+  if mode=="none": # or len(cc)==1:
     #one measurement per program
     m=build_measurement_circuits_none(nq,cc,config)
+  if mode=="none_bitstring" or mode=="disjointqubits_bitstring" or mode=="qubitwise_bitstring":
+    m=build_measurement_circuits_none_bitstring(nq,cc,config)
   elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
     if config.getboolean('QC','fixed_order_measurement_qubits'): 
       m=build_measurement_circuits_commute2(nq,cc,config)
@@ -1110,15 +1152,17 @@ def get_unique_pauliops(pauliops):
 
 def build_cliques(mode,pauliops):
   cliques=[]
-  if mode=="none":
+  if mode=="none" or mode=="none_bitstring":
       for p in pauliops:
           cliques.append([p])
-  elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute":
+  elif mode=="disjointqubits" or mode=="qubitwise" or mode=="commute" or mode=="disjointqubits_bitstring" or mode=="qubitwise_bitstring" or mode=="commute_bitstring":
       #run term grouping with own implementation
       nodes=[]
       for p in pauliops:
           nodes.append(p)
       cliques=graphclique.cliquecover(nodes,commutemode=mode,printcliques=True,plotgraph=False)
+  else:
+    raise RuntimeError("mode not known")
   return cliques
 
 def build_measurement_circuits(cliques,mode,nq,config):
@@ -1130,7 +1174,7 @@ def build_measurement_circuits(cliques,mode,nq,config):
       print("clique=",cc)
       cc2=Pauli_dep(nq,cc)
       m=build_measurement_circuit(mode,nq,cc2,config)
-      mqcs.append({"mqc":m['mqc'],"mqubits":m['mqubits'],"ops":cc2,"signs":m['signs']})
+      mqcs.append({"mqc":m['mqc'],"mqubits":m['mqubits'],"ops":cc2,"signs":m['signs'],"mode":m['mode']})
   return mqcs
 
 def getH_for_X_rank(nq,stab):
@@ -1170,6 +1214,7 @@ def Pauli_dep(nq,cc):
   rk=rk_gf2(stab[0:2*nq,0:nq])
   if rk<len(cc):
     print("some measurements are dependent: rk=",rk," m=",len(cc))
-    raise RuntimeError("split clique or add code to identify dependence of Paulis here")
+    #raise RuntimeError("split clique or add code to identify dependence of Paulis here")
+    return cc
   else:
     return cc

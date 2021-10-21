@@ -24,13 +24,13 @@ def disjoint_string(a,b):
     return True
 
 def commutecheck(commutemode,a,b):
-  if commutemode=="disjointqubits":
+  if commutemode=="disjointqubits" or commutemode=="disjointqubits_bitstring":
     if disjoint_qubits(a,b):
       return True
-  elif commutemode=="qubitwise":
+  elif commutemode=="qubitwise" or commutemode=="qubitwise_bitstring":
     if disjoint_string(a,b):
       return True
-  elif commutemode=="commute":
+  elif commutemode=="commute" or commutemode=="commute_bitstring":
     if Pauli(a).commutes(b):
       return True
   elif commutemode=="anticommute":

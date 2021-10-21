@@ -29,7 +29,7 @@ from qiskit.algorithms import VQE
 from qiskit.algorithms.optimizers import L_BFGS_B, SPSA, COBYLA, QNSPSA
 from qiskit.opflow.primitive_ops import PauliOp
 from qiskit.opflow.state_fns import CircuitStateFn
-from qiskit.quantum_info import Pauli
+from qiskit.quantum_info import Pauli,mutual_information
 from qiskit.opflow.gradients import Gradient, NaturalGradient, QFI, Hessian
 from qiskit.opflow import Z, X, I, StateFn, CircuitStateFn, SummedOp
 from qiskit.providers.aer.noise import NoiseModel
@@ -123,7 +123,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 shots=shots,
                 seed_simulator=seed,
                 seed_transpiler=seed,
-                optimization_level=0,#optimization_level,
+                optimization_level=optimization_level,
                 coupling_map=ibmq_coupling_map,
                 basis_gates=ibmq_basis_gates,
                 noise_model=ibmq_noise_model
@@ -154,35 +154,46 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 pickle.dump(qcs_par, outfile)
             with open('experiment_'+jobs.job_id()+"_job", 'wb') as outfile:
                 pickle.dump(jobs, outfile)
+#        else:
+#            print(mutual_information())
 
         res=jobs.result().results
-        for j in range(len(mqcs)):
-            counts = jobs.result().get_counts(j)
-            #print("NOISE count %i:" % j)
-            #plot_histogram(counts).savefig("counts_%i.png" % j)
-
         Vs=[]
         #loop over programs
         for im in range(len(mqcs)):
-            #for r in res[im].data.counts:
-            #    print(r,bin(int(r, base=16))[2:].zfill(nq),res[im].data.counts[r]/shots)
-
-            Va=[]
-            #loop over measurements in program
-            for ic in range(len(mqcs[im]['ops'])):
-                #print("op=",mqcs[im]['ops'][ic],"is measured at",mqcs[im]['mqubits'][ic],mqcs[im]['signs'][ic])
-                V=0
-                for r in res[im].data.counts:
-                    b=bin(int(r, base=16))[2:].zfill(nq)
-                    v=res[im].data.counts[r]/shots
-                    #if b[nq-1-mqcs[im]['mqubits'][ic]]=='1':
-                    if b[nq-1-ic]=='1':
-                        V=V-v
-                    else:
-                        V=V+v
-                V=V*mqcs[im]['signs'][ic]
-                Va.append(V)
-            Vs.append(Va)
+            if mqcs[im]['mode']=="single_qubit":
+                Va=[]
+                #loop over measurements in program
+                for ic in range(len(mqcs[im]['ops'])):
+                    #print("op=",mqcs[im]['ops'][ic],"is measured at",mqcs[im]['mqubits'][ic],mqcs[im]['signs'][ic])
+                    V=0
+                    for r in res[im].data.counts:
+                        b=bin(int(r, base=16))[2:].zfill(nq)
+                        v=res[im].data.counts[r]/shots
+                        #if b[nq-1-mqcs[im]['mqubits'][ic]]=='1':
+                        if b[nq-1-ic]=='1':
+                            V=V-v
+                        else:
+                            V=V+v
+                    V=V*mqcs[im]['signs'][ic]
+                    Va.append(V)
+                Vs.append(Va)
+            elif mqcs[im]['mode']=="bitstring":
+                #loop over measurements in program
+                Va=[]
+                for ic in range(len(mqcs[im]['ops'])):
+                    V=0
+                    for r in res[im].data.counts:
+                        b=bin(int(r, base=16))[2:].zfill(nq)
+                        #print("counts",r,b,res[im].data.counts[r]/shots)
+                        #find sign of bitstring b
+                        sign=1
+                        for i in range(nq):
+                            if b[i]=="1" and mqcs[im]['ops'][ic][i]!="I":
+                                sign=sign*(-1)
+                        V=V+sign*res[im].data.counts[r]/shots
+                    Va.append(V)
+                Vs.append(Va)
             print(mqcs[im]['ops'],Va)
         if thdf5_out:
             try:
@@ -194,6 +205,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
             except BlockingIOError:
                 print("hdf5 output is blocking")
         #print("t_measure",t1-t0,t2-t1,t3-t2,t4-t3)
+#    quit()
     return Vs
 
 def measurements_to_interact(mqcs,v,pauli_interact):
@@ -216,7 +228,7 @@ def measurements_to_interact(mqcs,v,pauli_interact):
 Urot_D=[]
 Urot_constraints=[]
 
-def measurements_to_constraints(mqcs,v,constraints):
+def measurements_to_constraints(mqcs,v,constraints,tprint=False):
     c=np.zeros(len(constraints))
     for ic in range(len(constraints)):
         cv=constraints[ic]['pauli']['const']-constraints[ic]['cval']
@@ -234,17 +246,34 @@ def measurements_to_constraints(mqcs,v,constraints):
                         break
         c[ic]=cv
 
-    if True:
-      #find unitary transformation of bath so that constraint violation is minimal
-      #build 1rdm from constraint values
-      #print(c)
-      print("before Urot",np.sum(c**2))
+    if auto_opt_bath_U:
+        c=Urot_run(constraints,c,tprint)
+    return c
+
+def Urot_run(constraints,c,tprint=False):
+      #FIXME orbital count hardcoded
+      norb=4
+      ninteract=2
+
+      
+      if tprint:
+          print("before Urot",np.sum(c**2))
       D=c_to_rdm(constraints,c)
-      #print(D)
+      s=""
+      N=0
+      [f,v]=np.linalg.eig(D)
+      for i in range(norb):
+          s=s+" "+str(f.real[i])
+          N=N+f.real[i]
+
+      if tprint:
+        print("before f=",s,N)
 
       #find unitary transformation so that constraint violation is minimal
 
+
       neff=norb-ninteract
+      np.random.seed(832476)
       x0=0.01*np.random.random(neff**2)
 
       global Urot_D,Urot_constraints
@@ -252,19 +281,21 @@ def measurements_to_constraints(mqcs,v,constraints):
       Urot_constraints=copy.deepcopy(constraints)
     
       method="BFGS"
-      res=minimize(Urot_obj, x0, method=method,tol=1e-9,options={'maxiter':10000,'verbose': 2,'disp': True})
+      res=minimize(Urot_obj, x0, method=method,tol=1e-9,options={'maxiter':10000})
       point=res.x
       nfev=res.nfev
 
-      D2=aca.mitigate_trans(point,D,4,2)
+      D2=aca.mitigate_trans(point,D,norb,ninteract)
+      #[f,v]=np.linalg.eig(D)
+      #print("after f=",f)
       #build constraint values from transformed 1rdm
       c=rdm_to_c(constraints,D2)
-      print("after Urot",np.sum(c**2))
-      #print(c)
-    return c
-
+      if tprint:
+        print("after Urot",np.sum(c**2))
+      return copy.deepcopy(c)
 
 def Urot_obj(x):
+      #FIXME orbital count hardcoded
       D2=aca.mitigate_trans(x,Urot_D,4,2)
       c=rdm_to_c(Urot_constraints,D2)
       L=0
@@ -274,6 +305,7 @@ def Urot_obj(x):
 
 
 def c_to_rdm(constraints,c):
+    #FIXME orbital count hardcoded
     D=np.zeros((4,4),dtype=np.complex_)
     for ic in range(len(constraints)):
       if constraints[ic]['observable']=="1RDM":
@@ -324,7 +356,10 @@ def rdmf_obj(x):
             raise RuntimeError("build_sparse not enabled")
         a=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real
         c_qc[ic]=a-constraints[ic]['cval']
-        L=L+lagrange[ic]*c_qc[ic]+0.5*penalty[ic]*abs(c_qc[ic])**penalty_exponent
+    if auto_opt_bath_U:
+        c_qc=Urot_run(constraints,c_qc)
+    for ic in range(len(constraints)):
+      L=L+lagrange[ic]*c_qc[ic]+0.5*penalty[ic]*abs(c_qc[ic])**penalty_exponent
     #build interaction expectation value from result
     if not build_sparse:
         raise RuntimeError("build_sparse not enabled")
@@ -340,7 +375,7 @@ def rdmf_obj(x):
         L=0
         v=measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed+rdmf_obj_eval,tsim,optimization_level)
         W_qc=measurements_to_interact(mqcs,v,pauli_interact)
-        c_qc=measurements_to_constraints(mqcs,v,constraints)
+        c_qc=measurements_to_constraints(mqcs,v,constraints,tprint=True)
         for ic in range(len(constraints)):
             L=L+lagrange[ic]*c_qc[ic]+0.5*penalty[ic]*abs(c_qc[ic])**penalty_exponent
         L=L+W_qc
@@ -535,11 +570,21 @@ l=int(config['ACA']['level'])
 if l==-1:
     l=len(Daca_levels)-1
 Daca=Daca_levels[l]
+
+#limit U/t->\infty
+#Daca=0*Daca_levels[l]
+#Daca[0,0]=0.5
+#Daca[1,1]=0.5
+#Daca[2,2]=0.5
+#Daca[3,3]=0.5
+
 norb_aca=np.shape(Daca)[0]
 aca.printmat(norb_aca,norb_aca,"D_aca_used_",Daca)
 print("aca: level",l," norb=",norb_aca)
 
 print("Daca=",Daca)
+[f,v]=np.linalg.eig(Daca)
+print("Occ(Daca)=",f.real)
 
 if mitigate_extreme_offdiagonal_1rdm_values:
     print("trying to mitigate extreme off-diagonal values in the 1rdm between the impurity and bath and in the bath")
@@ -686,6 +731,8 @@ else:
 
 print("nq=",nq)
 
+
+
 #get qubit mapping
 qmap=config['QC']['qubit_map']
 qubit_map=[]
@@ -724,6 +771,8 @@ elif entanglement=="qc":
             continue
         if c[0] in qubit_map[0:norb_aca] and c[1] in qubit_map[0:norb_aca]:
             entanglement.append([c[0],c[1]])
+    #entanglement=[[0,1],[2,3],[1,2],[1,0],[3,2]]
+    entanglement=[[0,1],[2,3],[1,2]]
     print("using entangler (physical qubits) =",entanglement)
 
 backend_check = BasicAer.get_backend('statevector_simulator')
@@ -759,19 +808,164 @@ for i in Waca:
     interact+=U*((~c_ops[2*i]) @ c_ops[2*i]@(~c_ops[2*i+1]) @ c_ops[2*i+1])
 
 
+
+ansatztype=config['QC']['ansatztype']
+q = QuantumRegister(nq)
+c = ClassicalRegister(nq)
+ansatz=QuantumCircuit(q,c)
+ipar=0
+npar=0
 # setup the initial state for the ansatz
-ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y',insert_barriers=False,skip_unentangled_qubits=True)
-#ansatz = HartreeFock(nq,Naca,qubit_converter)
+if ansatztype=="twolocal":
+    ansatz = TwoLocal(nq,rotation_blocks = rotation_blocks, entanglement_blocks = entanglement_blocks,entanglement=entanglement, reps=reps, parameter_prefix = 'y',insert_barriers=False,skip_unentangled_qubits=True)
+    npar=ansatz.num_parameters
+elif ansatztype=="hardwarefficient0":
+    for irep in range(reps):
+        #rotation layer
+        for iq in range(nq):
+            theta = Parameter('y['+str(ipar)+"]")
+            ansatz.rz(theta,iq)
+            ipar=ipar+1
+        #sx layer
+        for iq in range(nq):
+          ansatz.sx(iq)
+        for iq in range(nq):
+            theta = Parameter('y['+str(ipar)+"]")
+            ansatz.rz(theta,iq)
+            ipar=ipar+1
+        
+        #entangler layer
+        for e in entanglement:
+            ansatz.cx(e[0],e[1])
+
+    for iq in range(nq):
+        theta = Parameter('y['+str(ipar)+"]")
+        ansatz.rz(theta,iq)
+        ipar=ipar+1
+    for iq in range(nq):
+      ansatz.sx(iq)
+    for iq in range(nq):
+        theta = Parameter('y['+str(ipar)+"]")
+        ansatz.rz(theta,iq)
+        ipar=ipar+1
+    npar=ipar
+elif ansatztype=="hardwarefficient_u3":
+    for irep in range(reps):
+        #rotation layer
+        for iq in range(nq):
+            t1 = Parameter('y['+str(ipar)+"]")
+            t2 = Parameter('y['+str(ipar+1)+"]")
+            t3 = Parameter('y['+str(ipar+2)+"]")
+            ansatz.u3(t1,t2,t3,iq)
+            ipar=ipar+3
+        #sx layer
+        for iq in range(nq):
+          ansatz.sx(iq)
+        for iq in range(nq):
+            t1 = Parameter('y['+str(ipar)+"]")
+            t2 = Parameter('y['+str(ipar+1)+"]")
+            t3 = Parameter('y['+str(ipar+2)+"]")
+            ansatz.u3(t1,t2,t3,iq)
+            ipar=ipar+3
+        
+        #entangler layer
+        for e in entanglement:
+            ansatz.cx(e[0],e[1])
+
+    for iq in range(nq):
+        t1 = Parameter('y['+str(ipar)+"]")
+        t2 = Parameter('y['+str(ipar+1)+"]")
+        t3 = Parameter('y['+str(ipar+2)+"]")
+        ansatz.u3(t1,t2,t3,iq)
+        ipar=ipar+3
+    for iq in range(nq):
+      ansatz.sx(iq)
+    for iq in range(nq):
+        t1 = Parameter('y['+str(ipar)+"]")
+        t2 = Parameter('y['+str(ipar+1)+"]")
+        t3 = Parameter('y['+str(ipar+2)+"]")
+        ansatz.u3(t1,t2,t3,iq)
+        ipar=ipar+3
+    npar=ipar
+elif ansatztype=="2103.16161_spin_model":
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,0)
+    ipar=ipar+1
+
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,1)
+    ipar=ipar+1
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,3)
+    ipar=ipar+1
+    
+    ansatz.cnot(0,1)
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,1)
+    ipar=ipar+1
+    
+    ansatz.cnot(1,2)
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,2)
+    ipar=ipar+1
+    
+    ansatz.cnot(2,3)
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,2)
+    ipar=ipar+1
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,3)
+    ipar=ipar+1
+    
+    ansatz.cnot(1,2)
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,1)
+    ipar=ipar+1
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,2)
+    ipar=ipar+1
+    
+    ansatz.cnot(0,1)
+    
+    theta = Parameter('y['+str(ipar)+"]")
+    ansatz.ry(theta,1)
+    ipar=ipar+1
+
+    npar=ipar
+print(ansatz)
+
+
+
 
 #define registers
 q = QuantumRegister(nq)
 c = ClassicalRegister(nq)
 qc=QuantumCircuit(q,c)
 qc=qc.compose(ansatz)
-qc=qc.decompose()
+#qc=qc.decompose()
 
 print("variational state:")
 print(qc)
+
+#transpiler variational state
+initial_point = np.random.random(npar)
+
+circ=qc.bind_parameters(initial_point)
+for i in range(nq):
+    circ.measure(i,i)
+
+transpiled_qc = transpile(circ, backend=ibmq_backend, optimization_level=3,seed_transpiler=seed)
+print("transpiled variational state:")
+print(transpiled_qc)
+
+
 
 print("ansatz-state is written to ansatz.txt")
 qc.draw(output='text',filename="ansatz.txt")
@@ -784,7 +978,7 @@ if False:
     qc2=qc2.compose(ansatz).decompose()
     #print(ansatz)
     H = qubit_converter.convert(interact,num_particles=num_particles) #qc_interact2['qcs'][i]
-    params = ParameterVector('y', length=ansatz.num_parameters)
+    params = ParameterVector('y', length=npar)
     print("params=",params)
     qc2=qc2.assign_parameters(params)
 
@@ -796,6 +990,13 @@ if False:
     exit()
 
 pauli_interact=paulis_for_op(interact,qubit_converter,qc,qubit_map,num_particles)
+print("Interaction")
+print(pauli_interact)
+
+auto_opt_bath_U=config.getboolean('QC','auto_opt_bath_U')
+
+if config.getboolean('QC','ignore_W'):
+    pauli_interact['pauliops']=[]
 interact_op=qubit_convert_and_map(interact,qubit_converter,num_particles,qubit_map)
 #interact_op=qubit_converter.convert(interact,num_particles=num_particles)
 if build_sparse:
@@ -901,20 +1102,29 @@ for i in range(len(constraints)):
 
 #set intial parameters
 np.random.seed(seed)
-initial_point = np.random.random(ansatz.num_parameters)
-#initial_point = np.zeros(ansatz.num_parameters)
-print("number of parameters:",ansatz.num_parameters)
+initial_point = (np.random.random(npar)-0.5)*2*3.141592
 
-#initial_point=[1.06640208e+00,1.45607800e+00,7.34931531e-01,1.57367261e+00,-1.99480644e-01,-3.38610089e-01,2.84460785e+00,5.54690036e-05,4.77836694e-01,1.36731971e+00,1.04295359e+00,1.58973393e+00,-7.54861556e-01,7.87469873e-01,5.91415152e-01,5.84946121e-01,2.68335750e+00,-3.15965247e-03,-1.54766714e-01,3.35359740e-02,5.84140565e-01,1.01616537e+00,-1.30547619e-02,-6.28220323e-01]
+#initial_point=[1.83260653,1.57239882,0.38539072,0.11422225,2.48095628,0.54437877,0.23912962,1.61329308,0.84089431,0.46567886,0.77021549,0.26064483,0.29548364,0.81802542,0.96207029,0.54522041,0.73954837,-0.40343044,0.15583702,0.69756102,1.48141805,1.57349958,0.90441851,0.29493435,0.60615152,1.07527145,0.46660692,0.56152827,-0.67018988,0.06973803,0.89530264,1.11338873,0.15018496,0.1937279,0.32439406,0.09344536,0.23982207,0.58066347,0.9057391,1.38953941,0.88833724,-0.70732451,0.19725061,2.10463106,0.70710316,0.93471997,-0.08651704,0.05757463]
+#initial_point = np.zeros(npar)
+print("number of parameters:",npar)
 
-#initial_point=[ 1.57979748e+00,  1.82172669e-01,  5.12471810e+00, -1.57079633e+00,      -4.25179493e+00,  3.61868826e+00,  1.28628651e+00, -3.14159265e+00,       -3.23954700e+00,  3.11289071e+00, -1.70165477e+00, -3.14159265e+00,       -2.62189757e+00,  3.15828064e+00,  2.51831032e+00, -8.64445037e-11,        2.09072450e+00, -1.60959460e+00, -6.98497491e-02, -4.71238898e+00,        3.14349434e+00,  1.57445916e+00,  3.14068939e+00,  6.75998462e-01,       -1.60304937e+00,  1.10298395e-10, -3.12223364e+00,  3.14159265e+00,       -1.35362935e-01,  3.30172159e+00, -4.80779283e+00,  3.46606507e+00]
+#initial_point=[1.570034,   2.538581,  -0.002320321, 1.570805,  1.577478,-0.3359176, 1.508331, -0.000001906892, 0.2231919,   1.539132, -0.5821943, -0.0001039265, 0.5341129, 1.021703,   0.6353581,  0.8018677]
+
+
 
 if not tdoqc:
     exit()
 
 penalty_exponent=int(config["QC"]["penalty_exponent"])
 penalty=np.zeros(len(constraints))
+penalty[:]=0*penalty[:]+int(config["QC"]["initial_penalty"])
 lagrange=np.zeros(len(constraints))
+
+if config.getboolean('QC','initial_lagrange_from_mueller'):
+    der=mueller.mueller_hubbard_der(norb_aca,ninteract,U,Daca)
+    for i in range(len(constraints)):
+        lagrange[i]=-der[i]
+print("initial lagrange=",lagrange)
 
 v=measure_all_programs(nq,ansatz,mqcs,initial_point,backend,shots,seed,tsim,optimization_level)
 W_qc=measurements_to_interact(mqcs,v,pauli_interact)
@@ -924,19 +1134,15 @@ if tcheck:
     circ=ansatz.bind_parameters(initial_point)
     job=execute(circ,backend_check)
     result=job.result()
-    counts = result.get_counts(0)
-    #plot_histogram(counts).savefig("tcheck_counts.png")
-
     psi=result.get_statevector()
-    #print("NONOISE STATE VECTOR:", psi)
 
     W_exact=np.dot(np.conj(psi),interact_sparse.dot(psi)).real
     print("W_exact=",W_exact,"W_qc=",W_qc)
 
     c_exact=np.zeros(len(constraints))
     for ic in range(len(constraints)):
-        c_exact=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real-constraints[ic]['cval']
-        print("constraint",ic," exact=",c_exact,"qc=",c_qc[ic],constraints[ic]['i'],constraints[ic]['j'],constraints[ic]['type'],constraints[ic]['cval'])
+        c_exact[ic]=np.dot(np.conj(psi),constraints[ic]['opsparse'].dot(psi)).real-constraints[ic]['cval']
+        print("constraint",ic," exact=",c_exact[ic],"qc=",c_qc[ic],constraints[ic]['i'],constraints[ic]['j'],constraints[ic]['type'],constraints[ic]['cval'])
 
 
 tstddev=config.getboolean('QC','tstddev')
@@ -968,15 +1174,15 @@ if tstddev:
     for i in range(len(constraints)):
         print("stddev c[",i,"]=",math.sqrt(c2_qc_sum[i]-c_qc_sum[i]**2))
 
-
-#exit()
 rdmf_obj_eval=0
 rdmf_cons_eval=0
 tprintevals=True
 printevalsevery=1
 
 qiskit.utils.algorithm_globals.random_seed=seed
-maxiter=int(config['QC']['maxiter'])
+maxiter=int(config['QC']['algo_maxiter'])
+tol=float(config['QC']['algo_tol'])
+
 
 x0=initial_point
 tprintevals=False
@@ -1000,16 +1206,13 @@ print("Augmented Lagrangian")
 penalty[:]=0*penalty[:]+int(config["QC"]["initial_penalty"])
 print("initial penalty=",penalty)
 
-if config.getboolean('QC','initial_lagrange_from_mueller'):
-    der=mueller.mueller_hubbard_der(norb_aca,ninteract,U,Daca)
-    for i in range(len(constraints)):
-        lagrange[i]=-der[i]
-print("initial lagrange=",lagrange)
 tprintevals=True
 rdmf_obj_eval=0
 
 
 #augmented Lagrangian
+algo=config['QC']['algo']
+
 for oiter in range(int(config['QC']['auglag_iter_max'])):
     value=0
     point=[]
@@ -1031,19 +1234,20 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
             texact_expect=True
         else:
             texact_expect=False
-        algo=config['QC']['algo']
         if algo=="LBFGS":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
-            optimizer = L_BFGS_B(maxiter=maxiter,tol=1e-2)
-            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+            optimizer = L_BFGS_B(maxiter=maxiter,tol=tol)
+            [point, value, nfev]=optimizer.optimize(num_vars=npar,objective_function=rdmf_obj,initial_point=x0)
         if algo=="COBYLA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
-            optimizer = COBYLA(maxiter=maxiter,disp=True,tol=1e-2,callback=opt_callback)
-            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+            optimizer = COBYLA(maxiter=maxiter,disp=True,tol=tol,callback=opt_callback)
+            [point, value, nfev]=optimizer.optimize(num_vars=npar,objective_function=rdmf_obj,initial_point=x0)
+            if config.getboolean('QC','min_without_noise'):
+                algo="LBFGS"
         elif algo=="SPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
             optimizer = SPSA(maxiter=maxiter,callback=opt_callback,blocking=spsa_blocking)
-            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+            [point, value, nfev]=optimizer.optimize(num_vars=npar,objective_function=rdmf_obj,initial_point=x0)
         elif algo=="cal-SPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
             print("calibrating")
@@ -1051,12 +1255,12 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
             [learning_rate,perturbation]=optimizer.calibrate(rdmf_obj,initial_point=x0,stability_constant=0, target_magnitude=None, alpha=0.602, gamma=0.101, modelspace=False)
             print("minimizing")
             optimizer = SPSA(maxiter=maxiter,second_order=False,callback=opt_callback,perturbation=perturbation,learning_rate=learning_rate,blocking=spsa_blocking)
-            [point, value, nfev]=optimizer.optimize(num_vars=ansatz.num_parameters,objective_function=rdmf_obj,initial_point=x0)
+            [point, value, nfev]=optimizer.optimize(num_vars=npar,objective_function=rdmf_obj,initial_point=x0)
         elif algo=="QNSPSA":
             print("minimizing over parametrized qc-programs with augmented Lagrangian and "+algo)
             fidelity = QNSPSA.get_fidelity(ansatz)
             qnspsa = QNSPSA(fidelity, maxiter=maxiter,callback=opt_callback,blocking=spsa_blocking)
-            [point,value,nfev] = qnspsa.optimize(ansatz.num_parameters, rdmf_obj, initial_point=x0)
+            [point,value,nfev] = qnspsa.optimize(npar, rdmf_obj, initial_point=x0)
 
     print("point=",point)
     print("value=",value)
@@ -1102,8 +1306,7 @@ for oiter in range(int(config['QC']['auglag_iter_max'])):
     x0=point[:]
     #multiplier and penalty update
     for i in range(len(constraints)):
-        if abs(c_qc[i])<0.1:
-          lagrange[i]=lagrange[i]+penalty[i]*c_qc[i]
+        lagrange[i]=lagrange[i]+penalty[i]*c_qc[i]
         penalty[i]=penalty[i]*float(config["QC"]["penalty_factor"])
     for i in range(len(constraints)):
         print("constraint",i,constraints[i]['i'],constraints[i]['j'],constraints[i]['type'],"viol=",c_qc[i],"viol_noise=",c_qc_sum[i],"lagrange=",lagrange[i],"penalty=",penalty[i])
