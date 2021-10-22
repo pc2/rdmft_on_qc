@@ -45,7 +45,7 @@ import pickle
 import logging
 import h5py
 import shutil
-from qiskit.test.mock import FakeBelem,FakeBogota
+from qiskit.test.mock import FakeBelem,FakeBogota,FakeSantiago
 
 
 def opt_callback(nfunc,par,f,stepsize,accepted):
@@ -146,6 +146,7 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
     else:
         jobs.wait_for_final_state(wait=0.01)
 
+    Vs=[]
     if jobs.done():
         t4=time.time()
         if not tsim:
@@ -158,7 +159,6 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
 #            print(mutual_information())
 
         res=jobs.result().results
-        Vs=[]
         #loop over programs
         for im in range(len(mqcs)):
             if mqcs[im]['mode']=="single_qubit":
@@ -206,6 +206,8 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                 print("hdf5 output is blocking")
         #print("t_measure",t1-t0,t2-t1,t3-t2,t4-t3)
 #    quit()
+    else:
+        raise RuntimeError("some error running the circuit has occoured")
     return Vs
 
 def measurements_to_interact(mqcs,v,pauli_interact):
@@ -646,7 +648,7 @@ else:
 # set the backend for the quantum computation
 if tnoise:
     # Build noise model from backend properties
-    #IBMQ.save_account(apikey,overwrite=True)
+    IBMQ.save_account(apikey,overwrite=True)
     # ['ibmq_qasm_simulator', 'ibmq_armonk', 'ibmq_santiago', 'ibmq_bogota', 'ibmq_lima', 'ibmq_belem', 'ibmq_quito', 'simulator_statevector', 'simulator_mps', 'simulator_extended_stabilizer', 'simulator_stabilizer', 'ibmq_manila']
 
     if config['QC']['qc'].find("fake")==0:
@@ -654,6 +656,8 @@ if tnoise:
             ibmq_backend = FakeBelem()
         elif config['QC']['qc']=="fake_bogota":
             ibmq_backend = FakeBogota()
+        elif config['QC']['qc']=="fake_santiago":
+            ibmq_backend = FakeSantiago()
         else:
             raise RuntimeError("fake qc not known please add in rdmft.py")
     else:
@@ -822,14 +826,14 @@ if ansatztype=="twolocal":
 elif ansatztype=="hardwarefficient0":
     for irep in range(reps):
         #rotation layer
-        for iq in range(nq):
+        for iq in range(norb_aca):
             theta = Parameter('y['+str(ipar)+"]")
             ansatz.rz(theta,iq)
             ipar=ipar+1
         #sx layer
-        for iq in range(nq):
+        for iq in range(norb_aca:
           ansatz.sx(iq)
-        for iq in range(nq):
+        for iq in range(norb_aca):
             theta = Parameter('y['+str(ipar)+"]")
             ansatz.rz(theta,iq)
             ipar=ipar+1
@@ -838,13 +842,13 @@ elif ansatztype=="hardwarefficient0":
         for e in entanglement:
             ansatz.cx(e[0],e[1])
 
-    for iq in range(nq):
+    for iq in range(norb_aca):
         theta = Parameter('y['+str(ipar)+"]")
         ansatz.rz(theta,iq)
         ipar=ipar+1
-    for iq in range(nq):
+    for iq in range(norb_aca):
       ansatz.sx(iq)
-    for iq in range(nq):
+    for iq in range(norb_aca):
         theta = Parameter('y['+str(ipar)+"]")
         ansatz.rz(theta,iq)
         ipar=ipar+1
@@ -852,16 +856,16 @@ elif ansatztype=="hardwarefficient0":
 elif ansatztype=="hardwarefficient_u3":
     for irep in range(reps):
         #rotation layer
-        for iq in range(nq):
+        for iq in range(norb_aca):
             t1 = Parameter('y['+str(ipar)+"]")
             t2 = Parameter('y['+str(ipar+1)+"]")
             t3 = Parameter('y['+str(ipar+2)+"]")
             ansatz.u3(t1,t2,t3,iq)
             ipar=ipar+3
         #sx layer
-        for iq in range(nq):
+        for iq in range(norb_aca):
           ansatz.sx(iq)
-        for iq in range(nq):
+        for iq in range(norb_aca):
             t1 = Parameter('y['+str(ipar)+"]")
             t2 = Parameter('y['+str(ipar+1)+"]")
             t3 = Parameter('y['+str(ipar+2)+"]")
@@ -872,15 +876,15 @@ elif ansatztype=="hardwarefficient_u3":
         for e in entanglement:
             ansatz.cx(e[0],e[1])
 
-    for iq in range(nq):
+    for iq in range(norb_aca):
         t1 = Parameter('y['+str(ipar)+"]")
         t2 = Parameter('y['+str(ipar+1)+"]")
         t3 = Parameter('y['+str(ipar+2)+"]")
         ansatz.u3(t1,t2,t3,iq)
         ipar=ipar+3
-    for iq in range(nq):
+    for iq in range(norb_aca):
       ansatz.sx(iq)
-    for iq in range(nq):
+    for iq in range(norb_aca):
         t1 = Parameter('y['+str(ipar)+"]")
         t2 = Parameter('y['+str(ipar+1)+"]")
         t3 = Parameter('y['+str(ipar+2)+"]")
@@ -1184,6 +1188,10 @@ maxiter=int(config['QC']['algo_maxiter'])
 tol=float(config['QC']['algo_tol'])
 
 
+#if not config.getboolean('QC','min_without_noise'):
+#    initial_point=[3.10154661,2.33121779,1.56994994,2.87591172,1.56797337,-1.2759596,-2.5057679,-1.81839961,-1.57081844,0.05640153,-1.60075676,-2.45535814,0.32334325,3.21051636,0.6736446,0.81070058,3.14159784,-1.57079121,1.57151379,-1.37104868]
+
+
 x0=initial_point
 tprintevals=False
 
@@ -1208,6 +1216,7 @@ print("initial penalty=",penalty)
 
 tprintevals=True
 rdmf_obj_eval=0
+
 
 
 #augmented Lagrangian
