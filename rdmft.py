@@ -33,6 +33,7 @@ from qiskit.quantum_info import Pauli,mutual_information
 from qiskit.opflow.gradients import Gradient, NaturalGradient, QFI, Hessian
 from qiskit.opflow import Z, X, I, StateFn, CircuitStateFn, SummedOp
 from qiskit.providers.aer.noise import NoiseModel
+from qiskit.providers.aer import AerSimulator
 from qiskit.visualization import plot_histogram
 import qiskit_nature
 from qiskit_nature.circuit.library import HartreeFock
@@ -100,7 +101,8 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
     t1=time.time()
 
     for mqc in mqcs:
-        qcs_par.append(qc.compose(mqc['mqc']))
+        tcirc = transpile(qc.compose(mqc['mqc']),backend=ibmq_backend, seed_transpiler=seed,optimization_level=optimization_level)
+        qcs_par.append(tcirc)
     t2=time.time()
     if not tnoise:
         jobs = execute(
@@ -116,28 +118,28 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
         if tsim:
             #FIXME: eventuell python threading rundrum?
             backend.set_options(method="density_matrix",max_parallel_threads=max_parallel_threads,max_parallel_shots=max_parallel_shots,max_parallel_experiments=max_parallel_experiments)
-            jobs = execute(
+#            jobs = execute(
+#                qcs_par,
+#                backend=backend,
+#                backend_properties=ibmq_backend_props,
+#                shots=shots,
+#                seed_simulator=seed,
+#                seed_transpiler=seed,
+#                optimization_level=optimization_level,
+#                coupling_map=ibmq_coupling_map,
+#                basis_gates=ibmq_basis_gates,
+#                noise_model=ibmq_noise_model
+#            )
+#        else:
+        jobs = execute(
                 qcs_par,
                 backend=backend,
-                backend_properties=ibmq_backend_props,
-                shots=shots,
-                seed_simulator=seed,
-                seed_transpiler=seed,
-                optimization_level=optimization_level,
-                coupling_map=ibmq_coupling_map,
-                basis_gates=ibmq_basis_gates,
-                noise_model=ibmq_noise_model
-            )
-        else:
-            jobs = execute(
-                qcs_par,
-                backend=backend,
-                backend_properties=ibmq_backend_props,
+                #backend_properties=ibmq_backend_props,
                 shots=shots,
                 seed_simulator=seed,
                 seed_transpiler=seed,
                 optimization_level=optimization_level
-            )
+        )
     t3=time.time()
 
     if not tsim:
@@ -194,16 +196,16 @@ def measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed,tsim,optimization_l
                         V=V+sign*res[im].data.counts[r]/shots
                     Va.append(V)
                 Vs.append(Va)
-            print(mqcs[im]['ops'],Va)
-        if thdf5_out:
-            try:
-                h5f = h5py.File('measurements.h5', 'a')
-                h5f.create_dataset('opt_x_'+str(measurement_counter), data=x)
-                for i in range(len(Vs)):
-                    h5f.create_dataset('opt_V_'+str(measurement_counter)+"_"+str(i), data=Vs[i])
-                h5f.close()
-            except BlockingIOError:
-                print("hdf5 output is blocking")
+            #print(mqcs[im]['ops'],Va)
+#        if thdf5_out:
+#            try:
+#                h5f = h5py.File('measurements.h5', 'a')
+#                h5f.create_dataset('opt_x_'+str(measurement_counter), data=x)
+#                for i in range(len(Vs)):
+#                    h5f.create_dataset('opt_V_'+str(measurement_counter)+"_"+str(i), data=Vs[i])
+#                h5f.close()
+#            except BlockingIOError:
+#                print("hdf5 output is blocking")
         #print("t_measure",t1-t0,t2-t1,t3-t2,t4-t3)
 #    quit()
     else:
@@ -230,7 +232,7 @@ def measurements_to_interact(mqcs,v,pauli_interact):
 Urot_D=[]
 Urot_constraints=[]
 
-def measurements_to_constraints(mqcs,v,constraints,tprint=False):
+def measurements_to_constraints(mqcs,v,constraints,tprint=False,returnUrot=False):
     c=np.zeros(len(constraints))
     for ic in range(len(constraints)):
         cv=constraints[ic]['pauli']['const']-constraints[ic]['cval']
@@ -247,19 +249,19 @@ def measurements_to_constraints(mqcs,v,constraints,tprint=False):
                         found=True
                         break
         c[ic]=cv
-
     if auto_opt_bath_U:
-        c=Urot_run(constraints,c,tprint)
-    return c
+        return Urot_run(constraints,c,tprint,returnUrot)
+    else:
+        return c
 
-def Urot_run(constraints,c,tprint=False):
+def Urot_run(constraints,c,tprint=False,returnUrot=False):
       #FIXME orbital count hardcoded
       norb=4
       ninteract=2
 
-      
-      if tprint:
-          print("before Urot",np.sum(c**2))
+      before=np.sum(c**2)
+#      if tprint:
+#          print("before Urot",before)
       D=c_to_rdm(constraints,c)
       s=""
       N=0
@@ -268,12 +270,7 @@ def Urot_run(constraints,c,tprint=False):
           s=s+" "+str(f.real[i])
           N=N+f.real[i]
 
-      if tprint:
-        print("before f=",s,N)
-
       #find unitary transformation so that constraint violation is minimal
-
-
       neff=norb-ninteract
       np.random.seed(832476)
       x0=0.01*np.random.random(neff**2)
@@ -291,10 +288,22 @@ def Urot_run(constraints,c,tprint=False):
       #[f,v]=np.linalg.eig(D)
       #print("after f=",f)
       #build constraint values from transformed 1rdm
-      c=rdm_to_c(constraints,D2)
-      if tprint:
-        print("after Urot",np.sum(c**2))
-      return copy.deepcopy(c)
+      c2=rdm_to_c(constraints,D2)
+      after=np.sum(c2**2)
+#      if tprint:
+#        print("after Urot",after)
+      if returnUrot:
+        d={}
+        d['c']=copy.deepcopy(c2)
+        d['cin']=copy.deepcopy(c)
+        d['before']=before
+        d['after']=after
+        d['x']=res.x
+        d['N']=N
+        d['f']=f.real
+        return d
+      else:
+        return copy.deepcopy(c2)
 
 def Urot_obj(x):
       #FIXME orbital count hardcoded
@@ -377,28 +386,39 @@ def rdmf_obj(x):
         L=0
         v=measure_all_programs(nq,ansatz,mqcs,x,backend,shots,seed+rdmf_obj_eval,tsim,optimization_level)
         W_qc=measurements_to_interact(mqcs,v,pauli_interact)
-        c_qc=measurements_to_constraints(mqcs,v,constraints,tprint=True)
+        Urot=measurements_to_constraints(mqcs,v,constraints,tprint=True,returnUrot=True)
+        c_qc=Urot['c']
         for ic in range(len(constraints)):
             L=L+lagrange[ic]*c_qc[ic]+0.5*penalty[ic]*abs(c_qc[ic])**penalty_exponent
         L=L+W_qc
+        if thdf5_out:
+            try:
+                h5f = h5py.File('opt_iter.h5', 'a')
+                grp = h5f.create_group(str(rdmf_obj_eval))
+                grp.create_dataset('x', data=x)
+                grp.create_dataset('seed', data=seed+rdmf_obj_eval)
+                grp.create_dataset('cqc', data=c_qc)
+                grp.create_dataset('wqc', data=W_qc)
+                for i in range(len(v)):
+                    grp.create_dataset('opt_v_'+str(i), data=v[i])
+                grp.create_dataset('L', data=L)
+                grp.create_dataset('penalty', data=penalty)
+                grp.create_dataset('lagrange', data=lagrange)
+                grp.create_dataset('measurement', data=measurement_counter)
+                grp.create_dataset('Urot_before', data=Urot['before'])
+                grp.create_dataset('Urot_after', data=Urot['after'])
+                grp.create_dataset('Urot_x', data=Urot['x'])
+                grp.create_dataset('Urot_c', data=Urot['c'])
+                grp.create_dataset('Urot_cin', data=Urot['cin'])
+                grp.create_dataset('N', data=Urot['N'])
+                grp.create_dataset('f', data=Urot['f'])
+                h5f.close()
+            except BlockingIOError:
+                print("hdf5 output is blocking")
 
     t1 = time.time()
     if tprintevals and rdmf_obj_eval%printevalsevery==0:
         print("rdmf_obj_eval=",rdmf_obj_eval,"L=",L,"W=",W_qc,"sum(c^2)=",np.sum(c_qc**2),"t=",t1-t0,"exact=","L=",L2,"W=",W2_qc,"sum(c^2)=",np.sum(c2_qc**2))
-    if thdf5_out and not texact_expect:
-        try:
-            h5f = h5py.File('opt_iter.h5', 'a')
-            h5f.create_dataset('opt_x_'+str(rdmf_obj_eval), data=x)
-            h5f.create_dataset('opt_seed_'+str(rdmf_obj_eval), data=seed+rdmf_obj_eval)
-            h5f.create_dataset('opt_cqc_'+str(rdmf_obj_eval), data=c_qc)
-            h5f.create_dataset('opt_wqc_'+str(rdmf_obj_eval), data=W_qc)
-            h5f.create_dataset('opt_L_'+str(rdmf_obj_eval), data=L)
-            h5f.create_dataset('opt_penalty_'+str(rdmf_obj_eval), data=penalty)
-            h5f.create_dataset('opt_lagrange_'+str(rdmf_obj_eval), data=lagrange)
-            h5f.create_dataset('opt_measurement_'+str(rdmf_obj_eval), data=measurement_counter)
-            h5f.close()
-        except BlockingIOError:
-            print("hdf5 output is blocking")
     return L
 
 def rdmf_cons(x):
@@ -476,7 +496,7 @@ max_parallel_threads=int(config['QC']['max_parallel_threads'])
 max_parallel_experiments=int(config['QC']['max_parallel_experiments'])
 max_parallel_shots=int(config['QC']['max_parallel_shots'])
 
-
+rdmf_obj_eval=0
 
 
 #GS of system to get a physical density matrix
@@ -650,24 +670,29 @@ if tnoise:
     # Build noise model from backend properties
     IBMQ.save_account(apikey,overwrite=True)
     # ['ibmq_qasm_simulator', 'ibmq_armonk', 'ibmq_santiago', 'ibmq_bogota', 'ibmq_lima', 'ibmq_belem', 'ibmq_quito', 'simulator_statevector', 'simulator_mps', 'simulator_extended_stabilizer', 'simulator_stabilizer', 'ibmq_manila']
+    
+    IBMQ.load_account()
+    print("providers=",IBMQ.providers())
+    provider = IBMQ.get_provider(hub=config["QC"]['hub'],group=config["QC"]['group'])
+    print("backends=")
+    for b in provider.backends():
+        print(b.name())
+    ibmq_backend = provider.get_backend(config['QC']['qc'])
+    backend = provider.get_backend(config['QC']['qc'])
 
-    if config['QC']['qc'].find("fake")==0:
-        if config['QC']['qc']=="fake_belem":
-            ibmq_backend = FakeBelem()
-        elif config['QC']['qc']=="fake_bogota":
-            ibmq_backend = FakeBogota()
-        elif config['QC']['qc']=="fake_santiago":
-            ibmq_backend = FakeSantiago()
-        else:
-            raise RuntimeError("fake qc not known please add in rdmft.py")
-    else:
-        IBMQ.load_account()
-        print("providers=",IBMQ.providers())
-        provider = IBMQ.get_provider(hub=config["QC"]['hub'],group=config["QC"]['group'])
-        print("backends=")
-        for b in provider.backends():
-            print(b.name())
-        ibmq_backend = provider.get_backend(config['QC']['qc'])
+    if tsim:
+        backend=AerSimulator.from_backend(ibmq_backend)
+
+#    if config['QC']['qc'].find("fake")==0:
+#        if config['QC']['qc']=="fake_belem":
+#            ibmq_backend = FakeBelem()
+#        elif config['QC']['qc']=="fake_bogota":
+#            ibmq_backend = FakeBogota()
+#        elif config['QC']['qc']=="fake_santiago":
+#            ibmq_backend = FakeSantiago()
+#        else:
+#            raise RuntimeError("fake qc not known please add in rdmft.py")
+#    else:
 
 
     ibmq_backend_config = ibmq_backend.configuration()
@@ -709,14 +734,14 @@ if tnoise:
     ibmq_basis_gates = ibmq_noise_model.basis_gates
     # ibmq_quito: ['cx', 'id', 'reset', 'rz', 'sx', 'x'] ('cx' ist the only two-qubit gate)
 
-    #backend = BasicAer.get_backend('qasm_simulator')
-    backend = Aer.get_backend('qasm_simulator')
-    backend.set_options(
-            method="density_matrix",
-            max_parallel_threads=0,
-            max_parallel_experiments=0,
-            max_parallel_shots=1
-    )
+#    #backend = BasicAer.get_backend('qasm_simulator')
+#    backend = Aer.get_backend('qasm_simulator')
+#    backend.set_options(
+#            method="density_matrix",
+#            max_parallel_threads=0,
+#            max_parallel_experiments=0,
+#            max_parallel_shots=1
+#    )
     #backend = QasmSimulator.from_backend(ibmq_backend)
     optimization_level=3
 else:
@@ -831,7 +856,7 @@ elif ansatztype=="hardwarefficient0":
             ansatz.rz(theta,iq)
             ipar=ipar+1
         #sx layer
-        for iq in range(norb_aca:
+        for iq in range(norb_aca):
           ansatz.sx(iq)
         for iq in range(norb_aca):
             theta = Parameter('y['+str(ipar)+"]")
@@ -1107,6 +1132,9 @@ for i in range(len(constraints)):
 #set intial parameters
 np.random.seed(seed)
 initial_point = (np.random.random(npar)-0.5)*2*3.141592
+print("initial_point=")
+print(initial_point)
+
 
 #initial_point=[1.83260653,1.57239882,0.38539072,0.11422225,2.48095628,0.54437877,0.23912962,1.61329308,0.84089431,0.46567886,0.77021549,0.26064483,0.29548364,0.81802542,0.96207029,0.54522041,0.73954837,-0.40343044,0.15583702,0.69756102,1.48141805,1.57349958,0.90441851,0.29493435,0.60615152,1.07527145,0.46660692,0.56152827,-0.67018988,0.06973803,0.89530264,1.11338873,0.15018496,0.1937279,0.32439406,0.09344536,0.23982207,0.58066347,0.9057391,1.38953941,0.88833724,-0.70732451,0.19725061,2.10463106,0.70710316,0.93471997,-0.08651704,0.05757463]
 #initial_point = np.zeros(npar)

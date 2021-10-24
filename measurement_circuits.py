@@ -255,6 +255,7 @@ def build_measurement_circuits_none_bitstring(nq,cc,config):
  
   #build combined preprocessing pauli-string
 
+  nqmax=0
   comb=list(c)
   for c in cc:
     cc2=list(c)
@@ -263,6 +264,9 @@ def build_measurement_circuits_none_bitstring(nq,cc,config):
     for i in range(len(c)):
         if cc_reordered[i]!="I":
             comb[i]=cc_reordered[i]
+        if c[i]!="I":
+            nqmax=max(nqmax,i)
+
 
   #first reduce to Pauli-z 
   cc2,preqc=paulis_to_zs(nq,["".join(comb)])
@@ -271,10 +275,10 @@ def build_measurement_circuits_none_bitstring(nq,cc,config):
   c = ClassicalRegister(nq)
   mqc=QuantumCircuit(q,c)
   mqc=mqc.compose(preqc)
-  for m in range(nq):
+  for m in range(nqmax):
       mqc.measure(m,m)
   signs=[1]
-  return {"mqc":mqc,"mqubits":list(range(nq)),"signs":signs,"mode":"bitstring"}
+  return {"mqc":mqc,"mqubits":list(range(nqmax)),"signs":signs,"mode":"bitstring"}
 
 def rk_gf2(mat):
   return np.linalg.matrix_rank(mat_gf2(mat))
