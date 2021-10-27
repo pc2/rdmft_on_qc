@@ -1132,24 +1132,33 @@ for i in range(len(constraints)):
 #set intial parameters
 np.random.seed(seed)
 initial_point = (np.random.random(npar)-0.5)*2*3.141592
+#initial_point = np.zeros(npar)
+
+#initial_point=[ 3.36617, 3.18817, 0.509538, 2.61726, 0.866021, -1.65892, -1.25411,                                                                -0.014429, -0.718797, 0.543284, -1.49364, -3.14805, 1.3689,                                                                                                                                                                                                                   2.37435, 1.40662, 0.863992  ]
+#initial_point=[ 3.36345563,  3.18878481 , 0.50867812,  2.63822077,  0.74579453, -1.65532061,         -1.25159557, -0.01180757, -0.72536 ,    0.53567368, -1.48668484, -3.14471833,          1.36569587,  2.37699318 , 1.40626512 , 0.86731002]
+
+#result from noisy simulation
+#initial_point=[2.647972,  3.265368,  1.348365,   4.758774,   2.775753,   -1.444508,  -0.6095755,  -1.324078,  -1.025389,   0.7769008,     -0.3379025,  -3.089074,   1.578568,   1.581726,   0.3062963 ,   1.767301 ] 
+
+#result from noiseless simulation
+#initial_point= [ 2.56444228, 3.40698709,  1.57003307,  5.90891086,  2.57432067, -1.57066289,   -0.62658912, -1.3913296,  -0.90555285,  0.85861476, -0.29549811, -3.14158424,1.57078748,  1.57010815,  0.29546373,  1.57160398]
+
+
+
 print("initial_point=")
 print(initial_point)
 
-
-#initial_point=[1.83260653,1.57239882,0.38539072,0.11422225,2.48095628,0.54437877,0.23912962,1.61329308,0.84089431,0.46567886,0.77021549,0.26064483,0.29548364,0.81802542,0.96207029,0.54522041,0.73954837,-0.40343044,0.15583702,0.69756102,1.48141805,1.57349958,0.90441851,0.29493435,0.60615152,1.07527145,0.46660692,0.56152827,-0.67018988,0.06973803,0.89530264,1.11338873,0.15018496,0.1937279,0.32439406,0.09344536,0.23982207,0.58066347,0.9057391,1.38953941,0.88833724,-0.70732451,0.19725061,2.10463106,0.70710316,0.93471997,-0.08651704,0.05757463]
-#initial_point = np.zeros(npar)
 print("number of parameters:",npar)
 
-#initial_point=[1.570034,   2.538581,  -0.002320321, 1.570805,  1.577478,-0.3359176, 1.508331, -0.000001906892, 0.2231919,   1.539132, -0.5821943, -0.0001039265, 0.5341129, 1.021703,   0.6353581,  0.8018677]
 
 
 
 if not tdoqc:
     exit()
 
-penalty_exponent=int(config["QC"]["penalty_exponent"])
+penalty_exponent=float(config["QC"]["penalty_exponent"])
 penalty=np.zeros(len(constraints))
-penalty[:]=0*penalty[:]+int(config["QC"]["initial_penalty"])
+penalty[:]=0*penalty[:]+float(config["QC"]["initial_penalty"])
 lagrange=np.zeros(len(constraints))
 
 if config.getboolean('QC','initial_lagrange_from_mueller'):
@@ -1239,7 +1248,7 @@ if tsim and tsimcons:
     texact_expect=False
 
 print("Augmented Lagrangian")
-penalty[:]=0*penalty[:]+int(config["QC"]["initial_penalty"])
+penalty[:]=0*penalty[:]+float(config["QC"]["initial_penalty"])
 print("initial penalty=",penalty)
 
 tprintevals=True

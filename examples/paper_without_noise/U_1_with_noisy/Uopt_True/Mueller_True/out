@@ -1,0 +1,1710 @@
+GS energy with  DMRG -11.694833190615867
+N= 8.000000000000002
+E= -11.694833190615867
+D= [[ 5.00000000e-01+0.j -1.93931700e-13+0.j  4.22036269e-01+0.j
+  -1.16552471e-13+0.j  1.68272514e-14+0.j -5.09154774e-15+0.j
+  -1.73703655e-01+0.j  4.51751932e-14+0.j -1.73398622e-14+0.j
+   5.60602663e-15+0.j  1.20200285e-01+0.j  3.84539090e-14+0.j
+   1.78784938e-14+0.j -6.29364753e-15+0.j -1.00157388e-01+0.j
+   7.89906654e-15+0.j]
+ [-1.93915935e-13+0.j  5.00000000e-01+0.j  6.71987681e-14+0.j
+   4.22036270e-01+0.j -6.26380514e-14+0.j -1.27241967e-15+0.j
+  -1.05749139e-13+0.j -1.73703654e-01+0.j  1.47811945e-14+0.j
+   1.67331426e-14+0.j  8.04787476e-14+0.j  1.20200337e-01+0.j
+  -7.22288308e-15+0.j -1.62508895e-14+0.j -5.21088184e-14+0.j
+  -1.00157389e-01+0.j]
+ [ 4.22036269e-01+0.j  6.71752596e-14+0.j  5.00000000e-01+0.j
+   1.61328347e-13+0.j  2.42188907e-01+0.j  6.45449822e-15+0.j
+   1.89578171e-13+0.j -4.87052904e-14+0.j -4.93501824e-02+0.j
+   1.01327896e-14+0.j -1.30594645e-13+0.j  3.10184078e-14+0.j
+   1.57564596e-02+0.j -2.92163260e-14+0.j  1.05840060e-13+0.j
+  -2.34502584e-14+0.j]
+ [-1.16578403e-13+0.j  4.22036270e-01+0.j  1.61330565e-13+0.j
+   5.00000000e-01+0.j  7.55489849e-14+0.j  2.42188906e-01+0.j
+  -3.40423351e-14+0.j  1.13202714e-13+0.j -1.31039622e-14+0.j
+  -4.93501569e-02+0.j  2.34558427e-14+0.j -7.76379422e-14+0.j
+   3.54640607e-15+0.j  1.57564747e-02+0.j -1.91466326e-14+0.j
+   7.29904801e-14+0.j]
+ [ 1.68610785e-14+0.j -6.26210824e-14+0.j  2.42188907e-01+0.j
+   7.55535890e-14+0.j  5.00000000e-01+0.j  6.15277252e-15+0.j
+   3.74030139e-01+0.j -3.73242994e-14+0.j  6.34674605e-14+0.j
+  -5.66396860e-15+0.j -1.59133994e-01+0.j  2.90720957e-14+0.j
+  -2.51396126e-14+0.j  6.43288000e-15+0.j  1.20200335e-01+0.j
+  -5.10600519e-14+0.j]
+ [-5.08577621e-15+0.j -1.15359111e-15+0.j  6.45449412e-15+0.j
+   2.42188906e-01+0.j  6.16391132e-15+0.j  5.00000000e-01+0.j
+  -3.49144167e-15+0.j  3.74030138e-01+0.j -3.26097039e-15+0.j
+  -3.14921700e-14+0.j  5.18459746e-15+0.j -1.59133997e-01+0.j
+   3.81708356e-15+0.j  1.82388826e-14+0.j -2.06316091e-14+0.j
+   1.20200276e-01+0.j]
+ [-1.73703655e-01+0.j -1.05742242e-13+0.j  1.89607011e-13+0.j
+  -3.40412267e-14+0.j  3.74030139e-01+0.j -3.47174561e-15+0.j
+   5.00000000e-01+0.j  1.72152559e-14+0.j  2.58500787e-01+0.j
+   6.67518038e-15+0.j -3.87801770e-14+0.j -1.00751909e-14+0.j
+  -4.93501639e-02+0.j -3.64097214e-14+0.j  3.83816785e-14+0.j
+   5.04906236e-15+0.j]
+ [ 4.51836661e-14+0.j -1.73703654e-01+0.j -4.87057381e-14+0.j
+   1.13221661e-13+0.j -3.73073240e-14+0.j  3.74030138e-01+0.j
+   1.72216594e-14+0.j  5.00000000e-01+0.j  6.80710880e-15+0.j
+   2.58500787e-01+0.j -1.16678477e-14+0.j  5.41101452e-14+0.j
+  -2.23420584e-17+0.j -4.93501870e-02+0.j  8.65100721e-15+0.j
+  -5.04325302e-14+0.j]
+ [-1.73567757e-14+0.j  1.47738003e-14+0.j -4.93501824e-02+0.j
+  -1.31045123e-14+0.j  6.37263679e-14+0.j -3.26542966e-15+0.j
+   2.58500787e-01+0.j  6.80307578e-15+0.j  5.00000000e-01+0.j
+   3.31339743e-15+0.j  3.74030140e-01+0.j  3.54422485e-15+0.j
+   2.02346820e-14+0.j -6.13808350e-15+0.j -1.73703650e-01+0.j
+  -1.28418415e-14+0.j]
+ [ 5.59681282e-15+0.j  1.67678371e-14+0.j  1.01326450e-14+0.j
+  -4.93501569e-02+0.j -5.66060490e-15+0.j -3.15303339e-14+0.j
+   6.67508842e-15+0.j  2.58500787e-01+0.j  3.32250118e-15+0.j
+   5.00000000e-01+0.j -1.17544971e-14+0.j  3.74030141e-01+0.j
+  -4.57622432e-15+0.j -1.89709359e-14+0.j  1.81562506e-14+0.j
+  -1.73703653e-01+0.j]
+ [ 1.20200285e-01+0.j  8.04780624e-14+0.j -1.30635357e-13+0.j
+   2.34560505e-14+0.j -1.59133994e-01+0.j  5.18791270e-15+0.j
+  -3.86054036e-14+0.j -1.16713954e-14+0.j  3.74030140e-01+0.j
+  -1.17504428e-14+0.j  5.00000000e-01+0.j  7.84863493e-15+0.j
+   2.42188906e-01+0.j  8.76641629e-15+0.j -4.71753712e-14+0.j
+  -6.88705526e-16+0.j]
+ [ 3.84526215e-14+0.j  1.20200337e-01+0.j  3.10189134e-14+0.j
+  -7.76666329e-14+0.j  2.90671715e-14+0.j -1.59133997e-01+0.j
+  -1.00774050e-14+0.j  5.41917856e-14+0.j  3.55028240e-15+0.j
+   3.74030141e-01+0.j  7.83579503e-15+0.j  5.00000000e-01+0.j
+  -3.19970806e-15+0.j  2.42188906e-01+0.j -3.73917304e-15+0.j
+   5.84530351e-14+0.j]
+ [ 1.79144893e-14+0.j -7.22956681e-15+0.j  1.57564596e-02+0.j
+   3.54677115e-15+0.j -2.51638987e-14+0.j  3.82334433e-15+0.j
+  -4.93501639e-02+0.j -1.82634822e-17+0.j  2.03092751e-14+0.j
+  -4.54958887e-15+0.j  2.42188906e-01+0.j -3.19820779e-15+0.j
+   5.00000000e-01+0.j  6.68074202e-15+0.j  4.22036268e-01+0.j
+   1.84774820e-14+0.j]
+ [-6.29361929e-15+0.j -1.62335423e-14+0.j -2.92158806e-14+0.j
+   1.57564747e-02+0.j  6.43959082e-15+0.j  1.83048021e-14+0.j
+  -3.64098156e-14+0.j -4.93501870e-02+0.j -6.13773360e-15+0.j
+  -1.89709359e-14+0.j  8.76678290e-15+0.j  2.42188906e-01+0.j
+   6.75194281e-15+0.j  5.00000000e-01+0.j -2.26164131e-14+0.j
+   4.22036268e-01+0.j]
+ [-1.00157388e-01+0.j -5.21079669e-14+0.j  1.05877221e-13+0.j
+  -1.91478359e-14+0.j  1.20200335e-01+0.j -2.06280393e-14+0.j
+   3.82520079e-14+0.j  8.64808026e-15+0.j -1.73703650e-01+0.j
+   1.81319900e-14+0.j -4.72640590e-14+0.j -3.72069903e-15+0.j
+   4.22036268e-01+0.j -2.26076500e-14+0.j  5.00000000e-01+0.j
+  -8.69785120e-15+0.j]
+ [ 7.89071618e-15+0.j -1.00157389e-01+0.j -2.34499817e-14+0.j
+   7.30224720e-14+0.j -5.10525422e-14+0.j  1.20200276e-01+0.j
+   5.05095531e-15+0.j -5.04917738e-14+0.j -1.28384882e-14+0.j
+  -1.73703653e-01+0.j -6.80586719e-16+0.j  5.85196886e-14+0.j
+   1.84950037e-14+0.j  4.22036268e-01+0.j -8.66384660e-15+0.j
+   5.00000000e-01+0.j]]
+W= [0.19157007+0.j 0.20949801+0.j 0.20994172+0.j 0.21159645+0.j
+ 0.21159645+0.j 0.20994172+0.j 0.209498  +0.j 0.19157007+0.j]
+local approximation with  1 sites
+local interactions on sites [[0], [1], [2], [3], [4], [5], [6], [7]]
+Functional for interaction on sites [0]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+interacting orbitals: [0, 1]
+mapping: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+orbinteractaca= [0, 1]
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca-directory for images already exists
+aca: level 1  norb= 4
+Daca= [[ 0.5       +0.j  0.        +0.j -0.48245951+0.j  0.        +0.j]
+ [ 0.        +0.j  0.5       +0.j  0.        +0.j -0.48245953+0.j]
+ [-0.48245951+0.j  0.        +0.j  0.5       +0.j  0.        +0.j]
+ [ 0.        +0.j -0.48245953+0.j  0.        +0.j  0.5       +0.j]]
+Occ(Daca)= [0.98245951 0.01754049 0.98245953 0.01754047]
+rounding Naca1 to integer
+rounding Naca2 to integer
+Naca= (1, 1)
+WARNING: This is a completely UNoptimized simple variant for the constrained minimization, for larger number of orbitals please use the optimized Fortan implementation.
+tcplx= True
+nvar= 32
+Wsites= [0]
+| niter |f evals|CG iter|  obj func   |tr radius |   opt    |  c viol  |
+|-------|-------|-------|-------------|----------|----------|----------|
+|   1   |   1   |   0   | +2.8099e-01 | 1.00e+00 | 1.05e-01 | 5.34e-01 |
+|   2   |   2   |   1   | +2.8099e-01 | 2.77e-01 | 1.05e-01 | 5.34e-01 |
+|   3   |   3   |   2   | +2.7531e-01 | 1.69e+00 | 1.51e-01 | 4.54e-01 |
+|   4   |   4   |   4   | +2.7531e-01 | 1.69e-01 | 1.51e-01 | 4.54e-01 |
+|   5   |   5   |   5   | +2.6673e-01 | 1.14e+00 | 1.55e-01 | 4.21e-01 |
+|   6   |   6   |   6   | +2.6673e-01 | 1.14e-01 | 1.55e-01 | 4.21e-01 |
+|   7   |   7   |   7   | +2.8121e-01 | 8.01e-01 | 1.42e-01 | 3.95e-01 |
+|   8   |   8   |   8   | +2.8121e-01 | 1.95e-01 | 1.42e-01 | 3.95e-01 |
+|   9   |   9   |  10   | +2.4671e-01 | 1.30e+00 | 1.24e-01 | 3.74e-01 |
+|  10   |  10   |  12   | +2.4671e-01 | 1.30e-01 | 1.24e-01 | 3.74e-01 |
+|  11   |  11   |  13   | +2.4219e-01 | 9.09e-01 | 9.97e-02 | 3.52e-01 |
+|  12   |  12   |  15   | +2.4219e-01 | 1.22e-01 | 9.97e-02 | 3.52e-01 |
+|  13   |  13   |  16   | +2.3448e-01 | 8.53e-01 | 7.58e-02 | 3.22e-01 |
+|  14   |  14   |  18   | +2.3448e-01 | 1.11e-01 | 7.58e-02 | 3.22e-01 |
+|  15   |  15   |  19   | +2.3269e-01 | 7.79e-01 | 7.68e-02 | 3.01e-01 |
+|  16   |  16   |  21   | +2.3269e-01 | 1.26e-01 | 7.68e-02 | 3.01e-01 |
+|  17   |  17   |  22   | +2.1713e-01 | 8.23e-01 | 7.90e-02 | 2.88e-01 |
+|  18   |  18   |  24   | +2.1713e-01 | 8.42e-02 | 7.90e-02 | 2.88e-01 |
+|  19   |  19   |  26   | +2.1530e-01 | 5.89e-01 | 8.11e-02 | 2.75e-01 |
+|  20   |  20   |  28   | +2.1530e-01 | 1.41e-01 | 8.11e-02 | 2.75e-01 |
+|  21   |  21   |  30   | +2.1422e-01 | 9.17e-01 | 1.19e-01 | 2.52e-01 |
+|  22   |  22   |  32   | +2.1422e-01 | 9.17e-02 | 1.19e-01 | 2.52e-01 |
+|  23   |  23   |  33   | +2.1594e-01 | 6.42e-01 | 1.60e-01 | 2.18e-01 |
+|  24   |  24   |  35   | +2.1594e-01 | 2.04e-01 | 1.60e-01 | 2.18e-01 |
+|  25   |  25   |  37   | +2.0000e-01 | 1.31e+00 | 1.99e-01 | 1.81e-01 |
+|  26   |  26   |  39   | +2.0000e-01 | 1.31e-01 | 1.99e-01 | 1.81e-01 |
+|  27   |  27   |  41   | +1.9545e-01 | 9.16e-01 | 2.16e-01 | 1.29e-01 |
+|  28   |  28   |  43   | +1.9545e-01 | 1.28e-01 | 2.16e-01 | 1.29e-01 |
+|  29   |  29   |  44   | +1.7611e-01 | 8.98e-01 | 2.00e-01 | 1.14e-01 |
+|  30   |  30   |  46   | +1.7611e-01 | 1.36e-01 | 2.00e-01 | 1.14e-01 |
+|  31   |  31   |  47   | +1.7331e-01 | 9.55e-01 | 1.76e-01 | 6.77e-02 |
+|  32   |  32   |  49   | +1.7331e-01 | 1.88e-01 | 1.76e-01 | 6.77e-02 |
+|  33   |  33   |  50   | +1.6930e-01 | 1.31e+00 | 1.40e-01 | 5.24e-02 |
+|  34   |  34   |  52   | +1.6930e-01 | 2.25e-01 | 1.40e-01 | 5.24e-02 |
+|  35   |  35   |  53   | +1.8780e-01 | 2.25e-01 | 1.19e-01 | 5.15e-02 |
+|  36   |  36   |  55   | +1.8065e-01 | 2.98e-01 | 4.38e-02 | 2.22e-02 |
+|  37   |  37   |  57   | +1.8512e-01 | 3.83e-01 | 3.71e-02 | 2.99e-03 |
+|  38   |  38   |  58   | +1.8464e-01 | 3.83e-01 | 2.53e-02 | 9.24e-04 |
+|  39   |  39   |  60   | +1.8459e-01 | 3.83e-01 | 1.47e-02 | 3.80e-04 |
+|  40   |  40   |  61   | +1.8462e-01 | 3.83e-01 | 1.15e-02 | 4.33e-05 |
+|  41   |  41   |  62   | +1.8437e-01 | 3.83e-01 | 5.87e-03 | 8.75e-05 |
+|  42   |  42   |  63   | +1.8433e-01 | 3.83e-01 | 1.79e-03 | 4.93e-05 |
+|  43   |  43   |  65   | +1.8436e-01 | 3.83e-01 | 6.10e-04 | 2.03e-06 |
+|  44   |  44   |  68   | +1.8436e-01 | 3.83e-01 | 2.02e-04 | 6.73e-07 |
+|  45   |  45   |  69   | +1.8436e-01 | 3.83e-01 | 7.69e-05 | 7.84e-08 |
+|  46   |  46   |  71   | +1.8436e-01 | 3.83e-01 | 7.61e-05 | 3.56e-08 |
+|  47   |  47   |  73   | +1.8436e-01 | 3.83e-01 | 5.42e-05 | 1.58e-08 |
+|  48   |  48   |  74   | +1.8436e-01 | 3.83e-02 | 5.42e-05 | 1.58e-08 |
+|  49   |  49   |  75   | +1.8436e-01 | 3.83e-03 | 5.42e-05 | 1.58e-08 |
+|  50   |  50   |  77   | +1.8436e-01 | 3.83e-04 | 5.42e-05 | 1.58e-08 |
+|  51   |  51   |  81   | +1.8436e-01 | 5.38e-05 | 5.42e-05 | 1.58e-08 |
+|  52   |  52   |  82   | +1.8436e-01 | 3.77e-04 | 5.48e-05 | 4.75e-09 |
+|  53   |  53   |  85   | +1.8436e-01 | 3.77e-05 | 5.48e-05 | 4.75e-09 |
+|  54   |  54   |  86   | +1.8436e-01 | 7.53e-05 | 5.72e-05 | 2.30e-09 |
+|  55   |  55   |  88   | +1.8436e-01 | 3.77e-05 | 5.72e-05 | 2.30e-09 |
+|  56   |  56   |  89   | +1.8436e-01 | 7.53e-05 | 4.41e-05 | 1.42e-09 |
+|  57   |  57   |  91   | +1.8436e-01 | 3.77e-05 | 4.41e-05 | 1.42e-09 |
+|  58   |  58   |  93   | +1.8436e-01 | 7.53e-05 | 1.58e-05 | 1.42e-09 |
+|  59   |  59   |  95   | +1.8436e-01 | 7.53e-05 | 3.38e-06 | 2.17e-10 |
+|  60   |  60   |  97   | +1.8436e-01 | 7.53e-05 | 1.46e-06 | 7.67e-12 |
+|  61   |  61   |  99   | +1.8436e-01 | 7.53e-05 | 6.16e-07 | 1.33e-12 |
+|  62   |  62   |  101  | +1.8436e-01 | 7.53e-05 | 1.86e-07 | 3.49e-13 |
+|  63   |  63   |  103  | +1.8436e-01 | 7.53e-05 | 7.04e-08 | 7.35e-14 |
+|  64   |  64   |  105  | +1.8436e-01 | 7.53e-05 | 5.70e-08 | 2.40e-14 |
+|  65   |  65   |  107  | +1.8436e-01 | 7.53e-05 | 4.07e-08 | 9.33e-15 |
+|  66   |  66   |  108  | +1.8436e-01 | 7.53e-05 | 3.47e-08 | 6.66e-15 |
+|  67   |  67   |  110  | +1.8436e-01 | 7.53e-06 | 3.47e-08 | 6.66e-15 |
+|  68   |  68   |  112  | +1.8436e-01 | 7.53e-07 | 3.47e-08 | 6.66e-15 |
+|  69   |  69   |  114  | +1.8436e-01 | 7.53e-08 | 3.47e-08 | 6.66e-15 |
+|  70   |  70   |  116  | +1.8436e-01 | 7.53e-08 | 4.48e-08 | 6.22e-15 |
+|  71   |  71   |  118  | +1.8436e-01 | 7.53e-08 | 2.99e-08 | 6.22e-15 |
+|  72   |  72   |  120  | +1.8436e-01 | 3.77e-08 | 2.99e-08 | 6.22e-15 |
+|  73   |  73   |  121  | +1.8436e-01 | 7.53e-08 | 6.51e-09 | 3.66e-15 |
+|  74   |  74   |  124  | +1.8436e-01 | 7.53e-09 | 6.51e-09 | 3.66e-15 |
+|  75   |  75   |  127  | +1.8436e-01 | 7.53e-09 | 3.26e-09 | 4.11e-15 |
+|  76   |  76   |  128  | +1.8436e-01 | 4.47e-08 | 3.51e-09 | 3.33e-15 |
+|  77   |  77   |  129  | +1.8436e-01 | 2.10e-08 | 3.51e-09 | 3.33e-15 |
+|  78   |  78   |  130  | +1.8436e-01 | 3.62e-08 | 1.32e-08 | 3.00e-15 |
+|  79   |  79   |  131  | +1.8436e-01 | 3.62e-08 | 2.61e-08 | 2.11e-15 |
+|  80   |  80   |  133  | +1.8436e-01 | 8.13e-08 | 3.04e-08 | 1.11e-16 |
+|  81   |  82   |  138  | +1.8436e-01 | 8.13e-09 | 3.04e-08 | 1.11e-16 |
+|  82   |  83   |  139  | +1.8436e-01 | 1.63e-08 | 1.37e-08 | 1.11e-16 |
+|  83   |  85   |  142  | +1.8436e-01 | 3.29e-09 | 1.37e-08 | 1.11e-16 |
+|  84   |  86   |  143  | +1.8436e-01 | 6.66e-10 | 1.37e-08 | 1.11e-16 |
+
+`xtol` termination condition is satisfied.
+Number of iterations: 84, function evaluations: 86, CG iterations: 143, optimality: 1.37e-08, constraint violation: 1.11e-16, execution time:  1.1 s.
+F_aca (full CI space)= 0.18436311231472055
+FM= 0.18436310008945084
+dFM_dD real 0 0 0.14889594039946275
+dFM_dD real 0 1 0.0
+dFM_dD imag 0 1 0.0
+dFM_dD real 0 2 -0.9188037626756128
+dFM_dD imag 0 2 0.0
+dFM_dD real 0 3 5.551115123125782e-12
+dFM_dD imag 0 3 0.0
+dFM_dD real 1 1 0.14889576306631458
+dFM_dD real 1 2 -5.551115123125782e-12
+dFM_dD imag 1 2 0.0
+dFM_dD real 1 3 -0.9188041302898852
+dFM_dD imag 1 3 0.0
+dFM_dD real 2 2 -0.35110405959548613
+dFM_dD real 2 3 -1.942890293094024e-11
+dFM_dD imag 2 3 0.0
+dFM_dD real 3 3 -0.3511042369425121
+WARNING: This is a completely UNoptimized simple variant for the constrained minimization, for larger number of orbitals please use the optimized Fortan implementation.
+tcplx= True
+nvar= 32
+Wsites= [0]
+| niter |f evals|CG iter|  obj func   |tr radius |   opt    |  c viol  |
+|-------|-------|-------|-------------|----------|----------|----------|
+|   1   |   1   |   0   | +2.4628e-01 | 1.00e+00 | 1.44e-01 | 4.86e-01 |
+|   2   |   2   |   1   | +2.4628e-01 | 2.41e-01 | 1.44e-01 | 4.86e-01 |
+|   3   |   3   |   2   | +2.6110e-01 | 1.51e+00 | 1.83e-01 | 4.17e-01 |
+|   4   |   4   |   3   | +2.6110e-01 | 1.51e-01 | 1.83e-01 | 4.17e-01 |
+|   5   |   5   |   4   | +1.9816e-01 | 1.06e+00 | 1.74e-01 | 3.60e-01 |
+|   6   |   6   |   5   | +1.9816e-01 | 1.37e-01 | 1.74e-01 | 3.60e-01 |
+|   7   |   7   |   6   | +1.9781e-01 | 9.59e-01 | 1.71e-01 | 3.02e-01 |
+|   8   |   8   |   8   | +1.9781e-01 | 1.78e-01 | 1.71e-01 | 3.02e-01 |
+|   9   |   9   |   9   | +1.6018e-01 | 1.25e+00 | 1.90e-01 | 2.65e-01 |
+|  10   |  10   |  11   | +1.6018e-01 | 1.25e-01 | 1.90e-01 | 2.65e-01 |
+|  11   |  11   |  12   | +1.3160e-01 | 7.76e-01 | 1.67e-01 | 2.52e-01 |
+|  12   |  12   |  14   | +1.3160e-01 | 1.66e-01 | 1.67e-01 | 2.52e-01 |
+|  13   |  13   |  16   | +1.4276e-01 | 1.10e+00 | 1.23e-01 | 1.98e-01 |
+|  14   |  14   |  18   | +1.4276e-01 | 1.10e-01 | 1.23e-01 | 1.98e-01 |
+|  15   |  15   |  19   | +1.3994e-01 | 6.56e-01 | 1.53e-01 | 1.93e-01 |
+|  16   |  16   |  21   | +1.3994e-01 | 1.03e-01 | 1.53e-01 | 1.93e-01 |
+|  17   |  17   |  23   | +1.5490e-01 | 7.24e-01 | 1.80e-01 | 1.54e-01 |
+|  18   |  18   |  25   | +1.5490e-01 | 9.58e-02 | 1.80e-01 | 1.54e-01 |
+|  19   |  19   |  26   | +1.6096e-01 | 5.78e-01 | 2.01e-01 | 1.49e-01 |
+|  20   |  20   |  27   | +1.6096e-01 | 9.02e-02 | 2.01e-01 | 1.49e-01 |
+|  21   |  21   |  28   | +1.8109e-01 | 5.82e-01 | 2.18e-01 | 1.26e-01 |
+|  22   |  22   |  29   | +1.8109e-01 | 8.31e-02 | 2.18e-01 | 1.26e-01 |
+|  23   |  23   |  30   | +1.9957e-01 | 5.71e-01 | 2.26e-01 | 1.05e-01 |
+|  24   |  24   |  31   | +1.9957e-01 | 7.86e-02 | 2.26e-01 | 1.05e-01 |
+|  25   |  25   |  32   | +2.1477e-01 | 5.50e-01 | 2.28e-01 | 8.54e-02 |
+|  26   |  26   |  33   | +2.1477e-01 | 7.67e-02 | 2.28e-01 | 8.54e-02 |
+|  27   |  27   |  34   | +2.2451e-01 | 5.37e-01 | 2.30e-01 | 6.76e-02 |
+|  28   |  28   |  35   | +2.2451e-01 | 7.31e-02 | 2.30e-01 | 6.76e-02 |
+|  29   |  29   |  36   | +2.2866e-01 | 5.12e-01 | 2.30e-01 | 5.57e-02 |
+|  30   |  30   |  37   | +2.2866e-01 | 1.39e-01 | 2.30e-01 | 5.57e-02 |
+|  31   |  31   |  38   | +2.4411e-01 | 9.71e-01 | 2.37e-01 | 3.17e-02 |
+|  32   |  32   |  39   | +2.4494e-01 | 9.71e-01 | 2.41e-01 | 2.15e-02 |
+|  33   |  33   |  42   | +1.9987e-01 | 9.71e-01 | 2.04e-01 | 1.22e-02 |
+|  34   |  34   |  45   | +1.9987e-01 | 9.71e-02 | 2.04e-01 | 1.22e-02 |
+|  35   |  35   |  47   | +1.7937e-01 | 1.94e-01 | 1.57e-01 | 9.43e-03 |
+|  36   |  37   |  51   | +1.5967e-01 | 3.88e-01 | 1.60e-01 | 3.69e-03 |
+|  37   |  38   |  54   | +1.4182e-01 | 3.88e-01 | 1.27e-01 | 5.51e-03 |
+|  38   |  39   |  58   | +1.4182e-01 | 4.96e-02 | 1.27e-01 | 5.51e-03 |
+|  39   |  40   |  59   | +1.3202e-01 | 9.92e-02 | 9.75e-02 | 2.46e-03 |
+|  40   |  42   |  63   | +1.2297e-01 | 1.98e-01 | 3.89e-02 | 3.38e-04 |
+|  41   |  44   |  65   | +1.2119e-01 | 1.98e-01 | 3.40e-02 | 3.69e-06 |
+|  42   |  46   |  68   | +1.1893e-01 | 1.98e-01 | 2.39e-02 | 4.85e-05 |
+|  43   |  48   |  70   | +1.1834e-01 | 1.98e-01 | 2.23e-02 | 6.81e-07 |
+|  44   |  50   |  74   | +1.1834e-01 | 1.98e-02 | 2.23e-02 | 6.81e-07 |
+|  45   |  52   |  76   | +1.1742e-01 | 1.39e-01 | 1.86e-02 | 1.86e-06 |
+|  46   |  54   |  80   | +1.1742e-01 | 1.39e-02 | 1.86e-02 | 1.86e-06 |
+|  47   |  56   |  81   | +1.1694e-01 | 9.72e-02 | 1.58e-02 | 7.79e-07 |
+|  48   |  58   |  85   | +1.1694e-01 | 9.72e-03 | 1.58e-02 | 7.79e-07 |
+|  49   |  60   |  86   | +1.1667e-01 | 6.80e-02 | 1.36e-02 | 1.56e-07 |
+|  50   |  62   |  90   | +1.1667e-01 | 6.80e-03 | 1.36e-02 | 1.56e-07 |
+|  51   |  64   |  91   | +1.1650e-01 | 4.76e-02 | 1.20e-02 | 2.72e-08 |
+|  52   |  66   |  95   | +1.1608e-01 | 7.48e-02 | 6.90e-03 | 1.48e-05 |
+|  53   |  68   |  98   | +1.1600e-01 | 7.48e-02 | 4.42e-03 | 9.98e-07 |
+|  54   |  70   |  102  | +1.1600e-01 | 7.48e-03 | 4.42e-03 | 9.98e-07 |
+|  55   |  72   |  104  | +1.1596e-01 | 5.24e-02 | 2.46e-03 | 2.48e-07 |
+|  56   |  74   |  108  | +1.1596e-01 | 5.24e-03 | 2.46e-03 | 2.48e-07 |
+|  57   |  76   |  110  | +1.1595e-01 | 3.67e-02 | 1.15e-03 | 1.22e-07 |
+|  58   |  78   |  113  | +1.1594e-01 | 3.67e-02 | 9.21e-04 | 6.63e-08 |
+|  59   |  80   |  116  | +1.1594e-01 | 3.67e-02 | 4.98e-04 | 3.23e-08 |
+|  60   |  81   |  119  | +1.1594e-01 | 3.67e-03 | 4.98e-04 | 3.23e-08 |
+|  61   |  83   |  122  | +1.1594e-01 | 3.67e-04 | 4.98e-04 | 3.23e-08 |
+|  62   |  84   |  123  | +1.1594e-01 | 1.78e-04 | 4.98e-04 | 3.23e-08 |
+|  63   |  85   |  124  | +1.1594e-01 | 3.56e-04 | 4.20e-04 | 3.18e-08 |
+|  64   |  87   |  125  | +1.1594e-01 | 2.50e-03 | 2.36e-04 | 1.26e-09 |
+|  65   |  89   |  129  | +1.1594e-01 | 2.50e-03 | 5.37e-05 | 3.57e-09 |
+|  66   |  90   |  131  | +1.1594e-01 | 2.50e-04 | 5.37e-05 | 3.57e-09 |
+|  67   |  91   |  134  | +1.1594e-01 | 4.37e-05 | 5.37e-05 | 3.57e-09 |
+|  68   |  92   |  135  | +1.1594e-01 | 8.74e-05 | 4.13e-05 | 1.83e-09 |
+|  69   |  94   |  137  | +1.1594e-01 | 6.12e-04 | 2.56e-05 | 9.88e-11 |
+|  70   |  96   |  140  | +1.1594e-01 | 6.12e-04 | 1.10e-05 | 7.40e-11 |
+|  71   |  97   |  143  | +1.1594e-01 | 6.12e-05 | 1.10e-05 | 7.40e-11 |
+|  72   |  98   |  147  | +1.1594e-01 | 6.12e-06 | 1.10e-05 | 7.40e-11 |
+|  73   |  99   |  148  | +1.1594e-01 | 1.22e-05 | 8.83e-06 | 3.75e-11 |
+|  74   |  101  |  149  | +1.1594e-01 | 8.57e-05 | 7.79e-06 | 1.66e-12 |
+|  75   |  103  |  152  | +1.1594e-01 | 8.57e-06 | 7.79e-06 | 1.66e-12 |
+|  76   |  105  |  153  | +1.1594e-01 | 1.71e-05 | 6.10e-06 | 1.95e-12 |
+|  77   |  107  |  157  | +1.1594e-01 | 1.71e-06 | 6.10e-06 | 1.95e-12 |
+|  78   |  108  |  158  | +1.1594e-01 | 1.71e-06 | 5.64e-06 | 2.94e-12 |
+|  79   |  109  |  159  | +1.1594e-01 | 1.71e-06 | 5.15e-06 | 2.94e-12 |
+|  80   |  110  |  160  | +1.1594e-01 | 1.71e-06 | 4.65e-06 | 2.94e-12 |
+|  81   |  111  |  161  | +1.1594e-01 | 1.71e-06 | 4.11e-06 | 2.94e-12 |
+|  82   |  112  |  162  | +1.1594e-01 | 1.71e-06 | 3.55e-06 | 2.94e-12 |
+|  83   |  113  |  163  | +1.1594e-01 | 1.71e-06 | 2.95e-06 | 2.94e-12 |
+|  84   |  114  |  164  | +1.1594e-01 | 1.71e-06 | 2.32e-06 | 2.94e-12 |
+|  85   |  115  |  165  | +1.1594e-01 | 1.71e-06 | 1.66e-06 | 2.94e-12 |
+|  86   |  116  |  166  | +1.1594e-01 | 1.71e-06 | 9.84e-07 | 2.94e-12 |
+|  87   |  117  |  167  | +1.1594e-01 | 1.71e-06 | 2.95e-07 | 2.94e-12 |
+|  88   |  118  |  169  | +1.1594e-01 | 1.71e-06 | 7.88e-08 | 4.57e-13 |
+|  89   |  119  |  170  | +1.1594e-01 | 1.71e-06 | 1.58e-07 | 1.83e-13 |
+|  90   |  120  |  172  | +1.1594e-01 | 1.71e-06 | 8.38e-08 | 2.75e-14 |
+|  91   |  121  |  174  | +1.1594e-01 | 1.71e-06 | 6.36e-08 | 3.11e-15 |
+|  92   |  122  |  176  | +1.1594e-01 | 1.71e-06 | 2.12e-08 | 2.89e-15 |
+|  93   |  123  |  178  | +1.1594e-01 | 1.71e-06 | 9.92e-09 | 2.22e-16 |
+|  94   |  124  |  180  | +1.1594e-01 | 1.71e-06 | 8.73e-09 | 1.11e-16 |
+|  95   |  125  |  182  | +1.1594e-01 | 1.71e-06 | 7.36e-09 | 1.11e-16 |
+|  96   |  127  |  183  | +1.1594e-01 | 1.71e-07 | 7.36e-09 | 1.11e-16 |
+|  97   |  129  |  184  | +1.1594e-01 | 1.71e-08 | 7.36e-09 | 1.11e-16 |
+|  98   |  130  |  185  | +1.1594e-01 | 1.71e-08 | 6.74e-09 | 5.55e-17 |
+|  99   |  132  |  186  | +1.1594e-01 | 1.71e-09 | 6.74e-09 | 5.55e-17 |
+|  100  |  134  |  187  | +1.1594e-01 | 5.29e-10 | 6.74e-09 | 5.55e-17 |
+
+`xtol` termination condition is satisfied.
+Number of iterations: 100, function evaluations: 134, CG iterations: 187, optimality: 6.74e-09, constraint violation: 5.55e-17, execution time:  1.7 s.
+F_reordered (full CI space)= 0.11594274806860168
+providers= [<AccountProvider for IBMQ(hub='ibm-q', group='open', project='main')>, <AccountProvider for IBMQ(hub='ibm-q-research-2', group='paderborn-uni-1', project='main')>]
+backends=
+ibmq_qasm_simulator
+ibmq_armonk
+ibmq_santiago
+ibmq_bogota
+ibmq_casablanca
+ibmq_lima
+ibmq_belem
+ibmq_quito
+simulator_statevector
+simulator_mps
+simulator_extended_stabilizer
+simulator_stabilizer
+ibmq_jakarta
+ibmq_manila
+ibm_lagos
+setting transpiler_couplings to 0_1,1_0,1_2,2_1,2_3,3_2,3_4,4_3
+setting transpiler_gates to id,rz,sx,x,cx,reset
+nq= 5
+qubit_map [1, 2, 0, 3, 4]
+only physical qubits [1, 2, 0, 3] are used
+using entangler (physical qubits) = [[0, 1], [2, 3], [1, 2]]
+      ┌──────────┐┌────┐┌──────────┐      ┌──────────┐    ┌────┐   »
+q0_0: ┤ Rz(y[0]) ├┤ √X ├┤ Rz(y[4]) ├──■───┤ Rz(y[8]) ├────┤ √X ├───»
+      ├──────────┤├────┤├──────────┤┌─┴─┐ └──────────┘ ┌──┴────┴──┐»
+q0_1: ┤ Rz(y[1]) ├┤ √X ├┤ Rz(y[5]) ├┤ X ├──────■───────┤ Rz(y[9]) ├»
+      ├──────────┤├────┤├──────────┤└───┘    ┌─┴─┐    ┌┴──────────┤»
+q0_2: ┤ Rz(y[2]) ├┤ √X ├┤ Rz(y[6]) ├──■──────┤ X ├────┤ Rz(y[10]) ├»
+      ├──────────┤├────┤├──────────┤┌─┴─┐┌───┴───┴───┐└───┬────┬──┘»
+q0_3: ┤ Rz(y[3]) ├┤ √X ├┤ Rz(y[7]) ├┤ X ├┤ Rz(y[11]) ├────┤ √X ├───»
+      └──────────┘└────┘└──────────┘└───┘└───────────┘    └────┘   »
+q0_4: ─────────────────────────────────────────────────────────────»
+                                                                   »
+c0: 5/═════════════════════════════════════════════════════════════»
+                                                                   »
+«      ┌───────────┐             
+«q0_0: ┤ Rz(y[12]) ├─────────────
+«      └───┬────┬──┘┌───────────┐
+«q0_1: ────┤ √X ├───┤ Rz(y[13]) ├
+«          ├────┤   ├───────────┤
+«q0_2: ────┤ √X ├───┤ Rz(y[14]) ├
+«      ┌───┴────┴──┐└───────────┘
+«q0_3: ┤ Rz(y[15]) ├─────────────
+«      └───────────┘             
+«q0_4: ──────────────────────────
+«                                
+«c0: 5/══════════════════════════
+«                                
+variational state:
+      ┌──────────┐┌────┐┌──────────┐      ┌──────────┐    ┌────┐   »
+q1_0: ┤ Rz(y[0]) ├┤ √X ├┤ Rz(y[4]) ├──■───┤ Rz(y[8]) ├────┤ √X ├───»
+      ├──────────┤├────┤├──────────┤┌─┴─┐ └──────────┘ ┌──┴────┴──┐»
+q1_1: ┤ Rz(y[1]) ├┤ √X ├┤ Rz(y[5]) ├┤ X ├──────■───────┤ Rz(y[9]) ├»
+      ├──────────┤├────┤├──────────┤└───┘    ┌─┴─┐    ┌┴──────────┤»
+q1_2: ┤ Rz(y[2]) ├┤ √X ├┤ Rz(y[6]) ├──■──────┤ X ├────┤ Rz(y[10]) ├»
+      ├──────────┤├────┤├──────────┤┌─┴─┐┌───┴───┴───┐└───┬────┬──┘»
+q1_3: ┤ Rz(y[3]) ├┤ √X ├┤ Rz(y[7]) ├┤ X ├┤ Rz(y[11]) ├────┤ √X ├───»
+      └──────────┘└────┘└──────────┘└───┘└───────────┘    └────┘   »
+q1_4: ─────────────────────────────────────────────────────────────»
+                                                                   »
+c1: 5/═════════════════════════════════════════════════════════════»
+                                                                   »
+«      ┌───────────┐             
+«q1_0: ┤ Rz(y[12]) ├─────────────
+«      └───┬────┬──┘┌───────────┐
+«q1_1: ────┤ √X ├───┤ Rz(y[13]) ├
+«          ├────┤   ├───────────┤
+«q1_2: ────┤ √X ├───┤ Rz(y[14]) ├
+«      ┌───┴────┴──┐└───────────┘
+«q1_3: ┤ Rz(y[15]) ├─────────────
+«      └───────────┘             
+«q1_4: ──────────────────────────
+«                                
+«c1: 5/══════════════════════════
+«                                
+transpiled variational state:
+          ┌───────────────────────┐ ┌────┐     ┌─────────────┐          »
+q1_0 -> 0 ┤ Rz(0.418149665999278) ├─┤ √X ├─────┤ Rz(0.77567) ├───────■──»
+          ├───────────────────────┤ ├────┤┌────┴─────────────┴────┐┌─┴─┐»
+q1_1 -> 1 ┤ Rz(0.326604180797055) ├─┤ √X ├┤ Rz(0.833815799825830) ├┤ X ├»
+          ├───────────────────────┴┐├────┤├───────────────────────┤└───┘»
+q1_2 -> 2 ┤ Rz(0.0767350856672184) ├┤ √X ├┤ Rz(0.672847858473375) ├──■──»
+          ├───────────────────────┬┘├────┤├───────────────────────┤┌─┴─┐»
+q1_3 -> 3 ┤ Rz(0.536669818771344) ├─┤ √X ├┤ Rz(0.479954449085268) ├┤ X ├»
+          └──────────┬─┬──────────┘ └────┘└───────────────────────┘└───┘»
+q1_4 -> 4 ───────────┤M├────────────────────────────────────────────────»
+                     └╥┘                                                »
+    c1: 5/════════════╩═════════════════════════════════════════════════»
+                      4                                                 »
+«                    ┌────┐                                  ┌─┐            
+«q1_0 -> 0 ──────────┤ √X ├──────────────────────────────────┤M├────────────
+«                    └────┘         ┌───────────────────────┐└╥┘┌────┐┌─┐   
+«q1_1 -> 1 ────────────■────────────┤ Rz(0.307920547968430) ├─╫─┤ √X ├┤M├───
+«                    ┌─┴─┐          ├───────────────────────┤ ║ ├────┤└╥┘┌─┐
+«q1_2 -> 2 ──────────┤ X ├──────────┤ Rz(0.664671630702822) ├─╫─┤ √X ├─╫─┤M├
+«          ┌─────────┴───┴─────────┐└─────────┬────┬────────┘ ║ └┬─┬─┘ ║ └╥┘
+«q1_3 -> 3 ┤ Rz(0.580781082390910) ├──────────┤ √X ├──────────╫──┤M├───╫──╫─
+«          └───────────────────────┘          └────┘          ║  └╥┘   ║  ║ 
+«q1_4 -> 4 ───────────────────────────────────────────────────╫───╫────╫──╫─
+«                                                             ║   ║    ║  ║ 
+«    c1: 5/═══════════════════════════════════════════════════╩═══╩════╩══╩═
+«                                                             0   3    1  2 
+ansatz-state is written to ansatz.txt
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIZI ['I', 'I', 'Z', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIIZ ['I', 'I', 'I', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IIIZZ ['I', 'I', 'Z', 'Z', 'I'] [1, 2, 0, 3, 4]
+Interaction
+{'pauliops': [PauliOp(Pauli('IIZII'), coeff=0.25), PauliOp(Pauli('IIIZI'), coeff=-0.25), PauliOp(Pauli('IIZZI'), coeff=-0.25)], 'coeff': [0.25, -0.25, -0.25], 'const': 0.25}
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIZI ['I', 'I', 'Z', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIIZ ['I', 'I', 'I', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IIIZZ ['I', 'I', 'Z', 'Z', 'I'] [1, 2, 0, 3, 4]
+building constraints...
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIIZ ['I', 'I', 'I', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIIZ ['I', 'I', 'I', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IIIIX ['I', 'I', 'I', 'X', 'I'] [1, 2, 0, 3, 4]
+map IIIZX ['I', 'I', 'Z', 'X', 'I'] [1, 2, 0, 3, 4]
+map IIIIX ['I', 'I', 'I', 'X', 'I'] [1, 2, 0, 3, 4]
+map IIIZX ['I', 'I', 'Z', 'X', 'I'] [1, 2, 0, 3, 4]
+map IIIIY ['I', 'I', 'I', 'Y', 'I'] [1, 2, 0, 3, 4]
+map IIIZY ['I', 'I', 'Z', 'Y', 'I'] [1, 2, 0, 3, 4]
+map IIIIY ['I', 'I', 'I', 'Y', 'I'] [1, 2, 0, 3, 4]
+map IIIZY ['I', 'I', 'Z', 'Y', 'I'] [1, 2, 0, 3, 4]
+map IIYYX ['I', 'I', 'Y', 'X', 'Y'] [1, 2, 0, 3, 4]
+map IIXYY ['I', 'I', 'Y', 'Y', 'X'] [1, 2, 0, 3, 4]
+map IIYYX ['I', 'I', 'Y', 'X', 'Y'] [1, 2, 0, 3, 4]
+map IIXYY ['I', 'I', 'Y', 'Y', 'X'] [1, 2, 0, 3, 4]
+map IIXYX ['I', 'I', 'Y', 'X', 'X'] [1, 2, 0, 3, 4]
+map IIYYY ['I', 'I', 'Y', 'Y', 'Y'] [1, 2, 0, 3, 4]
+map IIXYX ['I', 'I', 'Y', 'X', 'X'] [1, 2, 0, 3, 4]
+map IIYYY ['I', 'I', 'Y', 'Y', 'Y'] [1, 2, 0, 3, 4]
+map IZIXX ['I', 'Z', 'X', 'X', 'I'] [1, 2, 0, 3, 4]
+map IIZYY ['I', 'I', 'Y', 'Y', 'Z'] [1, 2, 0, 3, 4]
+map IZIXX ['I', 'Z', 'X', 'X', 'I'] [1, 2, 0, 3, 4]
+map IIZYY ['I', 'I', 'Y', 'Y', 'Z'] [1, 2, 0, 3, 4]
+map IIZYX ['I', 'I', 'Y', 'X', 'Z'] [1, 2, 0, 3, 4]
+map IZIXY ['I', 'Z', 'X', 'Y', 'I'] [1, 2, 0, 3, 4]
+map IIZYX ['I', 'I', 'Y', 'X', 'Z'] [1, 2, 0, 3, 4]
+map IZIXY ['I', 'Z', 'X', 'Y', 'I'] [1, 2, 0, 3, 4]
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIZZ ['I', 'I', 'Z', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIIZZ ['I', 'I', 'Z', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IIXXI ['I', 'I', 'X', 'I', 'X'] [1, 2, 0, 3, 4]
+map IIYYZ ['I', 'I', 'Y', 'Z', 'Y'] [1, 2, 0, 3, 4]
+map IIXXI ['I', 'I', 'X', 'I', 'X'] [1, 2, 0, 3, 4]
+map IIYYZ ['I', 'I', 'Y', 'Z', 'Y'] [1, 2, 0, 3, 4]
+map IIYXI ['I', 'I', 'X', 'I', 'Y'] [1, 2, 0, 3, 4]
+map IIXYZ ['I', 'I', 'Y', 'Z', 'X'] [1, 2, 0, 3, 4]
+map IIYXI ['I', 'I', 'X', 'I', 'Y'] [1, 2, 0, 3, 4]
+map IIXYZ ['I', 'I', 'Y', 'Z', 'X'] [1, 2, 0, 3, 4]
+map IIZXI ['I', 'I', 'X', 'I', 'Z'] [1, 2, 0, 3, 4]
+map IZIXZ ['I', 'Z', 'X', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IIZXI ['I', 'I', 'X', 'I', 'Z'] [1, 2, 0, 3, 4]
+map IZIXZ ['I', 'Z', 'X', 'Z', 'I'] [1, 2, 0, 3, 4]
+map IZIYI ['I', 'Z', 'Y', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIZYZ ['I', 'I', 'Y', 'Z', 'Z'] [1, 2, 0, 3, 4]
+map IZIYI ['I', 'Z', 'Y', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIZYZ ['I', 'I', 'Y', 'Z', 'Z'] [1, 2, 0, 3, 4]
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIZII ['I', 'I', 'I', 'I', 'Z'] [1, 2, 0, 3, 4]
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IIZII ['I', 'I', 'I', 'I', 'Z'] [1, 2, 0, 3, 4]
+map IIXII ['I', 'I', 'I', 'I', 'X'] [1, 2, 0, 3, 4]
+map IZXZI ['I', 'Z', 'Z', 'I', 'X'] [1, 2, 0, 3, 4]
+map IIXII ['I', 'I', 'I', 'I', 'X'] [1, 2, 0, 3, 4]
+map IZXZI ['I', 'Z', 'Z', 'I', 'X'] [1, 2, 0, 3, 4]
+map IIYII ['I', 'I', 'I', 'I', 'Y'] [1, 2, 0, 3, 4]
+map IZYZI ['I', 'Z', 'Z', 'I', 'Y'] [1, 2, 0, 3, 4]
+map IIYII ['I', 'I', 'I', 'I', 'Y'] [1, 2, 0, 3, 4]
+map IZYZI ['I', 'Z', 'Z', 'I', 'Y'] [1, 2, 0, 3, 4]
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IZZZI ['I', 'Z', 'Z', 'I', 'Z'] [1, 2, 0, 3, 4]
+map IIIII ['I', 'I', 'I', 'I', 'I'] [1, 2, 0, 3, 4]
+map IZZZI ['I', 'Z', 'Z', 'I', 'Z'] [1, 2, 0, 3, 4]
+number of constraints= 16
+unique pauliops 28
+graphclique-cliquecover: 28 with commutationmode qubitwise_bitstring
+strategy largest_first 15
+strategy random_sequential 15
+strategy smallest_last 15
+strategy independent_set 15
+strategy connected_sequential_bfs 15
+strategy connected_sequential_dfs 15
+strategy saturation_largest_first 15
+number of cliques 15
+clique 0 ['IIIYI', 'IIYYX', 'IZYII', 'IIIIX']
+clique 1 ['IIIXI', 'IIYXY', 'IIIIY']
+clique 2 ['IIYXX']
+clique 3 ['IIYYY']
+clique 4 ['IIYYZ', 'IIIIZ']
+clique 5 ['IIYXZ']
+clique 6 ['IIIZI', 'IIYZY']
+clique 7 ['IIYZX']
+clique 8 ['IIYZZ']
+clique 9 ['IIZXI', 'IZZIX']
+clique 10 ['IIZYI', 'IZZIY']
+clique 11 ['IZXXI', 'IIXIX']
+clique 12 ['IZXYI', 'IIXIY']
+clique 13 ['IIZZI', 'IZZIZ']
+clique 14 ['IZXZI', 'IIXIZ']
+constructing measurement programs for 1rdm with commutativity mode qubitwise_bitstring
+clique= ['IIIYI', 'IIYYX', 'IZYII', 'IIIIX']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 4  (complexity= depth )
+measure ['IIIYI', 'IIYYX', 'IZYII', 'IIIIX'] at [0, 1, 2, 3]
+clique= ['IIIXI', 'IIYXY', 'IIIIY']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 4  (complexity= depth )
+measure ['IIIXI', 'IIYXY', 'IIIIY'] at [0, 1, 2, 3]
+clique= ['IIYXX']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 4  (complexity= depth )
+measure ['IIYXX'] at [0, 1, 2, 3]
+clique= ['IIYYY']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 3  (complexity= depth )
+measure ['IIYYY'] at [0, 1, 2, 3]
+clique= ['IIYYZ', 'IIIIZ']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 3  (complexity= depth )
+measure ['IIYYZ', 'IIIIZ'] at [0, 1, 2, 3]
+clique= ['IIYXZ']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 4  (complexity= depth )
+measure ['IIYXZ'] at [0, 1, 2, 3]
+clique= ['IIIZI', 'IIYZY']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 3  (complexity= depth )
+measure ['IIIZI', 'IIYZY'] at [0, 1, 2, 3]
+clique= ['IIYZX']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 4  (complexity= depth )
+measure ['IIYZX'] at [0, 1, 2, 3]
+clique= ['IIYZZ']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 3  (complexity= depth )
+measure ['IIYZZ'] at [0, 1, 2, 3]
+clique= ['IIZXI', 'IZZIX']
+constructed measurement circuit has constructed complexity 2 transpiled_complexity= 4  (complexity= depth )
+measure ['IIZXI', 'IZZIX'] at [0, 1, 2, 3]
+clique= ['IIZYI', 'IZZIY']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 3  (complexity= depth )
+measure ['IIZYI', 'IZZIY'] at [0, 1, 2, 3]
+clique= ['IZXXI', 'IIXIX']
+constructed measurement circuit has constructed complexity 2 transpiled_complexity= 4  (complexity= depth )
+measure ['IZXXI', 'IIXIX'] at [0, 1, 2, 3]
+clique= ['IZXYI', 'IIXIY']
+constructed measurement circuit has constructed complexity 3 transpiled_complexity= 4  (complexity= depth )
+measure ['IZXYI', 'IIXIY'] at [0, 1, 2, 3]
+clique= ['IIZZI', 'IZZIZ']
+constructed measurement circuit has constructed complexity 1 transpiled_complexity= 1  (complexity= depth )
+measure ['IIZZI', 'IZZIZ'] at [0, 1, 2, 3]
+clique= ['IZXZI', 'IIXIZ']
+constructed measurement circuit has constructed complexity 2 transpiled_complexity= 4  (complexity= depth )
+measure ['IZXZI', 'IIXIZ'] at [0, 1, 2, 3]
+graphclique-cliquecover: 3 with commutationmode qubitwise_bitstring
+strategy largest_first 1
+strategy random_sequential 1
+strategy smallest_last 1
+strategy independent_set 1
+strategy connected_sequential_bfs 1
+strategy connected_sequential_dfs 1
+strategy saturation_largest_first 1
+number of cliques 1
+clique 0 ['IIZII', 'IIIZI', 'IIZZI']
+constructing measurement programs for interaction with commutativity mode qubitwise_bitstring
+clique= ['IIZII', 'IIIZI', 'IIZZI']
+some measurements are dependent: rk= 2  m= 3
+constructed measurement circuit has constructed complexity 1 transpiled_complexity= 1  (complexity= depth )
+measure ['IIZII', 'IIIZI', 'IIZZI'] at [0, 1, 2]
+Number of quantum programs: 15 for 1rdm and  1 for interaction
+[{'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df04fd0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIIYI', 'IIYYX', 'IZYII', 'IIIIX'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df044c0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIIXI', 'IIYXY', 'IIIIY'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df04cd0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIYXX'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70def6e50>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIYYY'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70def67f0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIYYZ', 'IIIIZ'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df9b940>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIYXZ'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70def3be0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIIZI', 'IIYZY'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70def3580>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIYZX'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df041f0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIYZZ'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df6b310>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIZXI', 'IZZIX'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df6b8e0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIZYI', 'IZZIY'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df0b550>, 'mqubits': [0, 1, 2, 3], 'ops': ['IZXXI', 'IIXIX'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df0b760>, 'mqubits': [0, 1, 2, 3], 'ops': ['IZXYI', 'IIXIY'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df0bc70>, 'mqubits': [0, 1, 2, 3], 'ops': ['IIZZI', 'IZZIZ'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70deb01f0>, 'mqubits': [0, 1, 2, 3], 'ops': ['IZXZI', 'IIXIZ'], 'signs': [1], 'mode': 'bitstring'}, {'mqc': <qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7fd70df04730>, 'mqubits': [0, 1, 2], 'ops': ['IIZII', 'IIIZI', 'IIZZI'], 'signs': [1], 'mode': 'bitstring'}]
+constraint 0
+constraint observable 1RDM
+constraint i          0
+constraint j          0
+constraint type       real
+constraint cval       0.5000000000003648
+constraint op           NIIII * (0.5+0j)
++ NIIII * (0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIIZI'), coeff=-0.5)], 'coeff': [-0.5], 'const': 0.5}
+constraint 1
+constraint observable 1RDM
+constraint i          0
+constraint j          1
+constraint type       real
+constraint cval       0.0
+constraint op           +-III * (0.5+0j)
++ -+III * (-0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIIXI'), coeff=0.25), PauliOp(Pauli('IIZXI'), coeff=-0.25)], 'coeff': [0.25, -0.25], 'const': 0}
+constraint 2
+constraint observable 1RDM
+constraint i          0
+constraint j          1
+constraint type       imag
+constraint cval       0.0
+constraint op           +-III * -0.5j
++ -+III * -0.5j
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIIYI'), coeff=0.25), PauliOp(Pauli('IIZYI'), coeff=-0.25)], 'coeff': [0.25, -0.25], 'const': 0}
+constraint 3
+constraint observable 1RDM
+constraint i          0
+constraint j          2
+constraint type       real
+constraint cval       -0.48245951442674806
+constraint op           +I-II * (0.5+0j)
++ -I+II * (-0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIYYX'), coeff=-0.25), PauliOp(Pauli('IIYXY'), coeff=0.25)], 'coeff': [-0.25, 0.25], 'const': 0}
+constraint 4
+constraint observable 1RDM
+constraint i          0
+constraint j          2
+constraint type       imag
+constraint cval       0.0
+constraint op           +I-II * -0.5j
++ -I+II * -0.5j
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIYXX'), coeff=0.25), PauliOp(Pauli('IIYYY'), coeff=0.25)], 'coeff': [0.25, 0.25], 'const': 0}
+constraint 5
+constraint observable 1RDM
+constraint i          0
+constraint j          3
+constraint type       real
+constraint cval       0.0
+constraint op           +II-I * (0.5+0j)
++ -II+I * (-0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IZXXI'), coeff=-0.25), PauliOp(Pauli('IIYYZ'), coeff=-0.25)], 'coeff': [-0.25, -0.25], 'const': 0}
+constraint 6
+constraint observable 1RDM
+constraint i          0
+constraint j          3
+constraint type       imag
+constraint cval       0.0
+constraint op           +II-I * -0.5j
++ -II+I * -0.5j
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IZXYI'), coeff=-0.25), PauliOp(Pauli('IIYXZ'), coeff=0.25)], 'coeff': [-0.25, 0.25], 'const': 0}
+constraint 7
+constraint observable 1RDM
+constraint i          1
+constraint j          1
+constraint type       real
+constraint cval       0.5000000000004422
+constraint op           INIII * (0.5+0j)
++ INIII * (0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIZZI'), coeff=-0.5)], 'coeff': [-0.5], 'const': 0.5}
+constraint 8
+constraint observable 1RDM
+constraint i          1
+constraint j          2
+constraint type       real
+constraint cval       0.0
+constraint op           I+-II * (0.5+0j)
++ I-+II * (-0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIXIX'), coeff=0.25), PauliOp(Pauli('IIYZY'), coeff=0.25)], 'coeff': [0.25, 0.25], 'const': 0}
+constraint 9
+constraint observable 1RDM
+constraint i          1
+constraint j          2
+constraint type       imag
+constraint cval       0.0
+constraint op           I+-II * -0.5j
++ I-+II * -0.5j
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIYZX'), coeff=0.25), PauliOp(Pauli('IIXIY'), coeff=-0.25)], 'coeff': [0.25, -0.25], 'const': 0}
+constraint 10
+constraint observable 1RDM
+constraint i          1
+constraint j          3
+constraint type       real
+constraint cval       -0.4824595277323742
+constraint op           I+I-I * (0.5+0j)
++ I-I+I * (-0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IZXZI'), coeff=-0.25), PauliOp(Pauli('IIXIZ'), coeff=0.25)], 'coeff': [-0.25, 0.25], 'const': 0}
+constraint 11
+constraint observable 1RDM
+constraint i          1
+constraint j          3
+constraint type       imag
+constraint cval       0.0
+constraint op           I+I-I * -0.5j
++ I-I+I * -0.5j
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IZYII'), coeff=-0.25), PauliOp(Pauli('IIYZZ'), coeff=0.25)], 'coeff': [-0.25, 0.25], 'const': 0}
+constraint 12
+constraint observable 1RDM
+constraint i          2
+constraint j          2
+constraint type       real
+constraint cval       0.4999999999996387
+constraint op           IINII * (0.5+0j)
++ IINII * (0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIIIZ'), coeff=-0.5)], 'coeff': [-0.5], 'const': 0.5}
+constraint 13
+constraint observable 1RDM
+constraint i          2
+constraint j          3
+constraint type       real
+constraint cval       0.0
+constraint op           II+-I * (0.5+0j)
++ II-+I * (-0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIIIX'), coeff=0.25), PauliOp(Pauli('IZZIX'), coeff=-0.25)], 'coeff': [0.25, -0.25], 'const': 0}
+constraint 14
+constraint observable 1RDM
+constraint i          2
+constraint j          3
+constraint type       imag
+constraint cval       0.0
+constraint op           II+-I * -0.5j
++ II-+I * -0.5j
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IIIIY'), coeff=0.25), PauliOp(Pauli('IZZIY'), coeff=-0.25)], 'coeff': [0.25, -0.25], 'const': 0}
+constraint 15
+constraint observable 1RDM
+constraint i          3
+constraint j          3
+constraint type       real
+constraint cval       0.49999999999956324
+constraint op           IIINI * (0.5+0j)
++ IIINI * (0.5+0j)
+constraint pauli     
+{'pauliops': [PauliOp(Pauli('IZZIZ'), coeff=-0.5)], 'coeff': [-0.5], 'const': 0.5}
+initial_point=
+[2.647972, 3.265368, 1.348365, 4.758774, 2.775753, -1.444508, -0.6095755, -1.324078, -1.025389, 0.7769008, -0.3379025, -3.089074, 1.578568, 1.581726, 0.3062963, 1.767301]
+number of parameters: 16
+dFM_dD real 0 0 0.14889594039946275
+dFM_dD real 0 1 0.0
+dFM_dD imag 0 1 0.0
+dFM_dD real 0 2 -0.9188037626756128
+dFM_dD imag 0 2 0.0
+dFM_dD real 0 3 5.551115123125782e-12
+dFM_dD imag 0 3 0.0
+dFM_dD real 1 1 0.14889576306631458
+dFM_dD real 1 2 -5.551115123125782e-12
+dFM_dD imag 1 2 0.0
+dFM_dD real 1 3 -0.9188041302898852
+dFM_dD imag 1 3 0.0
+dFM_dD real 2 2 -0.35110405959548613
+dFM_dD real 2 3 -1.942890293094024e-11
+dFM_dD imag 2 3 0.0
+dFM_dD real 3 3 -0.3511042369425121
+initial lagrange= [-1.48895940e-01 -0.00000000e+00 -0.00000000e+00  9.18803763e-01
+ -0.00000000e+00 -5.55111512e-12 -0.00000000e+00 -1.48895763e-01
+  5.55111512e-12 -0.00000000e+00  9.18804130e-01 -0.00000000e+00
+  3.51104060e-01  1.94289029e-11 -0.00000000e+00  3.51104237e-01]
+W_exact= 0.2304187412875615 W_qc= 0.23577880859375
+constraint 0  exact= 0.025739813764504405 qc= 0.0039062499996351807 0 0 real 0.5000000000003648
+constraint 1  exact= -0.0019982351915422483 qc= 0.003417968750000001 0 1 real 0.0
+constraint 2  exact= 0.0028300366334982185 qc= 0.013122558593750002 0 1 imag 0.0
+constraint 3  exact= 0.2888412176155633 qc= 0.08886985104879369 0 2 real -0.48245951442674806
+constraint 4  exact= -0.4465511881982578 qc= 2.815429694935645e-09 0 2 imag 0.0
+constraint 5  exact= -0.01001068784322248 qc= 0.004625600725382666 0 3 real 0.0
+constraint 6  exact= -0.046730373687492346 qc= -9.036891731520401e-05 0 3 imag 0.0
+constraint 7  exact= -0.0031781114070373317 qc= -0.0023193359379421463 1 1 real 0.5000000000004422
+constraint 8  exact= 0.00983386753038747 qc= 0.0032773004832417213 1 2 real 0.0
+constraint 9  exact= 0.04731878060853885 qc= 0.0002148432983256265 1 2 imag 0.0
+constraint 10  exact= 0.47926957287681826 qc= 0.07158559166311568 1 3 real -0.4824595277323742
+constraint 11  exact= -0.48134369718228776 qc= 2.2829598211870916e-09 1 3 imag 0.0
+constraint 12  exact= -0.02623414822536102 qc= -0.03991540627944484 2 2 real 0.4999999999996387
+constraint 13  exact= 0.000108579092813602 qc= 0.01705427505601092 2 3 real 0.0
+constraint 14  exact= -0.002339143341970393 qc= 0.0015743469788811713 2 3 imag 0.0
+constraint 15  exact= 0.003040278480808234 qc= 0.005491578155242927 3 3 real 0.49999999999956324
+stddev W= 0.0032021651341735046
+stddev c[ 0 ]= 0.003156762827389099
+stddev c[ 1 ]= 0.005237366796349673
+stddev c[ 2 ]= 0.0011636765115318605
+stddev c[ 3 ]= 0.003582418756185286
+stddev c[ 4 ]= 1.0273181474479596e-09
+stddev c[ 5 ]= 0.0018848797070172686
+stddev c[ 6 ]= 0.0011813941895715235
+stddev c[ 7 ]= 0.003392808132247883
+stddev c[ 8 ]= 0.0017005275235075707
+stddev c[ 9 ]= 0.0011923136933922169
+stddev c[ 10 ]= 0.0013934995086548488
+stddev c[ 11 ]= 1.6398920791304758e-10
+stddev c[ 12 ]= 0.004265475024517597
+stddev c[ 13 ]= 0.004903933728680912
+stddev c[ 14 ]= 0.0020517637406472643
+stddev c[ 15 ]= 0.0031798760230086257
+Augmented Lagrangian
+initial penalty= [10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10. 10.]
+Augmented Lagrangian: unconstrained subproblem
+minimizing over parametrized qc-programs with augmented Lagrangian and COBYLA
+rdmf_obj_eval= 1 L= 0.21877934021631215 W= 0.2304187412875615 sum(c^2)= 0.0014271595268397252 t= 0.5464017391204834 exact= L= 0.21877934021631215 W= 0.2304187412875615 sum(c^2)= 0.0014271595268397252
+rdmf_obj_eval= 2 L= 0.21877934021631215 W= 0.23041874128756137 sum(c^2)= 0.0014271595267438394 t= 0.2411632537841797 exact= L= 0.21877934021631215 W= 0.23041874128756137 sum(c^2)= 0.0014271595267438394
+rdmf_obj_eval= 3 L= 1.2656499483707513 W= 0.025849121262407224 sum(c^2)= 0.14882672930631033 t= 0.20759987831115723 exact= L= 1.2656499483707513 W= 0.025849121262407224 sum(c^2)= 0.14882672930631033
+rdmf_obj_eval= 4 L= 0.2972301228104667 W= 0.2304187412875614 sum(c^2)= 0.005403314306530891 t= 0.1828298568725586 exact= L= 0.2972301228104667 W= 0.2304187412875614 sum(c^2)= 0.005403314306530891
+rdmf_obj_eval= 5 L= 0.2187793402163119 W= 0.2304187412875615 sum(c^2)= 0.0014271595266318218 t= 0.1343080997467041 exact= L= 0.2187793402163119 W= 0.2304187412875615 sum(c^2)= 0.0014271595266318218
+rdmf_obj_eval= 6 L= 0.21877934021633955 W= 0.23041874128756137 sum(c^2)= 0.0014271595267358653 t= 0.17808842658996582 exact= L= 0.21877934021633955 W= 0.23041874128756137 sum(c^2)= 0.0014271595267358653
+rdmf_obj_eval= 7 L= 1.4569810153599223 W= 0.23041874128756148 sum(c^2)= 0.1480777852454826 t= 0.0762026309967041 exact= L= 1.4569810153599223 W= 0.23041874128756148 sum(c^2)= 0.1480777852454826
+rdmf_obj_eval= 8 L= 0.2187793402163122 W= 0.23041874128756143 sum(c^2)= 0.0014271595267330382 t= 0.15334844589233398 exact= L= 0.2187793402163122 W= 0.23041874128756143 sum(c^2)= 0.0014271595267330382
+rdmf_obj_eval= 9 L= 0.21877934021631223 W= 0.23041874128756146 sum(c^2)= 0.0014271595267245714 t= 0.1854543685913086 exact= L= 0.21877934021631223 W= 0.23041874128756146 sum(c^2)= 0.0014271595267245714
+rdmf_obj_eval= 10 L= 0.21877934021631223 W= 0.23041874128756146 sum(c^2)= 0.0014271595267245714 t= 0.1860055923461914 exact= L= 0.21877934021631223 W= 0.23041874128756146 sum(c^2)= 0.0014271595267245714
+rdmf_obj_eval= 11 L= 0.21877934021631223 W= 0.23041874128756146 sum(c^2)= 0.0014271595267245714 t= 0.18535470962524414 exact= L= 0.21877934021631223 W= 0.23041874128756146 sum(c^2)= 0.0014271595267245714
+rdmf_obj_eval= 12 L= 0.3495765811163471 W= 0.23041874128756146 sum(c^2)= 0.006408523878323469 t= 0.1758129596710205 exact= L= 0.3495765811163471 W= 0.23041874128756146 sum(c^2)= 0.006408523878323469
+rdmf_obj_eval= 13 L= 2.586467637590598 W= 0.40581222578932574 sum(c^2)= 0.43004537694349737 t= 0.07981634140014648 exact= L= 2.586467637590598 W= 0.40581222578932574 sum(c^2)= 0.43004537694349737
+rdmf_obj_eval= 14 L= 0.9650797040411236 W= 0.23880738037777333 sum(c^2)= 0.1093501582531588 t= 0.16935110092163086 exact= L= 0.9650797040411236 W= 0.23880738037777333 sum(c^2)= 0.1093501582531588
+rdmf_obj_eval= 15 L= 0.4013362748063294 W= 0.23885519645540737 sum(c^2)= 0.014120307392673755 t= 0.18738055229187012 exact= L= 0.4013362748063294 W= 0.23885519645540737 sum(c^2)= 0.014120307392673755
+rdmf_obj_eval= 16 L= 0.3495765811163473 W= 0.23041874128756154 sum(c^2)= 0.0064085238783298465 t= 0.08107924461364746 exact= L= 0.3495765811163473 W= 0.23041874128756154 sum(c^2)= 0.0064085238783298465
+rdmf_obj_eval= 17 L= 0.42420489272578676 W= 0.22334325167739139 sum(c^2)= 0.013169254811817186 t= 0.1323554515838623 exact= L= 0.42420489272578676 W= 0.22334325167739139 sum(c^2)= 0.013169254811817186
+rdmf_obj_eval= 18 L= 1.7555276572422718 W= 0.10463851171362136 sum(c^2)= 0.2585554095989659 t= 0.08051347732543945 exact= L= 1.7555276572422718 W= 0.10463851171362136 sum(c^2)= 0.2585554095989659
+rdmf_obj_eval= 19 L= 0.32045001937841683 W= 0.10205010425540444 sum(c^2)= 0.013749791388986958 t= 0.12327361106872559 exact= L= 0.32045001937841683 W= 0.10205010425540444 sum(c^2)= 0.013749791388986958
+rdmf_obj_eval= 20 L= 0.21877934021631226 W= 0.2304187412875614 sum(c^2)= 0.001427159526722834 t= 0.1802356243133545 exact= L= 0.21877934021631226 W= 0.2304187412875614 sum(c^2)= 0.001427159526722834
+rdmf_obj_eval= 21 L= 0.5748837148401369 W= 0.16957290243423467 sum(c^2)= 0.060817765578181755 t= 0.0991370677947998 exact= L= 0.5748837148401369 W= 0.16957290243423467 sum(c^2)= 0.060817765578181755
+rdmf_obj_eval= 22 L= 0.24167824210349823 W= 0.2304187412875615 sum(c^2)= 0.0018323198023629198 t= 0.11251616477966309 exact= L= 0.24167824210349823 W= 0.2304187412875615 sum(c^2)= 0.0018323198023629198
+rdmf_obj_eval= 23 L= 0.4505928647141672 W= 0.19563091503576263 sum(c^2)= 0.018065392009735105 t= 0.11534667015075684 exact= L= 0.4505928647141672 W= 0.19563091503576263 sum(c^2)= 0.018065392009735105
+rdmf_obj_eval= 24 L= 0.39687862811834496 W= 0.2761820395881819 sum(c^2)= 0.03403243628070861 t= 0.2710702419281006 exact= L= 0.39687862811834496 W= 0.2761820395881819 sum(c^2)= 0.03403243628070861
+rdmf_obj_eval= 25 L= 0.2187793402163118 W= 0.23041874128756146 sum(c^2)= 0.0014271595266810537 t= 0.08390426635742188 exact= L= 0.2187793402163118 W= 0.23041874128756146 sum(c^2)= 0.0014271595266810537
+rdmf_obj_eval= 26 L= 0.2788801935117246 W= 0.2395641956440841 sum(c^2)= 0.011571415441835788 t= 0.15410852432250977 exact= L= 0.2788801935117246 W= 0.2395641956440841 sum(c^2)= 0.011571415441835788
+rdmf_obj_eval= 27 L= 0.21877934021630496 W= 0.23041874128756157 sum(c^2)= 0.0014271595266571661 t= 0.2249433994293213 exact= L= 0.21877934021630496 W= 0.23041874128756157 sum(c^2)= 0.0014271595266571661
+rdmf_obj_eval= 28 L= 0.23073207786676703 W= 0.23353981892432685 sum(c^2)= 0.0020809056334180308 t= 0.22748732566833496 exact= L= 0.23073207786676703 W= 0.23353981892432685 sum(c^2)= 0.0020809056334180308
+rdmf_obj_eval= 29 L= 0.218779340216305 W= 0.23041874128756148 sum(c^2)= 0.0014271595266914035 t= 0.2109529972076416 exact= L= 0.218779340216305 W= 0.23041874128756148 sum(c^2)= 0.0014271595266914035
+rdmf_obj_eval= 30 L= 0.2259278252652872 W= 0.2323410800789575 sum(c^2)= 0.001810639665494078 t= 0.13644814491271973 exact= L= 0.2259278252652872 W= 0.2323410800789575 sum(c^2)= 0.001810639665494078
+rdmf_obj_eval= 31 L= 0.21877934021630488 W= 0.23041874128756146 sum(c^2)= 0.001427159526659132 t= 0.12816905975341797 exact= L= 0.21877934021630488 W= 0.23041874128756146 sum(c^2)= 0.001427159526659132
+rdmf_obj_eval= 32 L= 0.22622004012655905 W= 0.2323798382426212 sum(c^2)= 0.0018179358165309784 t= 0.23828649520874023 exact= L= 0.22622004012655905 W= 0.2323798382426212 sum(c^2)= 0.0018179358165309784
+rdmf_obj_eval= 33 L= 0.21877934021630516 W= 0.23041874128756137 sum(c^2)= 0.0014271595266522451 t= 0.19827818870544434 exact= L= 0.21877934021630516 W= 0.23041874128756137 sum(c^2)= 0.0014271595266522451
+rdmf_obj_eval= 34 L= 0.23879916390786632 W= 0.23246649506188377 sum(c^2)= 0.002110387120660414 t= 0.1516280174255371 exact= L= 0.23879916390786632 W= 0.23246649506188377 sum(c^2)= 0.002110387120660414
+rdmf_obj_eval= 35 L= 0.21877934021630518 W= 0.2304187412875614 sum(c^2)= 0.0014271595267154767 t= 0.2136392593383789 exact= L= 0.21877934021630518 W= 0.2304187412875614 sum(c^2)= 0.0014271595267154767
+rdmf_obj_eval= 36 L= 0.2088894537199173 W= 0.16245548976436494 sum(c^2)= 0.0012604619652023708 t= 0.40987300872802734 exact= L= 0.2088894537199173 W= 0.16245548976436494 sum(c^2)= 0.0012604619652023708
+rdmf_obj_eval= 37 L= 0.2013802571633697 W= 0.16374890103467632 sum(c^2)= 0.0006942928760728226 t= 0.13557171821594238 exact= L= 0.2013802571633697 W= 0.16374890103467632 sum(c^2)= 0.0006942928760728226
+rdmf_obj_eval= 38 L= 0.37677726126327543 W= 0.12870732952829825 sum(c^2)= 0.03354787628309038 t= 0.18772387504577637 exact= L= 0.37677726126327543 W= 0.12870732952829825 sum(c^2)= 0.03354787628309038
+rdmf_obj_eval= 39 L= 0.23721050343276956 W= 0.17652180482546992 sum(c^2)= 0.0070396430080463274 t= 0.2984960079193115 exact= L= 0.23721050343276956 W= 0.17652180482546992 sum(c^2)= 0.0070396430080463274
+rdmf_obj_eval= 40 L= 0.1985619422587513 W= 0.16435438052458148 sum(c^2)= 0.0006224017070301645 t= 0.1751689910888672 exact= L= 0.1985619422587513 W= 0.16435438052458148 sum(c^2)= 0.0006224017070301645
+rdmf_obj_eval= 41 L= 0.21809080871676498 W= 0.16825808321181093 sum(c^2)= 0.003317782530584925 t= 0.40770554542541504 exact= L= 0.21809080871676498 W= 0.16825808321181093 sum(c^2)= 0.003317782530584925
+rdmf_obj_eval= 42 L= 0.19856194225875104 W= 0.1643543805245815 sum(c^2)= 0.0006224017070301016 t= 0.2233750820159912 exact= L= 0.19856194225875104 W= 0.1643543805245815 sum(c^2)= 0.0006224017070301016
+rdmf_obj_eval= 43 L= 0.20777421067266863 W= 0.16559567155399932 sum(c^2)= 0.001044443691973713 t= 0.18986225128173828 exact= L= 0.20777421067266863 W= 0.16559567155399932 sum(c^2)= 0.001044443691973713
+rdmf_obj_eval= 44 L= 0.19964630279745785 W= 0.16435836948478955 sum(c^2)= 0.0006599004283855056 t= 0.15544962882995605 exact= L= 0.19964630279745785 W= 0.16435836948478955 sum(c^2)= 0.0006599004283855056
+rdmf_obj_eval= 45 L= 0.20199347314974256 W= 0.1661978667586836 sum(c^2)= 0.0007957691828004018 t= 0.08456587791442871 exact= L= 0.20199347314974256 W= 0.1661978667586836 sum(c^2)= 0.0007957691828004018
+rdmf_obj_eval= 46 L= 0.19856194225875115 W= 0.16435438052458154 sum(c^2)= 0.0006224017070301367 t= 0.22539448738098145 exact= L= 0.19856194225875115 W= 0.16435438052458154 sum(c^2)= 0.0006224017070301367
+rdmf_obj_eval= 47 L= 0.2001111475989489 W= 0.1651375070318877 sum(c^2)= 0.0006917448123697551 t= 0.2262439727783203 exact= L= 0.2001111475989489 W= 0.1651375070318877 sum(c^2)= 0.0006917448123697551
+rdmf_obj_eval= 48 L= 0.19856194225873447 W= 0.16435438052460352 sum(c^2)= 0.0006224017070291275 t= 0.15594196319580078 exact= L= 0.19856194225873447 W= 0.16435438052460352 sum(c^2)= 0.0006224017070291275
+rdmf_obj_eval= 49 L= 0.1949105259906905 W= 0.17330449708463902 sum(c^2)= 0.00032958567521454256 t= 0.26842451095581055 exact= L= 0.1949105259906905 W= 0.17330449708463902 sum(c^2)= 0.00032958567521454256
+rdmf_obj_eval= 50 L= 0.19491052599069073 W= 0.17330449708463894 sum(c^2)= 0.0003295856752160786 t= 0.25218701362609863 exact= L= 0.19491052599069073 W= 0.17330449708463894 sum(c^2)= 0.0003295856752160786
+rdmf_obj_eval= 51 L= 0.19357132473892477 W= 0.17937751488863862 sum(c^2)= 0.00023057659941858692 t= 0.2397899627685547 exact= L= 0.19357132473892477 W= 0.17937751488863862 sum(c^2)= 0.00023057659941858692
+rdmf_obj_eval= 52 L= 0.19357132473892488 W= 0.17937751488863887 sum(c^2)= 0.00023057659944308655 t= 0.2528996467590332 exact= L= 0.19357132473892488 W= 0.17937751488863887 sum(c^2)= 0.00023057659944308655
+rdmf_obj_eval= 53 L= 0.19854394560080071 W= 0.21159704818438407 sum(c^2)= 0.0005429680766054835 t= 0.3115653991699219 exact= L= 0.19854394560080071 W= 0.21159704818438407 sum(c^2)= 0.0005429680766054835
+rdmf_obj_eval= 54 L= 0.19260065094211284 W= 0.17868367359071105 sum(c^2)= 0.00017011760720673963 t= 0.19568228721618652 exact= L= 0.19260065094211284 W= 0.17868367359071105 sum(c^2)= 0.00017011760720673963
+rdmf_obj_eval= 55 L= 0.22858811828208547 W= 0.16017690791254383 sum(c^2)= 0.0070522958880429 t= 0.30203723907470703 exact= L= 0.22858811828208547 W= 0.16017690791254383 sum(c^2)= 0.0070522958880429
+rdmf_obj_eval= 56 L= 0.19951123956956776 W= 0.18445526886727914 sum(c^2)= 0.001489933530947981 t= 0.2805500030517578 exact= L= 0.19951123956956776 W= 0.18445526886727914 sum(c^2)= 0.001489933530947981
+rdmf_obj_eval= 57 L= 0.19220816036614155 W= 0.17810504096703034 sum(c^2)= 0.00016218553343553063 t= 0.17345499992370605 exact= L= 0.19220816036614155 W= 0.17810504096703034 sum(c^2)= 0.00016218553343553063
+rdmf_obj_eval= 58 L= 0.19834052964140242 W= 0.1800036972030671 sum(c^2)= 0.001128895496372498 t= 0.17392706871032715 exact= L= 0.19834052964140242 W= 0.1800036972030671 sum(c^2)= 0.001128895496372498
+rdmf_obj_eval= 59 L= 0.1928884824544763 W= 0.17794899236784345 sum(c^2)= 0.00016334460650075972 t= 0.19699692726135254 exact= L= 0.1928884824544763 W= 0.17794899236784345 sum(c^2)= 0.00016334460650075972
+rdmf_obj_eval= 60 L= 0.19563479611487083 W= 0.17914162215795745 sum(c^2)= 0.00036014256258071946 t= 0.31336188316345215 exact= L= 0.19563479611487083 W= 0.17914162215795745 sum(c^2)= 0.00036014256258071946
+rdmf_obj_eval= 61 L= 0.1927551981759716 W= 0.17782832404403998 sum(c^2)= 0.00015664754427451401 t= 0.16343951225280762 exact= L= 0.1927551981759716 W= 0.17782832404403998 sum(c^2)= 0.00015664754427451401
+rdmf_obj_eval= 62 L= 0.19500710269574215 W= 0.17774220163499688 sum(c^2)= 0.00022664421039258768 t= 0.20256948471069336 exact= L= 0.19500710269574215 W= 0.17774220163499688 sum(c^2)= 0.00022664421039258768
+rdmf_obj_eval= 63 L= 0.1922081603661411 W= 0.17810504096703483 sum(c^2)= 0.0001621855334317497 t= 0.18671274185180664 exact= L= 0.1922081603661411 W= 0.17810504096703483 sum(c^2)= 0.0001621855334317497
+rdmf_obj_eval= 64 L= 0.19283619925785597 W= 0.17809585875082937 sum(c^2)= 0.00017897863794826176 t= 0.1968834400177002 exact= L= 0.19283619925785597 W= 0.17809585875082937 sum(c^2)= 0.00017897863794826176
+rdmf_obj_eval= 65 L= 0.1922081603661413 W= 0.17810504096702787 sum(c^2)= 0.00016218553343257992 t= 0.13258934020996094 exact= L= 0.1922081603661413 W= 0.17810504096702787 sum(c^2)= 0.00016218553343257992
+rdmf_obj_eval= 66 L= 0.1932676679291446 W= 0.17361934489631214 sum(c^2)= 0.0002516085002872868 t= 0.1416642665863037 exact= L= 0.1932676679291446 W= 0.17361934489631214 sum(c^2)= 0.0002516085002872868
+rdmf_obj_eval= 67 L= 0.192208160366141 W= 0.17810504096703528 sum(c^2)= 0.00016218553343289458 t= 0.09063935279846191 exact= L= 0.192208160366141 W= 0.17810504096703528 sum(c^2)= 0.00016218553343289458
+rdmf_obj_eval= 68 L= 0.1924474088558688 W= 0.19424318739411442 sum(c^2)= 0.00019632564396470905 t= 0.21320152282714844 exact= L= 0.1924474088558688 W= 0.19424318739411442 sum(c^2)= 0.00019632564396470905
+rdmf_obj_eval= 69 L= 0.1925349635342662 W= 0.17675347844916503 sum(c^2)= 0.00019138507870409025 t= 0.17028188705444336 exact= L= 0.1925349635342662 W= 0.17675347844916503 sum(c^2)= 0.00019138507870409025
+rdmf_obj_eval= 70 L= 0.1977812671111484 W= 0.1708392930683943 sum(c^2)= 0.0014029173444098327 t= 0.20906472206115723 exact= L= 0.1977812671111484 W= 0.1708392930683943 sum(c^2)= 0.0014029173444098327
+rdmf_obj_eval= 71 L= 0.19190328397237627 W= 0.17926307468115843 sum(c^2)= 0.00026963293799598564 t= 0.15953397750854492 exact= L= 0.19190328397237627 W= 0.17926307468115843 sum(c^2)= 0.00026963293799598564
+rdmf_obj_eval= 72 L= 0.19827445495775203 W= 0.18442319471741458 sum(c^2)= 0.0014045395039134628 t= 0.20400357246398926 exact= L= 0.19827445495775203 W= 0.18442319471741458 sum(c^2)= 0.0014045395039134628
+rdmf_obj_eval= 73 L= 0.1928830240491466 W= 0.1789956186586028 sum(c^2)= 0.0002883787950734066 t= 0.17468881607055664 exact= L= 0.1928830240491466 W= 0.1789956186586028 sum(c^2)= 0.0002883787950734066
+rdmf_obj_eval= 74 L= 0.1919032839723763 W= 0.17926307468115846 sum(c^2)= 0.0002696329379967935 t= 0.18668842315673828 exact= L= 0.1919032839723763 W= 0.17926307468115846 sum(c^2)= 0.0002696329379967935
+rdmf_obj_eval= 75 L= 0.19235727438455005 W= 0.17960873997878302 sum(c^2)= 0.0003103423205923315 t= 0.261063814163208 exact= L= 0.19235727438455005 W= 0.17960873997878302 sum(c^2)= 0.0003103423205923315
+rdmf_obj_eval= 76 L= 0.19159937801402446 W= 0.17924969483527603 sum(c^2)= 0.0002748227681871982 t= 0.19548559188842773 exact= L= 0.19159937801402446 W= 0.17924969483527603 sum(c^2)= 0.0002748227681871982
+rdmf_obj_eval= 77 L= 0.1943307208557466 W= 0.18052018446471613 sum(c^2)= 0.000699196951984114 t= 0.233170747756958 exact= L= 0.1943307208557466 W= 0.18052018446471613 sum(c^2)= 0.000699196951984114
+rdmf_obj_eval= 78 L= 0.19138215626913913 W= 0.17904432866974274 sum(c^2)= 0.00024306607158237719 t= 0.16600680351257324 exact= L= 0.19138215626913913 W= 0.17904432866974274 sum(c^2)= 0.00024306607158237719
+rdmf_obj_eval= 79 L= 0.1903295315722059 W= 0.17550530334120915 sum(c^2)= 0.00016532449611430473 t= 0.14182257652282715 exact= L= 0.1903295315722059 W= 0.17550530334120915 sum(c^2)= 0.00016532449611430473
+rdmf_obj_eval= 80 L= 0.18996825214679514 W= 0.1756097769267689 sum(c^2)= 0.00023315626760245836 t= 0.23270320892333984 exact= L= 0.18996825214679514 W= 0.1756097769267689 sum(c^2)= 0.00023315626760245836
+rdmf_obj_eval= 81 L= 0.19102039229621054 W= 0.1715863823694092 sum(c^2)= 0.00035123730867500755 t= 0.21219515800476074 exact= L= 0.19102039229621054 W= 0.1715863823694092 sum(c^2)= 0.00035123730867500755
+rdmf_obj_eval= 82 L= 0.18988112385644287 W= 0.17627617879810478 sum(c^2)= 0.00026017651623727643 t= 0.17594480514526367 exact= L= 0.18988112385644287 W= 0.17627617879810478 sum(c^2)= 0.00026017651623727643
+rdmf_obj_eval= 83 L= 0.18983820707870103 W= 0.17637439324957477 sum(c^2)= 0.0002501385527381682 t= 0.1333005428314209 exact= L= 0.18983820707870103 W= 0.17637439324957477 sum(c^2)= 0.0002501385527381682
+rdmf_obj_eval= 84 L= 0.1908281719728099 W= 0.17672204496924013 sum(c^2)= 0.00033354393263061645 t= 0.07512331008911133 exact= L= 0.1908281719728099 W= 0.17672204496924013 sum(c^2)= 0.00033354393263061645
+rdmf_obj_eval= 85 L= 0.18983820707869917 W= 0.17637439324957815 sum(c^2)= 0.00025013855272465696 t= 0.18451189994812012 exact= L= 0.18983820707869917 W= 0.17637439324957815 sum(c^2)= 0.00025013855272465696
+rdmf_obj_eval= 86 L= 0.19005225549314694 W= 0.17725055679984164 sum(c^2)= 0.0002769462825592617 t= 0.18742990493774414 exact= L= 0.19005225549314694 W= 0.17725055679984164 sum(c^2)= 0.0002769462825592617
+rdmf_obj_eval= 87 L= 0.18967013252504422 W= 0.17709869095375544 sum(c^2)= 0.00022741137533824023 t= 0.07778072357177734 exact= L= 0.18967013252504422 W= 0.17709869095375544 sum(c^2)= 0.00022741137533824023
+rdmf_obj_eval= 88 L= 0.18870627248453167 W= 0.18198557216178346 sum(c^2)= 0.00018199355669930583 t= 0.19724535942077637 exact= L= 0.18870627248453167 W= 0.18198557216178346 sum(c^2)= 0.00018199355669930583
+rdmf_obj_eval= 89 L= 0.1899926706483804 W= 0.18386111777879038 sum(c^2)= 0.0003395202292491371 t= 0.11662030220031738 exact= L= 0.1899926706483804 W= 0.18386111777879038 sum(c^2)= 0.0003395202292491371
+rdmf_obj_eval= 90 L= 0.1887062724845321 W= 0.18198557216178382 sum(c^2)= 0.0001819935567005454 t= 0.19260454177856445 exact= L= 0.1887062724845321 W= 0.18198557216178382 sum(c^2)= 0.0001819935567005454
+rdmf_obj_eval= 91 L= 0.18859097337902062 W= 0.18318051561219667 sum(c^2)= 0.00017089046027 t= 0.23958253860473633 exact= L= 0.18859097337902062 W= 0.18318051561219667 sum(c^2)= 0.00017089046027
+rdmf_obj_eval= 92 L= 0.1885909733790209 W= 0.18318051561219678 sum(c^2)= 0.00017089046027183002 t= 0.20563793182373047 exact= L= 0.1885909733790209 W= 0.18318051561219678 sum(c^2)= 0.00017089046027183002
+rdmf_obj_eval= 93 L= 0.19088660016866482 W= 0.18247619482872823 sum(c^2)= 0.00045896195690109246 t= 0.15039277076721191 exact= L= 0.19088660016866482 W= 0.18247619482872823 sum(c^2)= 0.00045896195690109246
+rdmf_obj_eval= 94 L= 0.18898100361555195 W= 0.18300838836384198 sum(c^2)= 0.0002042889780638799 t= 0.18830275535583496 exact= L= 0.18898100361555195 W= 0.18300838836384198 sum(c^2)= 0.0002042889780638799
+rdmf_obj_eval= 95 L= 0.18870411161930872 W= 0.1850048044054737 sum(c^2)= 0.00015474196611537416 t= 0.1784820556640625 exact= L= 0.18870411161930872 W= 0.1850048044054737 sum(c^2)= 0.00015474196611537416
+rdmf_obj_eval= 96 L= 0.1882138042793655 W= 0.18390057946482846 sum(c^2)= 0.00013387159747963828 t= 0.12539243698120117 exact= L= 0.1882138042793655 W= 0.18390057946482846 sum(c^2)= 0.00013387159747963828
+rdmf_obj_eval= 97 L= 0.18808164518494921 W= 0.1903516273392873 sum(c^2)= 0.00012725513858666778 t= 0.08346700668334961 exact= L= 0.18808164518494921 W= 0.1903516273392873 sum(c^2)= 0.00012725513858666778
+rdmf_obj_eval= 98 L= 0.1879788061568665 W= 0.1885174033558697 sum(c^2)= 0.00012487761341569564 t= 0.19482851028442383 exact= L= 0.1879788061568665 W= 0.1885174033558697 sum(c^2)= 0.00012487761341569564
+rdmf_obj_eval= 99 L= 0.1870238813671548 W= 0.18676030417040632 sum(c^2)= 0.00012695630091379893 t= 0.3149137496948242 exact= L= 0.1870238813671548 W= 0.18676030417040632 sum(c^2)= 0.00012695630091379893
+rdmf_obj_eval= 100 L= 0.18701967367024944 W= 0.1888918058796749 sum(c^2)= 0.0001733862345181591 t= 0.141021728515625 exact= L= 0.18701967367024944 W= 0.1888918058796749 sum(c^2)= 0.0001733862345181591
+rdmf_obj_eval= 101 L= 0.18691262541020898 W= 0.1891530665340507 sum(c^2)= 0.00015930166714494631 t= 0.16266489028930664 exact= L= 0.18691262541020898 W= 0.1891530665340507 sum(c^2)= 0.00015930166714494631
+rdmf_obj_eval= 102 L= 0.18622055620537023 W= 0.1904117590531849 sum(c^2)= 0.0001242333277907915 t= 0.1616346836090088 exact= L= 0.18622055620537023 W= 0.1904117590531849 sum(c^2)= 0.0001242333277907915
+rdmf_obj_eval= 103 L= 0.18611772527772547 W= 0.19143586137312385 sum(c^2)= 0.00013285668447236934 t= 0.12551617622375488 exact= L= 0.18611772527772547 W= 0.19143586137312385 sum(c^2)= 0.00013285668447236934
+rdmf_obj_eval= 104 L= 0.1861870085125489 W= 0.19053780499787512 sum(c^2)= 0.00016051345004259568 t= 0.5201656818389893 exact= L= 0.1861870085125489 W= 0.19053780499787512 sum(c^2)= 0.00016051345004259568
+rdmf_obj_eval= 105 L= 0.18613068043061265 W= 0.19122084351643953 sum(c^2)= 0.00014689982951680283 t= 0.2767007350921631 exact= L= 0.18613068043061265 W= 0.19122084351643953 sum(c^2)= 0.00014689982951680283
+rdmf_obj_eval= 106 L= 0.18623141264604848 W= 0.19134213884614015 sum(c^2)= 0.00013072596247566898 t= 0.22845888137817383 exact= L= 0.18623141264604848 W= 0.19134213884614015 sum(c^2)= 0.00013072596247566898
+rdmf_obj_eval= 107 L= 0.18589385225706181 W= 0.19111483972096527 sum(c^2)= 0.0001306885005409061 t= 0.10989141464233398 exact= L= 0.18589385225706181 W= 0.19111483972096527 sum(c^2)= 0.0001306885005409061
+rdmf_obj_eval= 108 L= 0.18584016093107927 W= 0.19122043041601688 sum(c^2)= 0.00012280266761280915 t= 0.2406902313232422 exact= L= 0.18584016093107927 W= 0.19122043041601688 sum(c^2)= 0.00012280266761280915
+rdmf_obj_eval= 109 L= 0.18587795673093066 W= 0.18824833033718424 sum(c^2)= 0.00019762863321963166 t= 0.15529990196228027 exact= L= 0.18587795673093066 W= 0.18824833033718424 sum(c^2)= 0.00019762863321963166
+rdmf_obj_eval= 110 L= 0.18583246505673337 W= 0.19158167481733152 sum(c^2)= 0.00011641427591172356 t= 0.15527081489562988 exact= L= 0.18583246505673337 W= 0.19158167481733152 sum(c^2)= 0.00011641427591172356
+rdmf_obj_eval= 111 L= 0.18562620522353593 W= 0.19073508901538022 sum(c^2)= 8.878549693750587e-05 t= 0.19022560119628906 exact= L= 0.18562620522353593 W= 0.19073508901538022 sum(c^2)= 8.878549693750587e-05
+rdmf_obj_eval= 112 L= 0.185647620289197 W= 0.19160369289045961 sum(c^2)= 9.613083757678972e-05 t= 0.1758737564086914 exact= L= 0.185647620289197 W= 0.19160369289045961 sum(c^2)= 9.613083757678972e-05
+rdmf_obj_eval= 113 L= 0.18601973150979956 W= 0.1916060608579856 sum(c^2)= 0.00012947713872543334 t= 0.12531781196594238 exact= L= 0.18601973150979956 W= 0.1916060608579856 sum(c^2)= 0.00012947713872543334
+rdmf_obj_eval= 114 L= 0.1872872021306972 W= 0.1934428857821767 sum(c^2)= 0.00038047272571907313 t= 0.20024347305297852 exact= L= 0.1872872021306972 W= 0.1934428857821767 sum(c^2)= 0.00038047272571907313
+rdmf_obj_eval= 115 L= 0.18580457738596237 W= 0.18425038629367582 sum(c^2)= 0.00012573673829145417 t= 0.12476563453674316 exact= L= 0.18580457738596237 W= 0.18425038629367582 sum(c^2)= 0.00012573673829145417
+rdmf_obj_eval= 116 L= 0.18564471375687577 W= 0.1918048052741412 sum(c^2)= 8.891667320559031e-05 t= 0.18784332275390625 exact= L= 0.18564471375687577 W= 0.1918048052741412 sum(c^2)= 8.891667320559031e-05
+rdmf_obj_eval= 117 L= 0.1854962166025474 W= 0.19148558083987782 sum(c^2)= 2.831347205546238e-05 t= 0.30114150047302246 exact= L= 0.1854962166025474 W= 0.19148558083987782 sum(c^2)= 2.831347205546238e-05
+rdmf_obj_eval= 118 L= 0.18555881804996735 W= 0.1916041844436954 sum(c^2)= 3.065393293404777e-05 t= 0.3850722312927246 exact= L= 0.18555881804996735 W= 0.1916041844436954 sum(c^2)= 3.065393293404777e-05
+rdmf_obj_eval= 119 L= 0.18536390581683815 W= 0.18808178888357932 sum(c^2)= 2.9047802305514862e-05 t= 0.19118070602416992 exact= L= 0.18536390581683815 W= 0.18808178888357932 sum(c^2)= 2.9047802305514862e-05
+rdmf_obj_eval= 120 L= 0.1855819905805302 W= 0.18819146774724804 sum(c^2)= 3.319086699313588e-05 t= 0.26616978645324707 exact= L= 0.1855819905805302 W= 0.18819146774724804 sum(c^2)= 3.319086699313588e-05
+rdmf_obj_eval= 121 L= 0.1855176671353916 W= 0.18451679014485825 sum(c^2)= 5.6613964795245995e-05 t= 0.25559091567993164 exact= L= 0.1855176671353916 W= 0.18451679014485825 sum(c^2)= 5.6613964795245995e-05
+rdmf_obj_eval= 122 L= 0.18547777091440093 W= 0.18878159953976034 sum(c^2)= 4.017714476144073e-05 t= 0.18324708938598633 exact= L= 0.18547777091440093 W= 0.18878159953976034 sum(c^2)= 4.017714476144073e-05
+rdmf_obj_eval= 123 L= 0.18553310619074653 W= 0.18604253722473357 sum(c^2)= 2.6089819702317857e-05 t= 0.12865543365478516 exact= L= 0.18553310619074653 W= 0.18604253722473357 sum(c^2)= 2.6089819702317857e-05
+rdmf_obj_eval= 124 L= 0.18588892000925122 W= 0.18950229209329486 sum(c^2)= 4.96945868334273e-05 t= 0.35172176361083984 exact= L= 0.18588892000925122 W= 0.18950229209329486 sum(c^2)= 4.96945868334273e-05
+rdmf_obj_eval= 125 L= 0.1853541138885603 W= 0.18698673131643356 sum(c^2)= 2.930805840239989e-05 t= 0.2503030300140381 exact= L= 0.1853541138885603 W= 0.18698673131643356 sum(c^2)= 2.930805840239989e-05
+rdmf_obj_eval= 126 L= 0.18538492544048374 W= 0.18731721132504134 sum(c^2)= 3.1660023517561886e-05 t= 0.2409522533416748 exact= L= 0.18538492544048374 W= 0.18731721132504134 sum(c^2)= 3.1660023517561886e-05
+rdmf_obj_eval= 127 L= 0.18536754711076978 W= 0.18648427322824548 sum(c^2)= 2.7802546548053982e-05 t= 0.14616966247558594 exact= L= 0.18536754711076978 W= 0.18648427322824548 sum(c^2)= 2.7802546548053982e-05
+rdmf_obj_eval= 128 L= 0.18506299632561043 W= 0.1863358480352604 sum(c^2)= 1.7746984300404803e-05 t= 0.18118882179260254 exact= L= 0.18506299632561043 W= 0.1863358480352604 sum(c^2)= 1.7746984300404803e-05
+rdmf_obj_eval= 129 L= 0.18480157081497892 W= 0.1848645751671454 sum(c^2)= 1.7404741697984637e-05 t= 0.22100090980529785 exact= L= 0.18480157081497892 W= 0.1848645751671454 sum(c^2)= 1.7404741697984637e-05
+rdmf_obj_eval= 130 L= 0.18467217877689016 W= 0.18428881106747386 sum(c^2)= 6.922669066142781e-06 t= 0.27663445472717285 exact= L= 0.18467217877689016 W= 0.18428881106747386 sum(c^2)= 6.922669066142781e-06
+rdmf_obj_eval= 131 L= 0.18525049760271536 W= 0.18692765572756784 sum(c^2)= 0.00010540439889640611 t= 0.19088506698608398 exact= L= 0.18525049760271536 W= 0.18692765572756784 sum(c^2)= 0.00010540439889640611
+rdmf_obj_eval= 132 L= 0.18564257447577437 W= 0.17798121751966833 sum(c^2)= 0.00020006898512574505 t= 0.17263555526733398 exact= L= 0.18564257447577437 W= 0.17798121751966833 sum(c^2)= 0.00020006898512574505
+rdmf_obj_eval= 133 L= 0.18474039510782267 W= 0.18352137564701265 sum(c^2)= 6.24557947005962e-06 t= 0.1288909912109375 exact= L= 0.18474039510782267 W= 0.18352137564701265 sum(c^2)= 6.24557947005962e-06
+rdmf_obj_eval= 134 L= 0.1846823932512534 W= 0.18473969996589698 sum(c^2)= 6.5124521227147735e-06 t= 0.1849963665008545 exact= L= 0.1846823932512534 W= 0.18473969996589698 sum(c^2)= 6.5124521227147735e-06
+rdmf_obj_eval= 135 L= 0.18472495184400253 W= 0.18541559977140992 sum(c^2)= 1.0222030600029202e-05 t= 0.21180367469787598 exact= L= 0.18472495184400253 W= 0.18541559977140992 sum(c^2)= 1.0222030600029202e-05
+rdmf_obj_eval= 136 L= 0.18554313348923412 W= 0.18367285254761462 sum(c^2)= 0.0001699723317702767 t= 0.25795626640319824 exact= L= 0.18554313348923412 W= 0.18367285254761462 sum(c^2)= 0.0001699723317702767
+rdmf_obj_eval= 137 L= 0.18457125685894812 W= 0.18539052219258073 sum(c^2)= 6.371649025090184e-06 t= 0.15239691734313965 exact= L= 0.18457125685894812 W= 0.18539052219258073 sum(c^2)= 6.371649025090184e-06
+rdmf_obj_eval= 138 L= 0.1849691404168914 W= 0.18644268146120196 sum(c^2)= 2.596601471714355e-05 t= 0.20062923431396484 exact= L= 0.1849691404168914 W= 0.18644268146120196 sum(c^2)= 2.596601471714355e-05
+rdmf_obj_eval= 139 L= 0.1846494082304435 W= 0.18735747320895757 sum(c^2)= 1.7319498382688937e-05 t= 0.16894221305847168 exact= L= 0.1846494082304435 W= 0.18735747320895757 sum(c^2)= 1.7319498382688937e-05
+rdmf_obj_eval= 140 L= 0.1846811545434793 W= 0.18450182322398212 sum(c^2)= 3.4793887688929138e-06 t= 0.149705171585083 exact= L= 0.1846811545434793 W= 0.18450182322398212 sum(c^2)= 3.4793887688929138e-06
+rdmf_obj_eval= 141 L= 0.18458879581637594 W= 0.18390578326676374 sum(c^2)= 1.1856941489705592e-06 t= 0.17989563941955566 exact= L= 0.18458879581637594 W= 0.18390578326676374 sum(c^2)= 1.1856941489705592e-06
+rdmf_obj_eval= 142 L= 0.1850052661079153 W= 0.18444364546662428 sum(c^2)= 9.150002227662728e-06 t= 0.15224552154541016 exact= L= 0.1850052661079153 W= 0.18444364546662428 sum(c^2)= 9.150002227662728e-06
+rdmf_obj_eval= 143 L= 0.18453351231593992 W= 0.18600222033549643 sum(c^2)= 7.315548213178272e-06 t= 0.1565096378326416 exact= L= 0.18453351231593992 W= 0.18600222033549643 sum(c^2)= 7.315548213178272e-06
+rdmf_obj_eval= 144 L= 0.18454921511316275 W= 0.18668019047784382 sum(c^2)= 9.493587064838317e-06 t= 0.20335102081298828 exact= L= 0.18454921511316275 W= 0.18668019047784382 sum(c^2)= 9.493587064838317e-06
+rdmf_obj_eval= 145 L= 0.1845755092967668 W= 0.18578824088035997 sum(c^2)= 1.076826824474401e-05 t= 0.17723584175109863 exact= L= 0.1845755092967668 W= 0.18578824088035997 sum(c^2)= 1.076826824474401e-05
+rdmf_obj_eval= 146 L= 0.18463479400406427 W= 0.18840503313400103 sum(c^2)= 1.7431567802698698e-05 t= 0.14109301567077637 exact= L= 0.18463479400406427 W= 0.18840503313400103 sum(c^2)= 1.7431567802698698e-05
+rdmf_obj_eval= 147 L= 0.18457549454809893 W= 0.18648855227668545 sum(c^2)= 5.50714371775561e-06 t= 0.20002293586730957 exact= L= 0.18457549454809893 W= 0.18648855227668545 sum(c^2)= 5.50714371775561e-06
+rdmf_obj_eval= 148 L= 0.18487048025961603 W= 0.1872194175214136 sum(c^2)= 1.1355522628600613e-05 t= 0.16547584533691406 exact= L= 0.18487048025961603 W= 0.1872194175214136 sum(c^2)= 1.1355522628600613e-05
+rdmf_obj_eval= 149 L= 0.18467760825437948 W= 0.18307002076539167 sum(c^2)= 4.236663595436881e-05 t= 0.1655886173248291 exact= L= 0.18467760825437948 W= 0.18307002076539167 sum(c^2)= 4.236663595436881e-05
+rdmf_obj_eval= 150 L= 0.1845340068071003 W= 0.18592805168169646 sum(c^2)= 7.899958758335385e-06 t= 0.15243005752563477 exact= L= 0.1845340068071003 W= 0.18592805168169646 sum(c^2)= 7.899958758335385e-06
+rdmf_obj_eval= 151 L= 0.1845625151401218 W= 0.18492740979356853 sum(c^2)= 2.555471433035893e-05 t= 0.16248226165771484 exact= L= 0.1845625151401218 W= 0.18492740979356853 sum(c^2)= 2.555471433035893e-05
+rdmf_obj_eval= 152 L= 0.1845317420029787 W= 0.18591902945150302 sum(c^2)= 5.3263497496810374e-06 t= 0.38386106491088867 exact= L= 0.1845317420029787 W= 0.18591902945150302 sum(c^2)= 5.3263497496810374e-06
+rdmf_obj_eval= 153 L= 0.18459851309421546 W= 0.18633979513489038 sum(c^2)= 8.420418029977703e-06 t= 0.16184091567993164 exact= L= 0.18459851309421546 W= 0.18633979513489038 sum(c^2)= 8.420418029977703e-06
+rdmf_obj_eval= 154 L= 0.18453217278094985 W= 0.18606663204742216 sum(c^2)= 6.802924687143561e-06 t= 0.23006510734558105 exact= L= 0.18453217278094985 W= 0.18606663204742216 sum(c^2)= 6.802924687143561e-06
+rdmf_obj_eval= 155 L= 0.1846081464289302 W= 0.1849816896024092 sum(c^2)= 1.4725143229425837e-06 t= 0.3031291961669922 exact= L= 0.1846081464289302 W= 0.1849816896024092 sum(c^2)= 1.4725143229425837e-06
+rdmf_obj_eval= 156 L= 0.18459117239625508 W= 0.18681278079149016 sum(c^2)= 1.5233793913605248e-05 t= 0.11726856231689453 exact= L= 0.18459117239625508 W= 0.18681278079149016 sum(c^2)= 1.5233793913605248e-05
+rdmf_obj_eval= 157 L= 0.18449112730810002 W= 0.18556655515889475 sum(c^2)= 9.955051081907179e-07 t= 0.22512340545654297 exact= L= 0.18449112730810002 W= 0.18556655515889475 sum(c^2)= 9.955051081907179e-07
+rdmf_obj_eval= 158 L= 0.18455163745258474 W= 0.18575856490374815 sum(c^2)= 4.6686907508563854e-06 t= 0.20958304405212402 exact= L= 0.18455163745258474 W= 0.18575856490374815 sum(c^2)= 4.6686907508563854e-06
+rdmf_obj_eval= 159 L= 0.18449415591351623 W= 0.18570003400480664 sum(c^2)= 1.125752441582093e-06 t= 0.1794736385345459 exact= L= 0.18449415591351623 W= 0.18570003400480664 sum(c^2)= 1.125752441582093e-06
+rdmf_obj_eval= 160 L= 0.18452552607121825 W= 0.18599474813124178 sum(c^2)= 7.156728805376729e-06 t= 0.19402289390563965 exact= L= 0.18452552607121825 W= 0.18599474813124178 sum(c^2)= 7.156728805376729e-06
+rdmf_obj_eval= 161 L= 0.18449555243050816 W= 0.18568241429802218 sum(c^2)= 3.3034796938502285e-06 t= 0.10469222068786621 exact= L= 0.18449555243050816 W= 0.18568241429802218 sum(c^2)= 3.3034796938502285e-06
+rdmf_obj_eval= 162 L= 0.18455015976696287 W= 0.1838526878133353 sum(c^2)= 1.5468685478781818e-05 t= 0.09423398971557617 exact= L= 0.18455015976696287 W= 0.1838526878133353 sum(c^2)= 1.5468685478781818e-05
+rdmf_obj_eval= 163 L= 0.18449228404126214 W= 0.18513869274198866 sum(c^2)= 1.589573739984008e-06 t= 0.1191563606262207 exact= L= 0.18449228404126214 W= 0.18513869274198866 sum(c^2)= 1.589573739984008e-06
+rdmf_obj_eval= 164 L= 0.18450501103531725 W= 0.1860658302021639 sum(c^2)= 2.0068676470016135e-06 t= 0.1795952320098877 exact= L= 0.18450501103531725 W= 0.1860658302021639 sum(c^2)= 2.0068676470016135e-06
+rdmf_obj_eval= 165 L= 0.18449457699970773 W= 0.18533365952785735 sum(c^2)= 1.2231569016275943e-06 t= 0.3306126594543457 exact= L= 0.18449457699970773 W= 0.18533365952785735 sum(c^2)= 1.2231569016275943e-06
+rdmf_obj_eval= 166 L= 0.18450169924975351 W= 0.18505383084172458 sum(c^2)= 1.137612378818703e-06 t= 0.32543110847473145 exact= L= 0.18450169924975351 W= 0.18505383084172458 sum(c^2)= 1.137612378818703e-06
+rdmf_obj_eval= 167 L= 0.18453200585919113 W= 0.18584407975994172 sum(c^2)= 3.2355240194914597e-06 t= 0.14826345443725586 exact= L= 0.18453200585919113 W= 0.18584407975994172 sum(c^2)= 3.2355240194914597e-06
+rdmf_obj_eval= 168 L= 0.18448233839842249 W= 0.18546715938751976 sum(c^2)= 1.7809868902360404e-06 t= 0.18075084686279297 exact= L= 0.18448233839842249 W= 0.18546715938751976 sum(c^2)= 1.7809868902360404e-06
+rdmf_obj_eval= 169 L= 0.18447641066204432 W= 0.18523835346125544 sum(c^2)= 9.606130529673551e-07 t= 0.1664271354675293 exact= L= 0.18447641066204432 W= 0.18523835346125544 sum(c^2)= 9.606130529673551e-07
+rdmf_obj_eval= 170 L= 0.18449032953139383 W= 0.18484146426097098 sum(c^2)= 1.8924026203318337e-06 t= 0.2819554805755615 exact= L= 0.18449032953139383 W= 0.18484146426097098 sum(c^2)= 1.8924026203318337e-06
+rdmf_obj_eval= 171 L= 0.18449043143326194 W= 0.18524677178162707 sum(c^2)= 1.1308998100909438e-06 t= 0.17308735847473145 exact= L= 0.18449043143326194 W= 0.18524677178162707 sum(c^2)= 1.1308998100909438e-06
+rdmf_obj_eval= 172 L= 0.1844784923168482 W= 0.18598785469500878 sum(c^2)= 5.050807558266932e-06 t= 0.17522501945495605 exact= L= 0.1844784923168482 W= 0.18598785469500878 sum(c^2)= 5.050807558266932e-06
+rdmf_obj_eval= 173 L= 0.1844840824482556 W= 0.18516518459826053 sum(c^2)= 1.2812757939377143e-06 t= 0.2579796314239502 exact= L= 0.1844840824482556 W= 0.18516518459826053 sum(c^2)= 1.2812757939377143e-06
+rdmf_obj_eval= 174 L= 0.1844966350544146 W= 0.18542762654745557 sum(c^2)= 1.0215083528468556e-06 t= 0.36286354064941406 exact= L= 0.1844966350544146 W= 0.18542762654745557 sum(c^2)= 1.0215083528468556e-06
+rdmf_obj_eval= 175 L= 0.18447349860975434 W= 0.18538013540458473 sum(c^2)= 9.18693412342661e-07 t= 0.18562078475952148 exact= L= 0.18447349860975434 W= 0.18538013540458473 sum(c^2)= 9.18693412342661e-07
+rdmf_obj_eval= 176 L= 0.18445363119135383 W= 0.18511777132624652 sum(c^2)= 5.580785830742779e-07 t= 0.19362449645996094 exact= L= 0.18445363119135383 W= 0.18511777132624652 sum(c^2)= 5.580785830742779e-07
+rdmf_obj_eval= 177 L= 0.18443836961950338 W= 0.1833698200296977 sum(c^2)= 3.7414365746028255e-06 t= 0.1437976360321045 exact= L= 0.18443836961950338 W= 0.1833698200296977 sum(c^2)= 3.7414365746028255e-06
+rdmf_obj_eval= 178 L= 0.18444973237312057 W= 0.18313868175594072 sum(c^2)= 5.171098766923499e-06 t= 0.2681424617767334 exact= L= 0.18444973237312057 W= 0.18313868175594072 sum(c^2)= 5.171098766923499e-06
+rdmf_obj_eval= 179 L= 0.18444583282295435 W= 0.18364303580653302 sum(c^2)= 4.104083700504479e-06 t= 0.1694648265838623 exact= L= 0.18444583282295435 W= 0.18364303580653302 sum(c^2)= 4.104083700504479e-06
+rdmf_obj_eval= 180 L= 0.18443422068399506 W= 0.18360710343873987 sum(c^2)= 3.882135460260702e-06 t= 0.15782713890075684 exact= L= 0.18443422068399506 W= 0.18360710343873987 sum(c^2)= 3.882135460260702e-06
+rdmf_obj_eval= 181 L= 0.18445743234806186 W= 0.1835261904906398 sum(c^2)= 9.287769723901375e-06 t= 0.17808842658996582 exact= L= 0.18445743234806186 W= 0.1835261904906398 sum(c^2)= 9.287769723901375e-06
+rdmf_obj_eval= 182 L= 0.18443839152586414 W= 0.18337480277176876 sum(c^2)= 2.029134523908934e-06 t= 0.12448668479919434 exact= L= 0.18443839152586414 W= 0.18337480277176876 sum(c^2)= 2.029134523908934e-06
+rdmf_obj_eval= 183 L= 0.18443089552083328 W= 0.1835897495815027 sum(c^2)= 4.6414482526320715e-06 t= 0.14289116859436035 exact= L= 0.18443089552083328 W= 0.1835897495815027 sum(c^2)= 4.6414482526320715e-06
+rdmf_obj_eval= 184 L= 0.184427115271233 W= 0.1836111669118761 sum(c^2)= 4.610770804572327e-06 t= 0.24281907081604004 exact= L= 0.184427115271233 W= 0.1836111669118761 sum(c^2)= 4.610770804572327e-06
+rdmf_obj_eval= 185 L= 0.18443531378104625 W= 0.1830678384877619 sum(c^2)= 5.209532989368449e-06 t= 0.1924607753753662 exact= L= 0.18443531378104625 W= 0.1830678384877619 sum(c^2)= 5.209532989368449e-06
+rdmf_obj_eval= 186 L= 0.18442102019490123 W= 0.18399956876105647 sum(c^2)= 3.3613071127260655e-06 t= 0.19636869430541992 exact= L= 0.18442102019490123 W= 0.18399956876105647 sum(c^2)= 3.3613071127260655e-06
+rdmf_obj_eval= 187 L= 0.18441789101075276 W= 0.18408564967958307 sum(c^2)= 2.9163268739202995e-06 t= 0.19443774223327637 exact= L= 0.18441789101075276 W= 0.18408564967958307 sum(c^2)= 2.9163268739202995e-06
+rdmf_obj_eval= 188 L= 0.1843998781041005 W= 0.1844639315730414 sum(c^2)= 6.763577218008026e-07 t= 0.12856793403625488 exact= L= 0.1843998781041005 W= 0.1844639315730414 sum(c^2)= 6.763577218008026e-07
+rdmf_obj_eval= 189 L= 0.18441919749772973 W= 0.18461419190406342 sum(c^2)= 2.8018179402086008e-06 t= 0.17834782600402832 exact= L= 0.18441919749772973 W= 0.18461419190406342 sum(c^2)= 2.8018179402086008e-06
+rdmf_obj_eval= 190 L= 0.18440667062991456 W= 0.1842384847464109 sum(c^2)= 1.0872827105983618e-06 t= 0.17496156692504883 exact= L= 0.18440667062991456 W= 0.1842384847464109 sum(c^2)= 1.0872827105983618e-06
+rdmf_obj_eval= 191 L= 0.18440044361451557 W= 0.1846313920574271 sum(c^2)= 1.9933759361708268e-07 t= 0.27738070487976074 exact= L= 0.18440044361451557 W= 0.1846313920574271 sum(c^2)= 1.9933759361708268e-07
+rdmf_obj_eval= 192 L= 0.18441432143386374 W= 0.18429050676520417 sum(c^2)= 3.061878500375039e-06 t= 0.30268335342407227 exact= L= 0.18441432143386374 W= 0.18429050676520417 sum(c^2)= 3.061878500375039e-06
+rdmf_obj_eval= 193 L= 0.18440457994501697 W= 0.18476262220822776 sum(c^2)= 1.3428657789941436e-07 t= 0.29564404487609863 exact= L= 0.18440457994501697 W= 0.18476262220822776 sum(c^2)= 1.3428657789941436e-07
+rdmf_obj_eval= 194 L= 0.1844130793164658 W= 0.18534095743813928 sum(c^2)= 1.776166580202313e-06 t= 0.2887904644012451 exact= L= 0.1844130793164658 W= 0.18534095743813928 sum(c^2)= 1.776166580202313e-06
+rdmf_obj_eval= 195 L= 0.18444303145020766 W= 0.18518293824996454 sum(c^2)= 5.651588242890178e-06 t= 0.16550636291503906 exact= L= 0.18444303145020766 W= 0.18518293824996454 sum(c^2)= 5.651588242890178e-06
+rdmf_obj_eval= 196 L= 0.18440904493751129 W= 0.18457202908492581 sum(c^2)= 2.952997494520577e-06 t= 0.46455979347229004 exact= L= 0.18440904493751129 W= 0.18457202908492581 sum(c^2)= 2.952997494520577e-06
+rdmf_obj_eval= 197 L= 0.18439972960754641 W= 0.1845461963384082 sum(c^2)= 1.0236986543657997e-06 t= 0.23456358909606934 exact= L= 0.18439972960754641 W= 0.1845461963384082 sum(c^2)= 1.0236986543657997e-06
+rdmf_obj_eval= 198 L= 0.1843987200925173 W= 0.18433646276882776 sum(c^2)= 2.319218892067679e-06 t= 0.28524327278137207 exact= L= 0.1843987200925173 W= 0.18433646276882776 sum(c^2)= 2.319218892067679e-06
+rdmf_obj_eval= 199 L= 0.184400167455631 W= 0.18431627643045545 sum(c^2)= 2.9463076668263252e-06 t= 0.3481631278991699 exact= L= 0.184400167455631 W= 0.18431627643045545 sum(c^2)= 2.9463076668263252e-06
+rdmf_obj_eval= 200 L= 0.18439349099394645 W= 0.18404829440440446 sum(c^2)= 1.7421219648090538e-06 t= 0.28138303756713867 exact= L= 0.18439349099394645 W= 0.18404829440440446 sum(c^2)= 1.7421219648090538e-06
+rdmf_obj_eval= 201 L= 0.18439327158674204 W= 0.18401886229994405 sum(c^2)= 1.5116609954652355e-06 t= 0.27298951148986816 exact= L= 0.18439327158674204 W= 0.18401886229994405 sum(c^2)= 1.5116609954652355e-06
+rdmf_obj_eval= 202 L= 0.1843993180673581 W= 0.1839155267632874 sum(c^2)= 1.4725715327879936e-06 t= 0.375399112701416 exact= L= 0.1843993180673581 W= 0.1839155267632874 sum(c^2)= 1.4725715327879936e-06
+rdmf_obj_eval= 203 L= 0.18439879044514804 W= 0.18399119622314036 sum(c^2)= 1.8441240529674919e-06 t= 0.17418384552001953 exact= L= 0.18439879044514804 W= 0.18399119622314036 sum(c^2)= 1.8441240529674919e-06
+rdmf_obj_eval= 204 L= 0.18440380127269712 W= 0.18360077616087928 sum(c^2)= 3.0081044465578808e-06 t= 0.25119781494140625 exact= L= 0.18440380127269712 W= 0.18360077616087928 sum(c^2)= 3.0081044465578808e-06
+rdmf_obj_eval= 205 L= 0.1843901799001681 W= 0.18411820335502396 sum(c^2)= 8.509205979548817e-07 t= 0.32671117782592773 exact= L= 0.1843901799001681 W= 0.18411820335502396 sum(c^2)= 8.509205979548817e-07
+rdmf_obj_eval= 206 L= 0.18438749556864217 W= 0.18437888234619565 sum(c^2)= 7.169593953276493e-08 t= 0.2346053123474121 exact= L= 0.18438749556864217 W= 0.18437888234619565 sum(c^2)= 7.169593953276493e-08
+rdmf_obj_eval= 207 L= 0.18438793225575917 W= 0.1843822908957742 sum(c^2)= 5.377196912746302e-08 t= 0.16472840309143066 exact= L= 0.18438793225575917 W= 0.1843822908957742 sum(c^2)= 5.377196912746302e-08
+rdmf_obj_eval= 208 L= 0.18439384026763478 W= 0.18440862182197185 sum(c^2)= 1.06980178100815e-06 t= 0.40766167640686035 exact= L= 0.18439384026763478 W= 0.18440862182197185 sum(c^2)= 1.06980178100815e-06
+rdmf_obj_eval= 209 L= 0.18439121898739358 W= 0.18432825463658864 sum(c^2)= 2.3735750885018697e-07 t= 0.1996161937713623 exact= L= 0.18439121898739358 W= 0.18432825463658864 sum(c^2)= 2.3735750885018697e-07
+rdmf_obj_eval= 210 L= 0.1844007694017531 W= 0.1839380527221049 sum(c^2)= 2.375781277798561e-06 t= 0.196397066116333 exact= L= 0.1844007694017531 W= 0.1839380527221049 sum(c^2)= 2.375781277798561e-06
+rdmf_obj_eval= 211 L= 0.184393835083534 W= 0.18458528984492933 sum(c^2)= 2.2543157433733592e-07 t= 0.2517073154449463 exact= L= 0.184393835083534 W= 0.18458528984492933 sum(c^2)= 2.2543157433733592e-07
+rdmf_obj_eval= 212 L= 0.18440851781826992 W= 0.18514734546447315 sum(c^2)= 5.1960272242922894e-06 t= 0.19858527183532715 exact= L= 0.18440851781826992 W= 0.18514734546447315 sum(c^2)= 5.1960272242922894e-06
+rdmf_obj_eval= 213 L= 0.18438777450368088 W= 0.18429497125363845 sum(c^2)= 1.222151575453356e-07 t= 0.23525595664978027 exact= L= 0.18438777450368088 W= 0.18429497125363845 sum(c^2)= 1.222151575453356e-07
+rdmf_obj_eval= 214 L= 0.18439592965017496 W= 0.184117313601723 sum(c^2)= 2.4186406909628474e-07 t= 0.33167290687561035 exact= L= 0.18439592965017496 W= 0.184117313601723 sum(c^2)= 2.4186406909628474e-07
+rdmf_obj_eval= 215 L= 0.1843851049808574 W= 0.18434830513885667 sum(c^2)= 7.344446978116025e-08 t= 0.42972373962402344 exact= L= 0.1843851049808574 W= 0.18434830513885667 sum(c^2)= 7.344446978116025e-08
+rdmf_obj_eval= 216 L= 0.18438448208654287 W= 0.18439084717836896 sum(c^2)= 5.888857084298038e-08 t= 0.14617395401000977 exact= L= 0.18438448208654287 W= 0.18439084717836896 sum(c^2)= 5.888857084298038e-08
+rdmf_obj_eval= 217 L= 0.18438183277820935 W= 0.18440125783175998 sum(c^2)= 2.3316216098999692e-07 t= 0.23170995712280273 exact= L= 0.18438183277820935 W= 0.18440125783175998 sum(c^2)= 2.3316216098999692e-07
+rdmf_obj_eval= 218 L= 0.18438249097233586 W= 0.18452548680527395 sum(c^2)= 1.2894328756403874e-07 t= 0.212263822555542 exact= L= 0.18438249097233586 W= 0.18452548680527395 sum(c^2)= 1.2894328756403874e-07
+rdmf_obj_eval= 219 L= 0.1843817375622607 W= 0.18425163345649564 sum(c^2)= 2.55089051759004e-07 t= 0.40221667289733887 exact= L= 0.1843817375622607 W= 0.18425163345649564 sum(c^2)= 2.55089051759004e-07
+rdmf_obj_eval= 220 L= 0.18438175080574173 W= 0.18423649659309826 sum(c^2)= 2.3005251735755299e-07 t= 0.20622873306274414 exact= L= 0.18438175080574173 W= 0.18423649659309826 sum(c^2)= 2.3005251735755299e-07
+rdmf_obj_eval= 221 L= 0.18438320405895536 W= 0.18409747419956868 sum(c^2)= 3.4044208979994035e-07 t= 0.21451950073242188 exact= L= 0.18438320405895536 W= 0.18409747419956868 sum(c^2)= 3.4044208979994035e-07
+rdmf_obj_eval= 222 L= 0.18438220491893323 W= 0.18418470773871692 sum(c^2)= 4.651391766172508e-07 t= 0.22974944114685059 exact= L= 0.18438220491893323 W= 0.18418470773871692 sum(c^2)= 4.651391766172508e-07
+rdmf_obj_eval= 223 L= 0.1843768575809864 W= 0.18455362456134278 sum(c^2)= 2.2475245892305388e-07 t= 0.15833544731140137 exact= L= 0.1843768575809864 W= 0.18455362456134278 sum(c^2)= 2.2475245892305388e-07
+rdmf_obj_eval= 224 L= 0.18437237144745763 W= 0.1844639849033731 sum(c^2)= 1.3054738295522324e-07 t= 0.12461638450622559 exact= L= 0.18437237144745763 W= 0.1844639849033731 sum(c^2)= 1.3054738295522324e-07
+rdmf_obj_eval= 225 L= 0.18437390087576155 W= 0.18441158322197274 sum(c^2)= 7.443965743487076e-07 t= 0.24334096908569336 exact= L= 0.18437390087576155 W= 0.18441158322197274 sum(c^2)= 7.443965743487076e-07
+rdmf_obj_eval= 226 L= 0.18437394938889315 W= 0.18452631367981415 sum(c^2)= 3.410388990211763e-07 t= 0.3034183979034424 exact= L= 0.18437394938889315 W= 0.18452631367981415 sum(c^2)= 3.410388990211763e-07
+rdmf_obj_eval= 227 L= 0.18436975677105577 W= 0.18444570361477453 sum(c^2)= 5.397289997565735e-08 t= 0.2055363655090332 exact= L= 0.18436975677105577 W= 0.18444570361477453 sum(c^2)= 5.397289997565735e-08
+rdmf_obj_eval= 228 L= 0.18436877364516924 W= 0.18467248140249376 sum(c^2)= 5.729549328392707e-08 t= 0.20142054557800293 exact= L= 0.18436877364516924 W= 0.18467248140249376 sum(c^2)= 5.729549328392707e-08
+rdmf_obj_eval= 229 L= 0.18436877799855436 W= 0.18466776326916703 sum(c^2)= 6.440607324753994e-08 t= 0.11681723594665527 exact= L= 0.18436877799855436 W= 0.18466776326916703 sum(c^2)= 6.440607324753994e-08
+rdmf_obj_eval= 230 L= 0.18436796017022025 W= 0.1846398322716763 sum(c^2)= 7.711915489889498e-08 t= 0.1536262035369873 exact= L= 0.18436796017022025 W= 0.1846398322716763 sum(c^2)= 7.711915489889498e-08
+rdmf_obj_eval= 231 L= 0.18436800435423886 W= 0.1846833076995204 sum(c^2)= 9.185566911101651e-08 t= 0.2902712821960449 exact= L= 0.18436800435423886 W= 0.1846833076995204 sum(c^2)= 9.185566911101651e-08
+rdmf_obj_eval= 232 L= 0.1843692096418003 W= 0.1846711614872878 sum(c^2)= 2.0153721839739314e-07 t= 0.22777223587036133 exact= L= 0.1843692096418003 W= 0.1846711614872878 sum(c^2)= 2.0153721839739314e-07
+rdmf_obj_eval= 233 L= 0.18436830586821087 W= 0.1846034152252311 sum(c^2)= 9.264220437135017e-08 t= 0.23142766952514648 exact= L= 0.18436830586821087 W= 0.1846034152252311 sum(c^2)= 9.264220437135017e-08
+rdmf_obj_eval= 234 L= 0.18436915385748612 W= 0.18460802671534474 sum(c^2)= 3.421841935037429e-07 t= 0.1884920597076416 exact= L= 0.18436915385748612 W= 0.18460802671534474 sum(c^2)= 3.421841935037429e-07
+rdmf_obj_eval= 235 L= 0.184367147280313 W= 0.18450008761475029 sum(c^2)= 3.257646564821611e-08 t= 0.17123913764953613 exact= L= 0.184367147280313 W= 0.18450008761475029 sum(c^2)= 3.257646564821611e-08
+rdmf_obj_eval= 236 L= 0.18436851387910996 W= 0.18456216169043904 sum(c^2)= 4.597409427045631e-08 t= 0.17373919486999512 exact= L= 0.18436851387910996 W= 0.18456216169043904 sum(c^2)= 4.597409427045631e-08
+rdmf_obj_eval= 237 L= 0.1843667197435245 W= 0.18441889516348575 sum(c^2)= 1.7200002213010343e-08 t= 0.21897172927856445 exact= L= 0.1843667197435245 W= 0.18441889516348575 sum(c^2)= 1.7200002213010343e-08
+rdmf_obj_eval= 238 L= 0.184367655308886 W= 0.18430368025522773 sum(c^2)= 1.854576082485131e-07 t= 0.2013106346130371 exact= L= 0.184367655308886 W= 0.18430368025522773 sum(c^2)= 1.854576082485131e-07
+rdmf_obj_eval= 239 L= 0.18436650071089183 W= 0.18443323029934552 sum(c^2)= 2.135872368262846e-08 t= 0.2024681568145752 exact= L= 0.18436650071089183 W= 0.18443323029934552 sum(c^2)= 2.135872368262846e-08
+rdmf_obj_eval= 240 L= 0.18437578788698736 W= 0.1840389856538735 sum(c^2)= 1.7975587831542358e-06 t= 0.2292470932006836 exact= L= 0.18437578788698736 W= 0.1840389856538735 sum(c^2)= 1.7975587831542358e-06
+rdmf_obj_eval= 241 L= 0.18436813508204047 W= 0.18446824000745898 sum(c^2)= 1.2285238108264275e-07 t= 0.17804360389709473 exact= L= 0.18436813508204047 W= 0.18446824000745898 sum(c^2)= 1.2285238108264275e-07
+rdmf_obj_eval= 242 L= 0.1843688091997372 W= 0.1846442905383639 sum(c^2)= 4.35330646943213e-07 t= 0.21176862716674805 exact= L= 0.1843688091997372 W= 0.1846442905383639 sum(c^2)= 4.35330646943213e-07
+rdmf_obj_eval= 243 L= 0.18436663648771687 W= 0.18446874516663617 sum(c^2)= 8.535524905591251e-08 t= 0.1633446216583252 exact= L= 0.18436663648771687 W= 0.18446874516663617 sum(c^2)= 8.535524905591251e-08
+rdmf_obj_eval= 244 L= 0.1843677382854914 W= 0.18463735646327614 sum(c^2)= 2.9308319785264034e-07 t= 0.19733095169067383 exact= L= 0.1843677382854914 W= 0.18463735646327614 sum(c^2)= 2.9308319785264034e-07
+rdmf_obj_eval= 245 L= 0.1843669960539924 W= 0.1843185377954484 sum(c^2)= 2.1427364644439882e-08 t= 0.21657228469848633 exact= L= 0.1843669960539924 W= 0.1843185377954484 sum(c^2)= 2.1427364644439882e-08
+rdmf_obj_eval= 246 L= 0.18436650909155938 W= 0.184435706060301 sum(c^2)= 1.5320245738962994e-08 t= 0.17955541610717773 exact= L= 0.18436650909155938 W= 0.184435706060301 sum(c^2)= 1.5320245738962994e-08
+rdmf_obj_eval= 247 L= 0.18436662694862097 W= 0.18445315652472058 sum(c^2)= 1.0934322941813096e-08 t= 0.12868881225585938 exact= L= 0.18436662694862097 W= 0.18445315652472058 sum(c^2)= 1.0934322941813096e-08
+rdmf_obj_eval= 248 L= 0.1843668153206814 W= 0.184444771789052 sum(c^2)= 4.752624792321997e-08 t= 0.3446493148803711 exact= L= 0.1843668153206814 W= 0.184444771789052 sum(c^2)= 4.752624792321997e-08
+rdmf_obj_eval= 249 L= 0.18436652796192543 W= 0.1844328304254898 sum(c^2)= 9.432180938716957e-09 t= 0.20046615600585938 exact= L= 0.18436652796192543 W= 0.1844328304254898 sum(c^2)= 9.432180938716957e-09
+rdmf_obj_eval= 250 L= 0.1843666804485252 W= 0.1844664970279471 sum(c^2)= 1.650438601599325e-08 t= 0.1415088176727295 exact= L= 0.1843666804485252 W= 0.1844664970279471 sum(c^2)= 1.650438601599325e-08
+rdmf_obj_eval= 251 L= 0.18436668930586125 W= 0.18443598859433938 sum(c^2)= 1.0329070327704526e-08 t= 0.25389814376831055 exact= L= 0.18436668930586125 W= 0.18443598859433938 sum(c^2)= 1.0329070327704526e-08
+point= [ 2.56444227  3.40689832  1.5684462   5.9089109   2.57432068 -1.5711503
+ -0.62658914 -1.39132961 -0.90555289  0.85861477 -0.29563907 -3.14166545
+  1.57062457  1.56697468  0.29532274  1.57328373]
+value= 0.18436668930586125
+nfev= 251
+stddev W= 0.005001252881673542
+stddev c[ 0 ]= 0.003997103797442424
+stddev c[ 1 ]= 0.005668552854951892
+stddev c[ 2 ]= 0.0006609011177889112
+stddev c[ 3 ]= 0.0028066132542634353
+stddev c[ 4 ]= 1.5737397049132002e-09
+stddev c[ 5 ]= 0.0033480669898811625
+stddev c[ 6 ]= 0.002701245597103766
+stddev c[ 7 ]= 0.0039052962092398415
+stddev c[ 8 ]= 0.0032389213768318713
+stddev c[ 9 ]= 0.0026570989538124987
+stddev c[ 10 ]= 0.0023058135480891278
+stddev c[ 11 ]= 8.304094300665627e-10
+stddev c[ 12 ]= 0.006898150618647331
+stddev c[ 13 ]= 0.0025921100083976596
+stddev c[ 14 ]= 0.0023332635063564628
+stddev c[ 15 ]= 0.003918159066570203
+rdmf_obj_eval= 252 L= 0.18436668930586125 W= 0.18443598859433938 sum(c^2)= 1.0329070327704526e-08 t= 0.19535040855407715 exact= L= 0.18436668930586125 W= 0.18443598859433938 sum(c^2)= 1.0329070327704526e-08
+W= 0.18443598859433938 W_noise= 0.191009521484375
+constraint violation sum(c^2)= 1.0329070327704526e-08
+Augmented Lagrangian: penalty and multiplier update
+constraint 0 0 0 real viol= -3.6399682874221906e-05 viol_noise= -0.01828002929723979 lagrange= -0.14925993722820496 penalty= 15.0
+constraint 1 0 1 real viol= -2.2216423558324924e-05 viol_noise= 0.0101318359375 lagrange= -0.00022216423558324923 penalty= 15.0
+constraint 2 0 1 imag viol= -3.4976065085624056e-05 viol_noise= 0.013275146484375 lagrange= -0.00034976065085624055 penalty= 15.0
+constraint 3 0 2 real viol= -4.451170419689232e-05 viol_noise= 0.0946785503425631 lagrange= 0.9183586456336439 penalty= 15.0
+constraint 4 0 2 imag viol= 4.236354878006665e-10 viol_noise= 1.8677961885482652e-09 lagrange= 4.236354878006665e-09 penalty= 15.0
+constraint 5 0 3 real viol= -9.473224884762473e-07 viol_noise= 0.002796064108542579 lagrange= -9.473230435877596e-06 penalty= 15.0
+constraint 6 0 3 imag viol= 6.039123903814076e-07 viol_noise= 0.0005617540115203094 lagrange= 6.039123903814076e-06 penalty= 15.0
+constraint 7 1 1 real viol= 9.54422096699492e-06 viol_noise= 0.00036621093705779817 lagrange= -0.14880032085664463 penalty= 15.0
+constraint 8 1 2 real viol= -9.460273810505391e-07 viol_noise= 0.0023587975677153202 lagrange= -9.460268259390268e-06 penalty= 15.0
+constraint 9 1 2 imag viol= -6.055820935811662e-07 viol_noise= -0.0010301560008737938 lagrange= -6.055820935811662e-06 penalty= 15.0
+constraint 10 1 3 real viol= -4.559239329526843e-05 viol_noise= 0.0701976761637585 lagrange= 0.9183482063569325 penalty= 15.0
+constraint 11 1 3 imag viol= 3.437765017100247e-09 viol_noise= 3.35814840518589e-09 lagrange= 3.437765017100247e-08 penalty= 15.0
+constraint 12 2 2 real viol= 3.6413097034226904e-05 viol_noise= -0.016960960383620383 lagrange= 0.3514681905658284 penalty= 15.0
+constraint 13 2 3 real viol= 2.22164344426871e-05 viol_noise= 0.010045652472238755 lagrange= 0.00022216436385577392 penalty= 15.0
+constraint 14 2 3 imag viol= 3.4976281380950046e-05 viol_noise= -0.009797216140810376 lagrange= 0.00034976281380950046 penalty= 15.0
+constraint 15 3 3 real viol= -9.531045338129207e-06 viol_noise= 0.009240013118793522 lagrange= 0.3510089264891308 penalty= 15.0
+Augmented Lagrangian: unconstrained subproblem
+minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS
+rdmf_obj_eval= 253 L= 0.18436681841924052 W= 0.18443598859433938 sum(c^2)= 1.0329070357734302e-08 t= 0.194122314453125 exact= L= 0.18436681841924052 W= 0.18443598859433938 sum(c^2)= 1.0329070357734302e-08
+rdmf_obj_eval= 254 L= 0.1843668184192405 W= 0.1844359885943394 sum(c^2)= 1.0329070355714286e-08 t= 0.219590425491333 exact= L= 0.1843668184192405 W= 0.1844359885943394 sum(c^2)= 1.0329070355714286e-08
+rdmf_obj_eval= 255 L= 0.18436681841290867 W= 0.1844359861820016 sum(c^2)= 1.0328834101408304e-08 t= 0.16277384757995605 exact= L= 0.18436681841290867 W= 0.1844359861820016 sum(c^2)= 1.0328834101408304e-08
+rdmf_obj_eval= 256 L= 0.18436681841404812 W= 0.18443598859433935 sum(c^2)= 1.0329070855897792e-08 t= 0.13529086112976074 exact= L= 0.18436681841404812 W= 0.18443598859433935 sum(c^2)= 1.0329070855897792e-08
+rdmf_obj_eval= 257 L= 0.1843668184192405 W= 0.1844359885943394 sum(c^2)= 1.032907036345872e-08 t= 0.2779245376586914 exact= L= 0.1843668184192405 W= 0.1844359885943394 sum(c^2)= 1.032907036345872e-08
+rdmf_obj_eval= 258 L= 0.1843668184192404 W= 0.18443598859433943 sum(c^2)= 1.0329070357657712e-08 t= 0.18738174438476562 exact= L= 0.1843668184192404 W= 0.18443598859433943 sum(c^2)= 1.0329070357657712e-08
+rdmf_obj_eval= 259 L= 0.184366818416107 W= 0.18443598859433932 sum(c^2)= 1.0329070670850331e-08 t= 0.22716951370239258 exact= L= 0.184366818416107 W= 0.18443598859433932 sum(c^2)= 1.0329070670850331e-08
+rdmf_obj_eval= 260 L= 0.1843668184192404 W= 0.1844359885943394 sum(c^2)= 1.0329070360402542e-08 t= 0.3027167320251465 exact= L= 0.1843668184192404 W= 0.1844359885943394 sum(c^2)= 1.0329070360402542e-08
+rdmf_obj_eval= 261 L= 0.1843668184192404 W= 0.1844359885943394 sum(c^2)= 1.0329070368638951e-08 t= 0.26413846015930176 exact= L= 0.1843668184192404 W= 0.1844359885943394 sum(c^2)= 1.0329070368638951e-08
+rdmf_obj_eval= 262 L= 0.18436681841924027 W= 0.18443598859433935 sum(c^2)= 1.0329070356258536e-08 t= 0.2119293212890625 exact= L= 0.18436681841924027 W= 0.18443598859433935 sum(c^2)= 1.0329070356258536e-08
+rdmf_obj_eval= 263 L= 0.1843668184192404 W= 0.1844359885943394 sum(c^2)= 1.0329070368638951e-08 t= 0.3005528450012207 exact= L= 0.1843668184192404 W= 0.1844359885943394 sum(c^2)= 1.0329070368638951e-08
+rdmf_obj_eval= 264 L= 0.18436681841824873 W= 0.1844359885943394 sum(c^2)= 1.0329070397554972e-08 t= 0.17135834693908691 exact= L= 0.18436681841824873 W= 0.1844359885943394 sum(c^2)= 1.0329070397554972e-08
+rdmf_obj_eval= 265 L= 0.1843668184091736 W= 0.1844359904388047 sum(c^2)= 1.03282923039044e-08 t= 0.14189553260803223 exact= L= 0.1843668184091736 W= 0.1844359904388047 sum(c^2)= 1.03282923039044e-08
+rdmf_obj_eval= 266 L= 0.18436681841283534 W= 0.18443598859422675 sum(c^2)= 1.0328670542012002e-08 t= 0.13143253326416016 exact= L= 0.18436681841283534 W= 0.18443598859422675 sum(c^2)= 1.0328670542012002e-08
+rdmf_obj_eval= 267 L= 0.18436681840828037 W= 0.18443598859183366 sum(c^2)= 1.03290711682177e-08 t= 0.15131044387817383 exact= L= 0.18436681840828037 W= 0.18443598859183366 sum(c^2)= 1.03290711682177e-08
+rdmf_obj_eval= 268 L= 0.1843668184182488 W= 0.18443598859433946 sum(c^2)= 1.0329070401446665e-08 t= 0.2997283935546875 exact= L= 0.1843668184182488 W= 0.18443598859433946 sum(c^2)= 1.0329070401446665e-08
+rdmf_obj_eval= 269 L= 0.18436681842473687 W= 0.18443598859433974 sum(c^2)= 1.0329069808867805e-08 t= 0.28604793548583984 exact= L= 0.18436681842473687 W= 0.18443598859433974 sum(c^2)= 1.0329069808867805e-08
+rdmf_obj_eval= 270 L= 1.6731777520031923 W= 0.1669242984973962 sum(c^2)= 0.17392216332258875 t= 0.160797119140625 exact= L= 1.6731777520031923 W= 0.1669242984973962 sum(c^2)= 0.17392216332258875
+rdmf_obj_eval= 271 L= 1.6731777520031919 W= 0.16692429849739618 sum(c^2)= 0.17392216342240785 t= 0.08877229690551758 exact= L= 1.6731777520031919 W= 0.16692429849739618 sum(c^2)= 0.17392216342240785
+rdmf_obj_eval= 272 L= 1.6731777710912152 W= 0.16692429585028362 sum(c^2)= 0.17392216558661613 t= 0.09265732765197754 exact= L= 1.6731777710912152 W= 0.16692429585028362 sum(c^2)= 0.17392216558661613
+rdmf_obj_eval= 273 L= 1.6731777536876085 W= 0.16692429849739618 sum(c^2)= 0.17392216358386464 t= 0.14943146705627441 exact= L= 1.6731777536876085 W= 0.16692429849739618 sum(c^2)= 0.17392216358386464
+rdmf_obj_eval= 274 L= 1.6731777520031936 W= 0.16692429849739618 sum(c^2)= 0.1739221633935033 t= 0.20665574073791504 exact= L= 1.6731777520031936 W= 0.16692429849739618 sum(c^2)= 0.1739221633935033
+rdmf_obj_eval= 275 L= 1.6731777520027853 W= 0.16692429849739615 sum(c^2)= 0.17392216327640064 t= 0.07182550430297852 exact= L= 1.6731777520027853 W= 0.16692429849739615 sum(c^2)= 0.17392216327640064
+rdmf_obj_eval= 276 L= 1.6731777560089365 W= 0.16692429849739612 sum(c^2)= 0.1739221638387356 t= 0.16704010963439941 exact= L= 1.6731777560089365 W= 0.16692429849739612 sum(c^2)= 0.1739221638387356
+rdmf_obj_eval= 277 L= 1.6731777520031916 W= 0.16692429849739618 sum(c^2)= 0.17392216334723484 t= 0.1838221549987793 exact= L= 1.6731777520031916 W= 0.16692429849739618 sum(c^2)= 0.17392216334723484
+rdmf_obj_eval= 278 L= 1.673177752003192 W= 0.16692429849739618 sum(c^2)= 0.1739221633718294 t= 0.08279156684875488 exact= L= 1.673177752003192 W= 0.16692429849739618 sum(c^2)= 0.1739221633718294
+rdmf_obj_eval= 279 L= 1.6731777520031927 W= 0.16692429849739626 sum(c^2)= 0.1739221633684304 t= 0.08172249794006348 exact= L= 1.6731777520031927 W= 0.16692429849739626 sum(c^2)= 0.1739221633684304
+rdmf_obj_eval= 280 L= 1.673177752003192 W= 0.16692429849739618 sum(c^2)= 0.1739221633718294 t= 0.08144736289978027 exact= L= 1.673177752003192 W= 0.16692429849739618 sum(c^2)= 0.1739221633718294
+rdmf_obj_eval= 281 L= 1.6731777510900605 W= 0.16692429849739623 sum(c^2)= 0.17392216316986842 t= 0.10124707221984863 exact= L= 1.6731777510900605 W= 0.16692429849739623 sum(c^2)= 0.17392216316986842
+rdmf_obj_eval= 282 L= 1.6731777905766274 W= 0.16692429899477487 sum(c^2)= 0.17392216830748602 t= 0.18417882919311523 exact= L= 1.6731777905766274 W= 0.16692429899477487 sum(c^2)= 0.17392216830748602
+rdmf_obj_eval= 283 L= 1.6731777540362367 W= 0.16692429855284088 sum(c^2)= 0.17392216345244213 t= 0.0840916633605957 exact= L= 1.6731777540362367 W= 0.16692429855284088 sum(c^2)= 0.17392216345244213
+rdmf_obj_eval= 284 L= 1.673177751862659 W= 0.1669242985992563 sum(c^2)= 0.1739221633069188 t= 0.08228659629821777 exact= L= 1.673177751862659 W= 0.1669242985992563 sum(c^2)= 0.1739221633069188
+rdmf_obj_eval= 285 L= 1.6731777510900634 W= 0.1669242984973962 sum(c^2)= 0.17392216319525525 t= 0.06887674331665039 exact= L= 1.6731777510900634 W= 0.1669242984973962 sum(c^2)= 0.17392216319525525
+rdmf_obj_eval= 286 L= 1.6731777523024585 W= 0.16692429858052804 sum(c^2)= 0.17392216335307864 t= 0.20045828819274902 exact= L= 1.6731777523024585 W= 0.16692429858052804 sum(c^2)= 0.17392216335307864
+rdmf_obj_eval= 287 L= 0.1843661858188595 W= 0.18444571990800995 sum(c^2)= 2.8536811018646248e-08 t= 0.17061114311218262 exact= L= 0.1843661858188595 W= 0.18444571990800995 sum(c^2)= 2.8536811018646248e-08
+rdmf_obj_eval= 288 L= 0.18436618581885922 W= 0.18444571990801006 sum(c^2)= 2.8536811015468988e-08 t= 0.27600669860839844 exact= L= 0.18436618581885922 W= 0.18444571990801006 sum(c^2)= 2.8536811015468988e-08
+rdmf_obj_eval= 289 L= 0.18436618581528802 W= 0.18444571749506894 sum(c^2)= 2.8536703402180376e-08 t= 0.15161895751953125 exact= L= 0.18436618581528802 W= 0.18444571749506894 sum(c^2)= 2.8536703402180376e-08
+rdmf_obj_eval= 290 L= 0.18436618581400702 W= 0.18444571990801004 sum(c^2)= 2.8536811222370185e-08 t= 0.19576668739318848 exact= L= 0.18436618581400702 W= 0.18444571990801004 sum(c^2)= 2.8536811222370185e-08
+rdmf_obj_eval= 291 L= 0.18436618581885927 W= 0.18444571990801004 sum(c^2)= 2.8536811017308406e-08 t= 0.23271489143371582 exact= L= 0.18436618581885927 W= 0.18444571990801004 sum(c^2)= 2.8536811017308406e-08
+rdmf_obj_eval= 292 L= 0.18436618581885936 W= 0.18444571990801 sum(c^2)= 2.8536811014987026e-08 t= 0.17647218704223633 exact= L= 0.18436618581885936 W= 0.18444571990801 sum(c^2)= 2.8536811014987026e-08
+rdmf_obj_eval= 293 L= 0.1843661858165513 W= 0.18444571990800984 sum(c^2)= 2.853681112130967e-08 t= 0.22777915000915527 exact= L= 0.1843661858165513 W= 0.18444571990800984 sum(c^2)= 2.853681112130967e-08
+rdmf_obj_eval= 294 L= 0.1843661858188594 W= 0.18444571990801 sum(c^2)= 2.853681102264988e-08 t= 0.25214529037475586 exact= L= 0.1843661858188594 W= 0.18444571990801 sum(c^2)= 2.853681102264988e-08
+rdmf_obj_eval= 295 L= 0.18436618581885955 W= 0.18444571990801 sum(c^2)= 2.8536811025895305e-08 t= 0.2596571445465088 exact= L= 0.18436618581885955 W= 0.18444571990801 sum(c^2)= 2.8536811025895305e-08
+rdmf_obj_eval= 296 L= 0.18436618581885955 W= 0.18444571990801 sum(c^2)= 2.8536811025895305e-08 t= 0.2333083152770996 exact= L= 0.18436618581885955 W= 0.18444571990801 sum(c^2)= 2.8536811025895305e-08
+rdmf_obj_eval= 297 L= 0.18436618581885955 W= 0.18444571990801 sum(c^2)= 2.8536811025895305e-08 t= 0.22353887557983398 exact= L= 0.18436618581885955 W= 0.18444571990801 sum(c^2)= 2.8536811025895305e-08
+rdmf_obj_eval= 298 L= 0.18436618581832234 W= 0.18444571990801 sum(c^2)= 2.8536811030840002e-08 t= 0.19163060188293457 exact= L= 0.18436618581832234 W= 0.18444571990801 sum(c^2)= 2.8536811030840002e-08
+rdmf_obj_eval= 299 L= 0.18436618583419437 W= 0.18444572175202348 sum(c^2)= 2.8539242131401134e-08 t= 0.2360372543334961 exact= L= 0.18436618583419437 W= 0.18444572175202348 sum(c^2)= 2.8539242131401134e-08
+rdmf_obj_eval= 300 L= 0.18436618581686187 W= 0.18444571990802267 sum(c^2)= 2.8536856027507133e-08 t= 0.30147433280944824 exact= L= 0.18436618581686187 W= 0.18444571990802267 sum(c^2)= 2.8536856027507133e-08
+rdmf_obj_eval= 301 L= 0.1843661858088343 W= 0.18444571990571954 sum(c^2)= 2.853681134723973e-08 t= 0.10432767868041992 exact= L= 0.1843661858088343 W= 0.18444571990571954 sum(c^2)= 2.853681134723973e-08
+rdmf_obj_eval= 302 L= 0.1843661858183224 W= 0.18444571990801 sum(c^2)= 2.8536811030236352e-08 t= 0.1382153034210205 exact= L= 0.1843661858183224 W= 0.18444571990801 sum(c^2)= 2.8536811030236352e-08
+rdmf_obj_eval= 303 L= 0.18436618582399555 W= 0.1844457199080091 sum(c^2)= 2.853681078722524e-08 t= 0.3384668827056885 exact= L= 0.18436618582399555 W= 0.1844457199080091 sum(c^2)= 2.853681078722524e-08
+rdmf_obj_eval= 304 L= 0.18436550463777063 W= 0.18439265306675257 sum(c^2)= 2.823702473389118e-08 t= 0.18619966506958008 exact= L= 0.18436550463777063 W= 0.18439265306675257 sum(c^2)= 2.823702473389118e-08
+rdmf_obj_eval= 305 L= 0.18436550463777054 W= 0.18439265306675262 sum(c^2)= 2.8237024741307517e-08 t= 0.2500574588775635 exact= L= 0.18436550463777054 W= 0.18439265306675262 sum(c^2)= 2.8237024741307517e-08
+rdmf_obj_eval= 306 L= 0.184365504637209 W= 0.18439265065398674 sum(c^2)= 2.8237057392958157e-08 t= 0.2779841423034668 exact= L= 0.184365504637209 W= 0.18439265065398674 sum(c^2)= 2.8237057392958157e-08
+rdmf_obj_eval= 307 L= 0.1843655046333585 W= 0.18439265306675254 sum(c^2)= 2.8237024669476072e-08 t= 0.18427252769470215 exact= L= 0.1843655046333585 W= 0.18439265306675254 sum(c^2)= 2.8237024669476072e-08
+rdmf_obj_eval= 308 L= 0.18436550463777074 W= 0.1843926530667526 sum(c^2)= 2.8237024746593618e-08 t= 0.2704172134399414 exact= L= 0.18436550463777074 W= 0.1843926530667526 sum(c^2)= 2.8237024746593618e-08
+rdmf_obj_eval= 309 L= 0.18436550463777074 W= 0.18439265306675262 sum(c^2)= 2.823702474122187e-08 t= 0.23485374450683594 exact= L= 0.18436550463777074 W= 0.18439265306675262 sum(c^2)= 2.823702474122187e-08
+rdmf_obj_eval= 310 L= 0.18436550463644247 W= 0.18439265306675268 sum(c^2)= 2.823702472622615e-08 t= 0.2125539779663086 exact= L= 0.18436550463644247 W= 0.18439265306675268 sum(c^2)= 2.823702472622615e-08
+rdmf_obj_eval= 311 L= 0.18436550463777063 W= 0.18439265306675262 sum(c^2)= 2.8237024729639472e-08 t= 0.22361230850219727 exact= L= 0.18436550463777063 W= 0.18439265306675262 sum(c^2)= 2.8237024729639472e-08
+rdmf_obj_eval= 312 L= 0.18436550463777074 W= 0.18439265306675257 sum(c^2)= 2.8237024743941958e-08 t= 0.11418867111206055 exact= L= 0.18436550463777074 W= 0.18439265306675257 sum(c^2)= 2.8237024743941958e-08
+rdmf_obj_eval= 313 L= 0.18436550463777074 W= 0.18439265306675257 sum(c^2)= 2.8237024743941958e-08 t= 0.11031794548034668 exact= L= 0.18436550463777074 W= 0.18439265306675257 sum(c^2)= 2.8237024743941958e-08
+rdmf_obj_eval= 314 L= 0.18436550463777082 W= 0.18439265306675257 sum(c^2)= 2.823702473522166e-08 t= 0.28119707107543945 exact= L= 0.18436550463777082 W= 0.18439265306675257 sum(c^2)= 2.823702473522166e-08
+rdmf_obj_eval= 315 L= 0.18436550463768211 W= 0.18439265306675257 sum(c^2)= 2.8237024659210125e-08 t= 0.20537638664245605 exact= L= 0.18436550463768211 W= 0.18439265306675257 sum(c^2)= 2.8237024659210125e-08
+rdmf_obj_eval= 316 L= 0.18436550465159207 W= 0.1843926549102738 sum(c^2)= 2.8239264247745375e-08 t= 0.2272014617919922 exact= L= 0.18436550465159207 W= 0.1843926549102738 sum(c^2)= 2.8239264247745375e-08
+rdmf_obj_eval= 317 L= 0.18436550463997622 W= 0.18439265306688438 sum(c^2)= 2.823749263028914e-08 t= 0.2003955841064453 exact= L= 0.18436550463997622 W= 0.18439265306688438 sum(c^2)= 2.823749263028914e-08
+rdmf_obj_eval= 318 L= 0.18436550462894405 W= 0.18439265306473537 sum(c^2)= 2.8237024632703507e-08 t= 0.22235846519470215 exact= L= 0.18436550462894405 W= 0.18439265306473537 sum(c^2)= 2.8237024632703507e-08
+rdmf_obj_eval= 319 L= 0.184365504637682 W= 0.18439265306675265 sum(c^2)= 2.823702465394849e-08 t= 0.19608449935913086 exact= L= 0.184365504637682 W= 0.18439265306675265 sum(c^2)= 2.823702465394849e-08
+rdmf_obj_eval= 320 L= 0.18436550464244114 W= 0.18439265306675176 sum(c^2)= 2.8237024809891675e-08 t= 0.0849158763885498 exact= L= 0.18436550464244114 W= 0.18439265306675176 sum(c^2)= 2.8237024809891675e-08
+rdmf_obj_eval= 321 L= 0.18436358804846076 W= 0.18426751701077937 sum(c^2)= 2.4572488692249535e-08 t= 0.14236855506896973 exact= L= 0.18436358804846076 W= 0.18426751701077937 sum(c^2)= 2.4572488692249535e-08
+rdmf_obj_eval= 322 L= 0.184363588048461 W= 0.18426751701077929 sum(c^2)= 2.4572488724696177e-08 t= 0.20220232009887695 exact= L= 0.184363588048461 W= 0.18426751701077929 sum(c^2)= 2.4572488724696177e-08
+rdmf_obj_eval= 323 L= 0.18436358805470768 W= 0.1842675145984718 sum(c^2)= 2.4572838635662823e-08 t= 0.2350311279296875 exact= L= 0.18436358805470768 W= 0.1842675145984718 sum(c^2)= 2.4572838635662823e-08
+rdmf_obj_eval= 324 L= 0.18436358804647102 W= 0.18426751701077929 sum(c^2)= 2.4572488418302635e-08 t= 0.26773548126220703 exact= L= 0.18436358804647102 W= 0.18426751701077929 sum(c^2)= 2.4572488418302635e-08
+rdmf_obj_eval= 325 L= 0.18436358804846095 W= 0.18426751701077934 sum(c^2)= 2.4572488713207912e-08 t= 0.16809606552124023 exact= L= 0.18436358804846095 W= 0.18426751701077934 sum(c^2)= 2.4572488713207912e-08
+rdmf_obj_eval= 326 L= 0.18436358804846076 W= 0.18426751701077937 sum(c^2)= 2.4572488705127645e-08 t= 0.15462779998779297 exact= L= 0.18436358804846076 W= 0.18426751701077937 sum(c^2)= 2.4572488705127645e-08
+rdmf_obj_eval= 327 L= 0.1843635880508276 W= 0.18426751701077934 sum(c^2)= 2.457248904057145e-08 t= 0.31543993949890137 exact= L= 0.1843635880508276 W= 0.18426751701077934 sum(c^2)= 2.457248904057145e-08
+rdmf_obj_eval= 328 L= 0.18436358804846079 W= 0.18426751701077929 sum(c^2)= 2.4572488714676704e-08 t= 0.34142565727233887 exact= L= 0.18436358804846079 W= 0.18426751701077929 sum(c^2)= 2.4572488714676704e-08
+rdmf_obj_eval= 329 L= 0.184363588048461 W= 0.18426751701077929 sum(c^2)= 2.4572488724696177e-08 t= 0.20097088813781738 exact= L= 0.184363588048461 W= 0.18426751701077929 sum(c^2)= 2.4572488724696177e-08
+rdmf_obj_eval= 330 L= 0.184363588048461 W= 0.18426751701077929 sum(c^2)= 2.4572488724696177e-08 t= 0.21142935752868652 exact= L= 0.184363588048461 W= 0.18426751701077929 sum(c^2)= 2.4572488724696177e-08
+rdmf_obj_eval= 331 L= 0.18436358804846092 W= 0.18426751701077934 sum(c^2)= 2.4572488712813324e-08 t= 0.279421329498291 exact= L= 0.18436358804846092 W= 0.18426751701077934 sum(c^2)= 2.4572488712813324e-08
+rdmf_obj_eval= 332 L= 0.18436358804871808 W= 0.1842675170107794 sum(c^2)= 2.457248864326112e-08 t= 0.19384002685546875 exact= L= 0.18436358804871808 W= 0.1842675170107794 sum(c^2)= 2.457248864326112e-08
+rdmf_obj_eval= 333 L= 0.1843635880565897 W= 0.18426751885319054 sum(c^2)= 2.4574007709350777e-08 t= 0.2923617362976074 exact= L= 0.1843635880565897 W= 0.18426751885319054 sum(c^2)= 2.4574007709350777e-08
+rdmf_obj_eval= 334 L= 0.184363588051036 W= 0.18426751701091465 sum(c^2)= 2.4572968226763387e-08 t= 0.2223668098449707 exact= L= 0.184363588051036 W= 0.18426751701091465 sum(c^2)= 2.4572968226763387e-08
+rdmf_obj_eval= 335 L= 0.18436358804601766 W= 0.18426751701022043 sum(c^2)= 2.4572488438833367e-08 t= 0.11441183090209961 exact= L= 0.18436358804601766 W= 0.18426751701022043 sum(c^2)= 2.4572488438833367e-08
+rdmf_obj_eval= 336 L= 0.1843635880487181 W= 0.18426751701077937 sum(c^2)= 2.4572488646567063e-08 t= 0.4108097553253174 exact= L= 0.1843635880487181 W= 0.18426751701077937 sum(c^2)= 2.4572488646567063e-08
+rdmf_obj_eval= 337 L= 0.18436358805056635 W= 0.1842675170107791 sum(c^2)= 2.457248902406507e-08 t= 0.10889434814453125 exact= L= 0.18436358805056635 W= 0.1842675170107791 sum(c^2)= 2.457248902406507e-08
+point= [ 2.56444226  3.407759    1.56989851  5.90891086  2.57432065 -1.57052942
+ -0.62658913 -1.39132961 -0.90555287  0.85861475 -0.29550151 -3.1414506
+  1.57100233  1.56994601  0.29546031  1.57174633]
+value= 0.18436358804846076
+nfev= 85
+stddev W= 0.004914561999820311
+stddev c[ 0 ]= 0.0038711641076215834
+stddev c[ 1 ]= 0.005685675426616808
+stddev c[ 2 ]= 0.0006788017706157389
+stddev c[ 3 ]= 0.002785583108414384
+stddev c[ 4 ]= 1.5354332195044494e-07
+stddev c[ 5 ]= 0.003351743783116744
+stddev c[ 6 ]= 0.002682900110821258
+stddev c[ 7 ]= 0.003845093740342454
+stddev c[ 8 ]= 0.0032393551507749582
+stddev c[ 9 ]= 0.0026456070405965772
+stddev c[ 10 ]= 0.0023261503297493905
+stddev c[ 11 ]= 1.5319203752890353e-07
+stddev c[ 12 ]= 0.006849949396164983
+stddev c[ 13 ]= 0.002659549533659283
+stddev c[ 14 ]= 0.0024960300901903042
+stddev c[ 15 ]= 0.004049719940275922
+rdmf_obj_eval= 338 L= 0.18436358804846076 W= 0.18426751701077937 sum(c^2)= 2.4572488692249535e-08 t= 0.1619861125946045 exact= L= 0.18436358804846076 W= 0.18426751701077937 sum(c^2)= 2.4572488692249535e-08
+W= 0.18426751701077937 W_noise= 0.19073486328125
+constraint violation sum(c^2)= 2.4572488692249535e-08
+Augmented Lagrangian: penalty and multiplier update
+constraint 0 0 0 real viol= 7.102771819544884e-05 viol_noise= -0.01821899414098982 lagrange= -0.14819452145527323 penalty= 22.5
+constraint 1 0 1 real viol= 2.6662140862580375e-05 viol_noise= 0.0101776123046875 lagrange= 0.0001777678773554564 penalty= 22.5
+constraint 2 0 1 imag viol= 4.192678831347663e-05 viol_noise= 0.0133209228515625 lagrange= 0.00027914117384590886 penalty= 22.5
+constraint 3 0 2 real viol= 6.649950923676151e-05 viol_noise= 0.0947840705674217 lagrange= 0.9193561382721953 penalty= 22.5
+constraint 4 0 2 imag viol= 1.910517660741462e-09 viol_noise= -6.939105978640003e-07 lagrange= 3.2894119789128595e-08 penalty= 22.5
+constraint 5 0 3 real viol= -7.99525260321407e-08 viol_noise= 0.0027199866780660584 lagrange= -1.0672518326359707e-05 penalty= 22.5
+constraint 6 0 3 imag viol= 5.464624780416802e-08 viol_noise= 0.0005030062389967806 lagrange= 6.858817620876596e-06 penalty= 22.5
+constraint 7 1 1 real viol= -1.8682763837873928e-05 viol_noise= 0.00033569335893279817 lagrange= -0.14908056231421274 penalty= 22.5
+constraint 8 1 2 real viol= -7.81107477382454e-08 viol_noise= 0.0022667343130927005 lagrange= -1.0631929475463949e-05 penalty= 22.5
+constraint 9 1 2 imag viol= -5.24576083772764e-08 viol_noise= -0.0009986763544819043 lagrange= -6.842685061470808e-06 penalty= 22.5
+constraint 10 1 3 real viol= 6.651805332391625e-05 viol_noise= 0.07029297744577744 lagrange= 0.9193459771567912 penalty= 22.5
+constraint 11 1 3 imag viol= 5.640189981725996e-10 viol_noise= 6.971102935529605e-07 lagrange= 4.2837935143591466e-08 penalty= 22.5
+constraint 12 2 2 real viol= -7.102980367457157e-05 viol_noise= -0.01694005167880268 lagrange= 0.3504027435107098 penalty= 22.5
+constraint 13 2 3 real viol= -2.6662124827327236e-05 viol_noise= 0.009887070871982508 lagrange= -0.00017776750855413463 penalty= 22.5
+constraint 14 2 3 imag viol= -4.192679598910302e-05 viol_noise= -0.009892604961033622 lagrange= -0.0002791391260270448 penalty= 22.5
+constraint 15 3 3 real viol= 1.868069664756611e-05 viol_noise= 0.00915806925772586 lagrange= 0.3512891369388443 penalty= 22.5
+Augmented Lagrangian: unconstrained subproblem
+minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS
+rdmf_obj_eval= 339 L= 0.18436404878262294 W= 0.18426751701077937 sum(c^2)= 2.457248865167e-08 t= 0.20961785316467285 exact= L= 0.18436404878262294 W= 0.18426751701077937 sum(c^2)= 2.457248865167e-08
+rdmf_obj_eval= 340 L= 0.18436404878262294 W= 0.18426751701077929 sum(c^2)= 2.4572488650913652e-08 t= 0.3545091152191162 exact= L= 0.18436404878262294 W= 0.18426751701077929 sum(c^2)= 2.4572488650913652e-08
+rdmf_obj_eval= 341 L= 0.18436404879280607 W= 0.1842675145984718 sum(c^2)= 2.4572838560566595e-08 t= 0.148637056350708 exact= L= 0.18436404879280607 W= 0.1842675145984718 sum(c^2)= 2.4572838560566595e-08
+rdmf_obj_eval= 342 L= 0.18436404878062984 W= 0.18426751701077929 sum(c^2)= 2.4572488362146614e-08 t= 0.13168096542358398 exact= L= 0.18436404878062984 W= 0.18426751701077929 sum(c^2)= 2.4572488362146614e-08
+rdmf_obj_eval= 343 L= 0.18436404878262297 W= 0.18426751701077934 sum(c^2)= 2.4572488650104517e-08 t= 0.3661818504333496 exact= L= 0.18436404878262297 W= 0.18426751701077934 sum(c^2)= 2.4572488650104517e-08
+rdmf_obj_eval= 344 L= 0.18436404878262289 W= 0.18426751701077937 sum(c^2)= 2.4572488652144215e-08 t= 0.19368767738342285 exact= L= 0.18436404878262289 W= 0.18426751701077937 sum(c^2)= 2.4572488652144215e-08
+rdmf_obj_eval= 345 L= 0.18436404878499374 W= 0.18426751701077934 sum(c^2)= 2.4572488995986315e-08 t= 0.10129618644714355 exact= L= 0.18436404878499374 W= 0.18426751701077934 sum(c^2)= 2.4572488995986315e-08
+rdmf_obj_eval= 346 L= 0.1843640487826228 W= 0.18426751701077929 sum(c^2)= 2.4572488646875842e-08 t= 0.20165300369262695 exact= L= 0.1843640487826228 W= 0.18426751701077929 sum(c^2)= 2.4572488646875842e-08
+rdmf_obj_eval= 347 L= 0.18436404878262294 W= 0.18426751701077929 sum(c^2)= 2.4572488650913652e-08 t= 0.31791257858276367 exact= L= 0.18436404878262294 W= 0.18426751701077929 sum(c^2)= 2.4572488650913652e-08
+rdmf_obj_eval= 348 L= 0.18436404878262294 W= 0.18426751701077929 sum(c^2)= 2.4572488650913652e-08 t= 0.3288912773132324 exact= L= 0.18436404878262294 W= 0.18426751701077929 sum(c^2)= 2.4572488650913652e-08
+rdmf_obj_eval= 349 L= 0.18436404878262297 W= 0.18426751701077934 sum(c^2)= 2.4572488649212767e-08 t= 0.06824207305908203 exact= L= 0.18436404878262297 W= 0.18426751701077934 sum(c^2)= 2.4572488649212767e-08
+rdmf_obj_eval= 350 L= 0.1843640487828793 W= 0.1842675170107794 sum(c^2)= 2.4572488579474585e-08 t= 0.28195762634277344 exact= L= 0.1843640487828793 W= 0.1842675170107794 sum(c^2)= 2.4572488579474585e-08
+rdmf_obj_eval= 351 L= 0.1843640488078401 W= 0.18426751885319054 sum(c^2)= 2.4574007642203828e-08 t= 0.1813523769378662 exact= L= 0.1843640488078401 W= 0.18426751885319054 sum(c^2)= 2.4574007642203828e-08
+rdmf_obj_eval= 352 L= 0.1843640487905927 W= 0.18426751701091465 sum(c^2)= 2.4572968174954305e-08 t= 0.1737658977508545 exact= L= 0.1843640487905927 W= 0.18426751701091465 sum(c^2)= 2.4572968174954305e-08
+rdmf_obj_eval= 353 L= 0.18436404878017645 W= 0.18426751701022043 sum(c^2)= 2.457248837607243e-08 t= 0.18656253814697266 exact= L= 0.18436404878017645 W= 0.18426751701022043 sum(c^2)= 2.457248837607243e-08
+rdmf_obj_eval= 354 L= 0.18436404878287943 W= 0.18426751701077937 sum(c^2)= 2.457248858406169e-08 t= 0.22118830680847168 exact= L= 0.18436404878287943 W= 0.18426751701077937 sum(c^2)= 2.457248858406169e-08
+rdmf_obj_eval= 355 L= 0.18436404878473178 W= 0.1842675170107791 sum(c^2)= 2.4572488958165483e-08 t= 0.10025453567504883 exact= L= 0.18436404878473178 W= 0.1842675170107791 sum(c^2)= 2.4572488958165483e-08
+rdmf_obj_eval= 356 L= 4.028524410893106 W= 0.07024775520463936 sum(c^2)= 0.31971976787310946 t= 0.23847174644470215 exact= L= 4.028524410893106 W= 0.07024775520463936 sum(c^2)= 0.31971976787310946
+rdmf_obj_eval= 357 L= 4.0285244108931035 W= 0.07024775520463934 sum(c^2)= 0.31971976789919304 t= 0.1950387954711914 exact= L= 4.0285244108931035 W= 0.07024775520463934 sum(c^2)= 0.31971976789919304
+rdmf_obj_eval= 358 L= 4.028524400525473 W= 0.07024775473050635 sum(c^2)= 0.3197197672406535 t= 0.3122701644897461 exact= L= 4.028524400525473 W= 0.07024775473050635 sum(c^2)= 0.3197197672406535
+rdmf_obj_eval= 359 L= 4.02852441103172 W= 0.07024775520463936 sum(c^2)= 0.3197197680441658 t= 0.14291071891784668 exact= L= 4.02852441103172 W= 0.07024775520463936 sum(c^2)= 0.3197197680441658
+rdmf_obj_eval= 360 L= 4.028524410893104 W= 0.07024775520463934 sum(c^2)= 0.3197197679020574 t= 0.18164682388305664 exact= L= 4.028524410893104 W= 0.07024775520463934 sum(c^2)= 0.3197197679020574
+rdmf_obj_eval= 361 L= 4.028524410893025 W= 0.0702477552046393 sum(c^2)= 0.31971976788971257 t= 0.27274155616760254 exact= L= 4.028524410893025 W= 0.0702477552046393 sum(c^2)= 0.31971976788971257
+rdmf_obj_eval= 362 L= 4.028524409481976 W= 0.07024775520463934 sum(c^2)= 0.31971976770675026 t= 0.06964564323425293 exact= L= 4.028524409481976 W= 0.07024775520463934 sum(c^2)= 0.31971976770675026
+rdmf_obj_eval= 363 L= 4.028524410893107 W= 0.07024775520463934 sum(c^2)= 0.3197197678742775 t= 0.1228327751159668 exact= L= 4.028524410893107 W= 0.07024775520463934 sum(c^2)= 0.3197197678742775
+rdmf_obj_eval= 364 L= 4.0285244108930955 W= 0.0702477552046396 sum(c^2)= 0.31971976793183565 t= 0.3369131088256836 exact= L= 4.0285244108930955 W= 0.0702477552046396 sum(c^2)= 0.31971976793183565
+rdmf_obj_eval= 365 L= 4.028524410893107 W= 0.07024775520463934 sum(c^2)= 0.31971976793294754 t= 0.1442718505859375 exact= L= 4.028524410893107 W= 0.07024775520463934 sum(c^2)= 0.31971976793294754
+rdmf_obj_eval= 366 L= 4.028524410893103 W= 0.07024775520463933 sum(c^2)= 0.3197197678737085 t= 0.18715691566467285 exact= L= 4.028524410893103 W= 0.07024775520463933 sum(c^2)= 0.3197197678737085
+rdmf_obj_eval= 367 L= 4.028524405626287 W= 0.07024775520463933 sum(c^2)= 0.31971976741860825 t= 0.2531394958496094 exact= L= 4.028524405626287 W= 0.07024775520463933 sum(c^2)= 0.31971976741860825
+rdmf_obj_eval= 368 L= 4.028524341021246 W= 0.07024775687043573 sum(c^2)= 0.319719761960516 t= 0.15165114402770996 exact= L= 4.028524341021246 W= 0.07024775687043573 sum(c^2)= 0.319719761960516
+rdmf_obj_eval= 369 L= 4.028524413537867 W= 0.07024775474097812 sum(c^2)= 0.319719768310023 t= 0.09345126152038574 exact= L= 4.028524413537867 W= 0.07024775474097812 sum(c^2)= 0.319719768310023
+rdmf_obj_eval= 370 L= 4.028524408960266 W= 0.07024775534234247 sum(c^2)= 0.3197197676669853 t= 0.09173083305358887 exact= L= 4.028524408960266 W= 0.07024775534234247 sum(c^2)= 0.3197197676669853
+rdmf_obj_eval= 371 L= 4.028524405626289 W= 0.07024775520463934 sum(c^2)= 0.31971976743513364 t= 0.2167677879333496 exact= L= 4.028524405626289 W= 0.07024775520463934 sum(c^2)= 0.31971976743513364
+rdmf_obj_eval= 372 L= 4.028524412696397 W= 0.0702477550585751 sum(c^2)= 0.31971976803701674 t= 0.2795679569244385 exact= L= 4.028524412696397 W= 0.0702477550585751 sum(c^2)= 0.31971976803701674
+rdmf_obj_eval= 373 L= 0.18436364152423576 W= 0.1842460853776599 sum(c^2)= 1.3466672645472609e-08 t= 0.2236919403076172 exact= L= 0.18436364152423576 W= 0.1842460853776599 sum(c^2)= 1.3466672645472609e-08
+rdmf_obj_eval= 374 L= 0.18436364152423562 W= 0.1842460853776599 sum(c^2)= 1.3466672644530915e-08 t= 0.2234046459197998 exact= L= 0.18436364152423562 W= 0.1842460853776599 sum(c^2)= 1.3466672644530915e-08
+rdmf_obj_eval= 375 L= 0.18436364153269164 W= 0.18424608296588194 sum(c^2)= 1.3466953448353098e-08 t= 0.23982739448547363 exact= L= 0.18436364153269164 W= 0.18424608296588194 sum(c^2)= 1.3466953448353098e-08
+rdmf_obj_eval= 376 L= 0.1843636415222864 W= 0.18424608537765988 sum(c^2)= 1.346667242012137e-08 t= 0.18528985977172852 exact= L= 0.1843636415222864 W= 0.18424608537765988 sum(c^2)= 1.346667242012137e-08
+rdmf_obj_eval= 377 L= 0.18436364152423582 W= 0.1842460853776599 sum(c^2)= 1.3466672648672266e-08 t= 0.18276453018188477 exact= L= 0.18436364152423582 W= 0.1842460853776599 sum(c^2)= 1.3466672648672266e-08
+rdmf_obj_eval= 378 L= 0.18436364152423573 W= 0.1842460853776599 sum(c^2)= 1.3466672651203101e-08 t= 0.42203545570373535 exact= L= 0.18436364152423573 W= 0.1842460853776599 sum(c^2)= 1.3466672651203101e-08
+rdmf_obj_eval= 379 L= 0.1843636415264001 W= 0.18424608537765996 sum(c^2)= 1.3466672893776416e-08 t= 0.17636466026306152 exact= L= 0.1843636415264001 W= 0.18424608537765996 sum(c^2)= 1.3466672893776416e-08
+rdmf_obj_eval= 380 L= 0.18436364152423573 W= 0.18424608537765993 sum(c^2)= 1.3466672644792704e-08 t= 0.31043410301208496 exact= L= 0.18436364152423573 W= 0.18424608537765993 sum(c^2)= 1.3466672644792704e-08
+rdmf_obj_eval= 381 L= 0.18436364152423562 W= 0.1842460853776599 sum(c^2)= 1.3466672644530915e-08 t= 0.21055221557617188 exact= L= 0.18436364152423562 W= 0.1842460853776599 sum(c^2)= 1.3466672644530915e-08
+rdmf_obj_eval= 382 L= 0.18436364152423576 W= 0.1842460853776599 sum(c^2)= 1.3466672645369383e-08 t= 0.23997855186462402 exact= L= 0.18436364152423576 W= 0.1842460853776599 sum(c^2)= 1.3466672645369383e-08
+rdmf_obj_eval= 383 L= 0.1843636415242358 W= 0.1842460853776599 sum(c^2)= 1.3466672645929558e-08 t= 0.15181660652160645 exact= L= 0.1843636415242358 W= 0.1842460853776599 sum(c^2)= 1.3466672645929558e-08
+rdmf_obj_eval= 384 L= 0.18436364152434992 W= 0.1842460853776599 sum(c^2)= 1.34666726529786e-08 t= 0.16746783256530762 exact= L= 0.18436364152434992 W= 0.1842460853776599 sum(c^2)= 1.34666726529786e-08
+rdmf_obj_eval= 385 L= 0.18436364151867887 W= 0.18424608722031158 sum(c^2)= 1.346555344696154e-08 t= 0.19106411933898926 exact= L= 0.18436364151867887 W= 0.18424608722031158 sum(c^2)= 1.346555344696154e-08
+rdmf_obj_eval= 386 L= 0.1843636415297576 W= 0.1842460853777441 sum(c^2)= 1.346697063862748e-08 t= 0.15809130668640137 exact= L= 0.1843636415297576 W= 0.1842460853777441 sum(c^2)= 1.346697063862748e-08
+rdmf_obj_eval= 387 L= 0.18436364152185825 W= 0.18424608537711656 sum(c^2)= 1.3466672432979925e-08 t= 0.7109408378601074 exact= L= 0.18436364152185825 W= 0.18424608537711656 sum(c^2)= 1.3466672432979925e-08
+rdmf_obj_eval= 388 L= 0.18436364152435014 W= 0.18424608537765988 sum(c^2)= 1.3466672658874564e-08 t= 0.24518394470214844 exact= L= 0.18436364152435014 W= 0.18424608537765988 sum(c^2)= 1.3466672658874564e-08
+rdmf_obj_eval= 389 L= 0.18436364152629856 W= 0.18424608537766013 sum(c^2)= 1.3466672888454928e-08 t= 0.19455838203430176 exact= L= 0.18436364152629856 W= 0.18424608537766013 sum(c^2)= 1.3466672888454928e-08
+point= [ 2.56444226  3.40765936  1.56991801  5.90891086  2.57432065 -1.57055262
+ -0.62658913 -1.39132961 -0.90555287  0.85861475 -0.29550402 -3.14169734
+  1.57092435  1.56996995  0.2954578   1.57172569]
+value= 0.18436364152423576
+nfev= 51
+stddev W= 0.004957298536136252
+stddev c[ 0 ]= 0.003913277027556598
+stddev c[ 1 ]= 0.005685675426616808
+stddev c[ 2 ]= 0.0006788017706157389
+stddev c[ 3 ]= 0.002808058012765423
+stddev c[ 4 ]= 7.738049801884442e-08
+stddev c[ 5 ]= 0.003372498231766153
+stddev c[ 6 ]= 0.0026780677477389984
+stddev c[ 7 ]= 0.003816039802817526
+stddev c[ 8 ]= 0.0032551228058240065
+stddev c[ 9 ]= 0.0026397606855165915
+stddev c[ 10 ]= 0.0023264600186079336
+stddev c[ 11 ]= 7.78428633102096e-08
+stddev c[ 12 ]= 0.006794212249791454
+stddev c[ 13 ]= 0.00263553194571045
+stddev c[ 14 ]= 0.0024644216354511046
+stddev c[ 15 ]= 0.004080446324741681
+rdmf_obj_eval= 390 L= 0.18436364152423576 W= 0.1842460853776599 sum(c^2)= 1.3466672645472609e-08 t= 0.20773959159851074 exact= L= 0.18436364152423576 W= 0.1842460853776599 sum(c^2)= 1.3466672645472609e-08
+W= 0.1842460853776599 W_noise= 0.190765380859375
+constraint violation sum(c^2)= 1.3466672645472609e-08
+Augmented Lagrangian: penalty and multiplier update
+constraint 0 0 0 real viol= -5.2341780510278824e-05 viol_noise= -0.018280029297239805 lagrange= -0.1493722115167545 penalty= 33.75
+constraint 1 0 1 real viol= 1.6617903597754312e-05 viol_noise= 0.0101776123046875 lagrange= 0.0005516707083049285 penalty= 33.75
+constraint 2 0 1 imag viol= 2.6025414849371197e-05 viol_noise= 0.0133209228515625 lagrange= 0.0008647130079567607 penalty= 33.75
+constraint 3 0 2 real viol= 5.338246694169824e-05 viol_noise= 0.0947723878900112 lagrange= 0.9205572437783835 penalty= 33.75
+constraint 4 0 2 imag viol= 1.855366416059212e-09 viol_noise= 3.8421542921524e-07 lagrange= 7.463986415046087e-08 penalty= 33.75
+constraint 5 0 3 real viol= -7.660228503041946e-08 viol_noise= 0.002752557459752735 lagrange= -1.2396069739544144e-05 penalty= 33.75
+constraint 6 0 3 imag viol= 5.0600008644468425e-08 viol_noise= 0.0004805693652326934 lagrange= 7.997317815377136e-06 penalty= 33.75
+constraint 7 1 1 real viol= 1.3762678354845015e-05 viol_noise= 0.00042724609330779817 lagrange= -0.14877090205122873 penalty= 33.75
+constraint 8 1 2 real viol= -7.775359444484172e-08 viol_noise= 0.0022790110708765907 lagrange= -1.2381385350472888e-05 penalty= 33.75
+constraint 9 1 2 imag viol= -4.482109668330937e-08 viol_noise= -0.0009935650256013783 lagrange= -7.851159736845269e-06 penalty= 33.75
+constraint 10 1 3 real viol= 5.34038924325797e-05 viol_noise= 0.0703084087452641 lagrange= 0.9205475647365242 penalty= 33.75
+constraint 11 1 3 imag viol= 1.8068193330389448e-09 viol_noise= -3.8156126567351345e-07 lagrange= 8.349137013696772e-08 penalty= 33.75
+constraint 12 2 2 real viol= 5.234037951468151e-05 viol_noise= -0.016816035350014844 lagrange= 0.35158040204979013 penalty= 33.75
+constraint 13 2 3 real viol= -1.661791343445036e-05 viol_noise= 0.009905694256396818 lagrange= -0.0005516705608292678 penalty= 33.75
+constraint 14 2 3 imag viol= -2.6025407407419672e-05 viol_noise= -0.009894154645044466 lagrange= -0.0008647107926939874 penalty= 33.75
+constraint 15 3 3 real viol= -1.376409118980515e-05 viol_noise= 0.009156123241438052 lagrange= 0.35097944488707367 penalty= 33.75
+Augmented Lagrangian: unconstrained subproblem
+minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS
+rdmf_obj_eval= 391 L= 0.1843640202744038 W= 0.1842460853776599 sum(c^2)= 1.3466672643491134e-08 t= 0.22020578384399414 exact= L= 0.1843640202744038 W= 0.1842460853776599 sum(c^2)= 1.3466672643491134e-08
+rdmf_obj_eval= 392 L= 0.18436402027440374 W= 0.1842460853776599 sum(c^2)= 1.3466672642973584e-08 t= 0.27306199073791504 exact= L= 0.18436402027440374 W= 0.1842460853776599 sum(c^2)= 1.3466672642973584e-08
+rdmf_obj_eval= 393 L= 0.18436402028759827 W= 0.18424608296588194 sum(c^2)= 1.3466953445900145e-08 t= 0.19844818115234375 exact= L= 0.18436402028759827 W= 0.18424608296588194 sum(c^2)= 1.3466953445900145e-08
+rdmf_obj_eval= 394 L= 0.1843640202724507 W= 0.18424608537765988 sum(c^2)= 1.3466672416569522e-08 t= 0.37534236907958984 exact= L= 0.1843640202724507 W= 0.18424608537765988 sum(c^2)= 1.3466672416569522e-08
+rdmf_obj_eval= 395 L= 0.18436402027440385 W= 0.1842460853776599 sum(c^2)= 1.3466672644745065e-08 t= 0.22063350677490234 exact= L= 0.18436402027440385 W= 0.1842460853776599 sum(c^2)= 1.3466672644745065e-08
+rdmf_obj_eval= 396 L= 0.1843640202744038 W= 0.1842460853776599 sum(c^2)= 1.3466672642935381e-08 t= 0.1495957374572754 exact= L= 0.1843640202744038 W= 0.1842460853776599 sum(c^2)= 1.3466672642935381e-08
+rdmf_obj_eval= 397 L= 0.18436402027657253 W= 0.18424608537765996 sum(c^2)= 1.3466672896533656e-08 t= 0.14609956741333008 exact= L= 0.18436402027657253 W= 0.18424608537765996 sum(c^2)= 1.3466672896533656e-08
+rdmf_obj_eval= 398 L= 0.18436402027440388 W= 0.18424608537765993 sum(c^2)= 1.346667264523481e-08 t= 0.36622023582458496 exact= L= 0.18436402027440388 W= 0.18424608537765993 sum(c^2)= 1.346667264523481e-08
+rdmf_obj_eval= 399 L= 0.18436402027440374 W= 0.1842460853776599 sum(c^2)= 1.3466672642973584e-08 t= 0.2925906181335449 exact= L= 0.18436402027440374 W= 0.1842460853776599 sum(c^2)= 1.3466672642973584e-08
+rdmf_obj_eval= 400 L= 0.18436402027440396 W= 0.1842460853776599 sum(c^2)= 1.3466672644797735e-08 t= 0.15737032890319824 exact= L= 0.18436402027440396 W= 0.1842460853776599 sum(c^2)= 1.3466672644797735e-08
+rdmf_obj_eval= 401 L= 0.18436402027440377 W= 0.1842460853776599 sum(c^2)= 1.3466672641287078e-08 t= 0.2234969139099121 exact= L= 0.18436402027440377 W= 0.1842460853776599 sum(c^2)= 1.3466672641287078e-08
+rdmf_obj_eval= 402 L= 0.18436402027451834 W= 0.1842460853776599 sum(c^2)= 1.3466672655624623e-08 t= 0.21845293045043945 exact= L= 0.18436402027451834 W= 0.1842460853776599 sum(c^2)= 1.3466672655624623e-08
+rdmf_obj_eval= 403 L= 0.18436402024995985 W= 0.18424608722031158 sum(c^2)= 1.346555344169292e-08 t= 0.1806347370147705 exact= L= 0.18436402024995985 W= 0.18424608722031158 sum(c^2)= 1.346555344169292e-08
+rdmf_obj_eval= 404 L= 0.1843640202849541 W= 0.1842460853777441 sum(c^2)= 1.3466970632973733e-08 t= 0.15753459930419922 exact= L= 0.1843640202849541 W= 0.1842460853777441 sum(c^2)= 1.3466970632973733e-08
+rdmf_obj_eval= 405 L= 0.18436402027202275 W= 0.18424608537711656 sum(c^2)= 1.346667242879737e-08 t= 0.22983360290527344 exact= L= 0.18436402027202275 W= 0.18424608537711656 sum(c^2)= 1.346667242879737e-08
+rdmf_obj_eval= 406 L= 0.18436402027451831 W= 0.18424608537765988 sum(c^2)= 1.3466672653695462e-08 t= 0.19695091247558594 exact= L= 0.18436402027451831 W= 0.18424608537765988 sum(c^2)= 1.3466672653695462e-08
+rdmf_obj_eval= 407 L= 0.18436402027647072 W= 0.18424608537766013 sum(c^2)= 1.3466672884054048e-08 t= 0.22408413887023926 exact= L= 0.18436402027647072 W= 0.18424608537766013 sum(c^2)= 1.3466672884054048e-08
+rdmf_obj_eval= 408 L= 5.258861668571005 W= 0.49141999716983287 sum(c^2)= 0.2860878237128651 t= 0.07687878608703613 exact= L= 5.258861668571005 W= 0.49141999716983287 sum(c^2)= 0.2860878237128651
+rdmf_obj_eval= 409 L= 5.258861668571 W= 0.4914199971698327 sum(c^2)= 0.286087823740678 t= 0.10432553291320801 exact= L= 5.258861668571 W= 0.4914199971698327 sum(c^2)= 0.286087823740678
+rdmf_obj_eval= 410 L= 5.258861646672474 W= 0.49141999307850137 sum(c^2)= 0.28608782263723054 t= 0.20400643348693848 exact= L= 5.258861646672474 W= 0.49141999307850137 sum(c^2)= 0.28608782263723054
+rdmf_obj_eval= 411 L= 5.2588616686580325 W= 0.49141999716983276 sum(c^2)= 0.2860878237036924 t= 0.08037304878234863 exact= L= 5.2588616686580325 W= 0.49141999716983276 sum(c^2)= 0.2860878237036924
+rdmf_obj_eval= 412 L= 5.258861668571005 W= 0.49141999716983276 sum(c^2)= 0.28608782375232367 t= 0.07500743865966797 exact= L= 5.258861668571005 W= 0.49141999716983276 sum(c^2)= 0.28608782375232367
+rdmf_obj_eval= 413 L= 5.258861668571201 W= 0.4914199971698326 sum(c^2)= 0.28608782368754876 t= 0.07636237144470215 exact= L= 5.258861668571201 W= 0.4914199971698326 sum(c^2)= 0.28608782368754876
+rdmf_obj_eval= 414 L= 5.258861666864164 W= 0.4914199971698326 sum(c^2)= 0.2860878236171994 t= 0.07624101638793945 exact= L= 5.258861666864164 W= 0.4914199971698326 sum(c^2)= 0.2860878236171994
+rdmf_obj_eval= 415 L= 5.258861668571001 W= 0.49141999716983276 sum(c^2)= 0.28608782375391056 t= 0.18504643440246582 exact= L= 5.258861668571001 W= 0.49141999716983276 sum(c^2)= 0.28608782375391056
+rdmf_obj_eval= 416 L= 5.258861668571006 W= 0.49141999716983276 sum(c^2)= 0.2860878236951569 t= 0.1076810359954834 exact= L= 5.258861668571006 W= 0.49141999716983276 sum(c^2)= 0.2860878236951569
+rdmf_obj_eval= 417 L= 5.258861668571006 W= 0.49141999716983276 sum(c^2)= 0.2860878236951569 t= 0.09984517097473145 exact= L= 5.258861668571006 W= 0.49141999716983276 sum(c^2)= 0.2860878236951569
+rdmf_obj_eval= 418 L= 5.258861668571006 W= 0.49141999716983276 sum(c^2)= 0.2860878236951569 t= 0.1088404655456543 exact= L= 5.258861668571006 W= 0.49141999716983276 sum(c^2)= 0.2860878236951569
+rdmf_obj_eval= 419 L= 5.258861678300803 W= 0.49141999716983276 sum(c^2)= 0.28608782431883095 t= 0.07591462135314941 exact= L= 5.258861678300803 W= 0.49141999716983276 sum(c^2)= 0.28608782431883095
+rdmf_obj_eval= 420 L= 5.258861768337825 W= 0.4914199990681943 sum(c^2)= 0.28608782945445727 t= 0.1431410312652588 exact= L= 5.258861768337825 W= 0.4914199990681943 sum(c^2)= 0.28608782945445727
+rdmf_obj_eval= 421 L= 5.258861672534103 W= 0.49141999793990665 sum(c^2)= 0.286087824015713 t= 0.08678245544433594 exact= L= 5.258861672534103 W= 0.49141999793990665 sum(c^2)= 0.286087824015713
+rdmf_obj_eval= 422 L= 5.258861665975872 W= 0.4914199970045835 sum(c^2)= 0.2860878235691526 t= 0.13689398765563965 exact= L= 5.258861665975872 W= 0.4914199970045835 sum(c^2)= 0.2860878235691526
+rdmf_obj_eval= 423 L= 5.258861678300803 W= 0.49141999716983265 sum(c^2)= 0.2860878243001973 t= 0.0762937068939209 exact= L= 5.258861678300803 W= 0.49141999716983265 sum(c^2)= 0.2860878243001973
+rdmf_obj_eval= 424 L= 5.258861670892346 W= 0.4914199973065815 sum(c^2)= 0.2860878238477363 t= 0.1662285327911377 exact= L= 5.258861670892346 W= 0.4914199973065815 sum(c^2)= 0.2860878238477363
+rdmf_obj_eval= 425 L= 0.1843636801303608 W= 0.18430695364816818 sum(c^2)= 7.596817099991898e-09 t= 0.1449601650238037 exact= L= 0.1843636801303608 W= 0.18430695364816818 sum(c^2)= 7.596817099991898e-09
+rdmf_obj_eval= 426 L= 0.18436368013036092 W= 0.18430695364816813 sum(c^2)= 7.596817103741096e-09 t= 0.08312535285949707 exact= L= 0.18436368013036092 W= 0.18430695364816813 sum(c^2)= 7.596817103741096e-09
+rdmf_obj_eval= 427 L= 0.18436368014133814 W= 0.18430695123585444 sum(c^2)= 7.597025557760527e-09 t= 0.16516494750976562 exact= L= 0.18436368014133814 W= 0.18430695123585444 sum(c^2)= 7.597025557760527e-09
+rdmf_obj_eval= 428 L= 0.18436368012844306 W= 0.18430695364816813 sum(c^2)= 7.5968169414827e-09 t= 0.26340794563293457 exact= L= 0.18436368012844306 W= 0.18430695364816813 sum(c^2)= 7.5968169414827e-09
+rdmf_obj_eval= 429 L= 0.184363680130361 W= 0.18430695364816807 sum(c^2)= 7.596817103583249e-09 t= 0.19723224639892578 exact= L= 0.184363680130361 W= 0.18430695364816807 sum(c^2)= 7.596817103583249e-09
+rdmf_obj_eval= 430 L= 0.18436368013036122 W= 0.18430695364816804 sum(c^2)= 7.596817104676642e-09 t= 0.2745227813720703 exact= L= 0.18436368013036122 W= 0.18430695364816804 sum(c^2)= 7.596817104676642e-09
+rdmf_obj_eval= 431 L= 0.18436368013237606 W= 0.1843069536481681 sum(c^2)= 7.596817282389478e-09 t= 0.09702396392822266 exact= L= 0.18436368013237606 W= 0.1843069536481681 sum(c^2)= 7.596817282389478e-09
+rdmf_obj_eval= 432 L= 0.18436368013036109 W= 0.1843069536481681 sum(c^2)= 7.596817108302135e-09 t= 0.2648441791534424 exact= L= 0.18436368013036109 W= 0.1843069536481681 sum(c^2)= 7.596817108302135e-09
+rdmf_obj_eval= 433 L= 0.18436368013036095 W= 0.1843069536481681 sum(c^2)= 7.596817106422544e-09 t= 0.20153093338012695 exact= L= 0.18436368013036095 W= 0.1843069536481681 sum(c^2)= 7.596817106422544e-09
+rdmf_obj_eval= 434 L= 0.18436368013036095 W= 0.1843069536481681 sum(c^2)= 7.596817106422544e-09 t= 0.1975393295288086 exact= L= 0.18436368013036095 W= 0.1843069536481681 sum(c^2)= 7.596817106422544e-09
+rdmf_obj_eval= 435 L= 0.18436368013036095 W= 0.1843069536481681 sum(c^2)= 7.596817106422544e-09 t= 0.20583486557006836 exact= L= 0.18436368013036095 W= 0.1843069536481681 sum(c^2)= 7.596817106422544e-09
+rdmf_obj_eval= 436 L= 0.18436368013032947 W= 0.1843069536481681 sum(c^2)= 7.59681708702516e-09 t= 0.12364745140075684 exact= L= 0.18436368013032947 W= 0.1843069536481681 sum(c^2)= 7.59681708702516e-09
+rdmf_obj_eval= 437 L= 0.18436368014169868 W= 0.18430695549107198 sum(c^2)= 7.597767347601832e-09 t= 0.13619065284729004 exact= L= 0.18436368014169868 W= 0.18430695549107198 sum(c^2)= 7.597767347601832e-09
+rdmf_obj_eval= 438 L= 0.18436368013720156 W= 0.18430695364819732 sum(c^2)= 7.596920653127498e-09 t= 0.18344998359680176 exact= L= 0.18436368013720156 W= 0.18430695364819732 sum(c^2)= 7.596920653127498e-09
+rdmf_obj_eval= 439 L= 0.18436368012803578 W= 0.1843069536476377 sum(c^2)= 7.596816952802123e-09 t= 0.14991974830627441 exact= L= 0.18436368012803578 W= 0.1843069536476377 sum(c^2)= 7.596816952802123e-09
+rdmf_obj_eval= 440 L= 0.1843636801303294 W= 0.18430695364816813 sum(c^2)= 7.596817086349152e-09 t= 0.18575024604797363 exact= L= 0.1843636801303294 W= 0.18430695364816813 sum(c^2)= 7.596817086349152e-09
+rdmf_obj_eval= 441 L= 0.18436368013239046 W= 0.18430695364816793 sum(c^2)= 7.596817283828754e-09 t= 0.3403315544128418 exact= L= 0.18436368013239046 W= 0.18430695364816793 sum(c^2)= 7.596817283828754e-09
+rdmf_obj_eval= 442 L= 0.18436353355613816 W= 0.18432320143854397 sum(c^2)= 4.174446514846373e-09 t= 0.1927192211151123 exact= L= 0.18436353355613816 W= 0.18432320143854397 sum(c^2)= 4.174446514846373e-09
+rdmf_obj_eval= 443 L= 0.18436353355613805 W= 0.18432320143854403 sum(c^2)= 4.174446513530928e-09 t= 0.35452795028686523 exact= L= 0.18436353355613805 W= 0.18432320143854403 sum(c^2)= 4.174446513530928e-09
+rdmf_obj_eval= 444 L= 0.1843635335653558 W= 0.18432319902622504 sum(c^2)= 4.1745975933991484e-09 t= 0.17864751815795898 exact= L= 0.1843635335653558 W= 0.18432319902622504 sum(c^2)= 4.1745975933991484e-09
+rdmf_obj_eval= 445 L= 0.1843635335542516 W= 0.18432320143854405 sum(c^2)= 4.174446392635264e-09 t= 0.3004128932952881 exact= L= 0.1843635335542516 W= 0.18432320143854405 sum(c^2)= 4.174446392635264e-09
+rdmf_obj_eval= 446 L= 0.18436353355613813 W= 0.18432320143854403 sum(c^2)= 4.174446511849391e-09 t= 0.10786771774291992 exact= L= 0.18436353355613813 W= 0.18432320143854403 sum(c^2)= 4.174446511849391e-09
+rdmf_obj_eval= 447 L= 0.1843635335561379 W= 0.18432320143854403 sum(c^2)= 4.174446510936009e-09 t= 0.1975564956665039 exact= L= 0.1843635335561379 W= 0.18432320143854403 sum(c^2)= 4.174446510936009e-09
+rdmf_obj_eval= 448 L= 0.18436353355802082 W= 0.184323201438544 sum(c^2)= 4.1744466310704895e-09 t= 0.27083253860473633 exact= L= 0.18436353355802082 W= 0.184323201438544 sum(c^2)= 4.1744466310704895e-09
+rdmf_obj_eval= 449 L= 0.18436353355613808 W= 0.18432320143854405 sum(c^2)= 4.1744465129513305e-09 t= 0.22136449813842773 exact= L= 0.18436353355613808 W= 0.18432320143854405 sum(c^2)= 4.1744465129513305e-09
+rdmf_obj_eval= 450 L= 0.18436353355613808 W= 0.18432320143854403 sum(c^2)= 4.1744465148936325e-09 t= 0.1601879596710205 exact= L= 0.18436353355613808 W= 0.18432320143854403 sum(c^2)= 4.1744465148936325e-09
+rdmf_obj_eval= 451 L= 0.18436353355613808 W= 0.18432320143854403 sum(c^2)= 4.1744465148936325e-09 t= 0.16434836387634277 exact= L= 0.18436353355613808 W= 0.18432320143854403 sum(c^2)= 4.1744465148936325e-09
+rdmf_obj_eval= 452 L= 0.1843635335561381 W= 0.18432320143854403 sum(c^2)= 4.174446517217716e-09 t= 0.1275467872619629 exact= L= 0.1843635335561381 W= 0.18432320143854403 sum(c^2)= 4.174446517217716e-09
+rdmf_obj_eval= 453 L= 0.18436353355601218 W= 0.18432320143854405 sum(c^2)= 4.17444650493679e-09 t= 0.26242542266845703 exact= L= 0.18436353355601218 W= 0.18432320143854405 sum(c^2)= 4.17444650493679e-09
+rdmf_obj_eval= 454 L= 0.18436353356370627 W= 0.18432320328164792 sum(c^2)= 4.1751787366330335e-09 t= 0.14525461196899414 exact= L= 0.18436353356370627 W= 0.18432320328164792 sum(c^2)= 4.1751787366330335e-09
+rdmf_obj_eval= 455 L= 0.18436353356050778 W= 0.18432320143853673 sum(c^2)= 4.174420467408819e-09 t= 0.18866515159606934 exact= L= 0.18436353356050778 W= 0.18432320143853673 sum(c^2)= 4.174420467408819e-09
+rdmf_obj_eval= 456 L= 0.18436353355386215 W= 0.1843232014380248 sum(c^2)= 4.174446407830929e-09 t= 0.17693829536437988 exact= L= 0.18436353355386215 W= 0.1843232014380248 sum(c^2)= 4.174446407830929e-09
+rdmf_obj_eval= 457 L= 0.18436353355601212 W= 0.18432320143854408 sum(c^2)= 4.17444650653583e-09 t= 0.18736910820007324 exact= L= 0.18436353355601212 W= 0.18432320143854408 sum(c^2)= 4.17444650653583e-09
+rdmf_obj_eval= 458 L= 0.184363533558134 W= 0.18432320143854386 sum(c^2)= 4.174446636695884e-09 t= 0.30149030685424805 exact= L= 0.184363533558134 W= 0.18432320143854386 sum(c^2)= 4.174446636695884e-09
+point= [ 2.56444226  3.40747195  1.56994736  5.90891085  2.57432065 -1.57058458
+ -0.62658913 -1.39132961 -0.90555287  0.85861475 -0.29550495 -3.14152417
+  1.57078513  1.57000566  0.29545687  1.57169463]
+value= 0.18436353355613816
+nfev= 68
+stddev W= 0.004879831357710993
+stddev c[ 0 ]= 0.0038534409466954513
+stddev c[ 1 ]= 0.005659077357896674
+stddev c[ 2 ]= 0.0007122766123647343
+stddev c[ 3 ]= 0.002856897806031165
+stddev c[ 4 ]= 1.714436587339914e-07
+stddev c[ 5 ]= 0.00336770335665094
+stddev c[ 6 ]= 0.002693348610925382
+stddev c[ 7 ]= 0.003819942682695032
+stddev c[ 8 ]= 0.0032419972038606817
+stddev c[ 9 ]= 0.0026474750699009854
+stddev c[ 10 ]= 0.0022917699218690923
+stddev c[ 11 ]= 1.7231730860261788e-07
+stddev c[ 12 ]= 0.006820494567951095
+stddev c[ 13 ]= 0.0026716906044332443
+stddev c[ 14 ]= 0.0023573609712610618
+stddev c[ 15 ]= 0.003945771383418257
+rdmf_obj_eval= 459 L= 0.18436353355613816 W= 0.18432320143854397 sum(c^2)= 4.174446514846373e-09 t= 0.2121107578277588 exact= L= 0.18436353355613816 W= 0.18432320143854397 sum(c^2)= 4.174446514846373e-09
+W= 0.18432320143854397 W_noise= 0.1907806396484375
+constraint violation sum(c^2)= 4.174446514846373e-09
+Augmented Lagrangian: penalty and multiplier update
+constraint 0 0 0 real viol= 3.424349255143344e-05 viol_noise= -0.018188476562864805 lagrange= -0.14821649364314363 penalty= 50.625
+constraint 1 0 1 real viol= -1.4676827092171939e-06 viol_noise= 0.0101470947265625 lagrange= 0.0005021364168688482 penalty= 50.625
+constraint 2 0 1 imag viol= -2.267452096006828e-06 viol_noise= 0.0132598876953125 lagrange= 0.0007881864997165303 penalty= 50.625
+constraint 3 0 2 real viol= 2.8734366075422457e-05 viol_noise= 0.09472481400778819 lagrange= 0.9215270286334291 penalty= 50.625
+constraint 4 0 2 imag viol= 1.069448113399929e-09 viol_noise= 8.100496649982025e-07 lagrange= 1.1073373797770847e-07 penalty= 50.625
+constraint 5 0 3 real viol= -6.9385682162018e-08 viol_noise= 0.002741356117652225 lagrange= -1.4737836512512252e-05 penalty= 50.625
+constraint 6 0 3 imag viol= 4.858368399176128e-08 viol_noise= 0.0005045982298149356 lagrange= 9.637017150099079e-06 penalty= 50.625
+constraint 7 1 1 real viol= -8.997747019512392e-06 viol_noise= 0.00030517578080779817 lagrange= -0.14907457601313728 penalty= 50.625
+constraint 8 1 2 real viol= -7.221187907211673e-08 viol_noise= 0.002253735295286549 lagrange= -1.4818536269156827e-05 penalty= 50.625
+constraint 9 1 2 imag viol= -4.1468906758062316e-08 viol_noise= -0.0010252443157919477 lagrange= -9.250735339929872e-06 penalty= 50.625
+constraint 10 1 3 real viol= 2.875814504238461e-05 viol_noise= 0.07026274559167159 lagrange= 0.9215181521317047 penalty= 50.625
+constraint 11 1 3 imag viol= 1.573775831875679e-09 viol_noise= -8.080740074092874e-07 lagrange= 1.366063044627719e-07 penalty= 50.625
+constraint 12 2 2 real viol= -3.4243378435661054e-05 viol_noise= -0.01694211453326379 lagrange= 0.3504246880275866 penalty= 50.625
+constraint 13 2 3 real viol= 1.4676891171719949e-06 viol_noise= 0.00989975872840057 lagrange= -0.000502136053124713 penalty= 50.625
+constraint 14 2 3 imag viol= 2.267448259801291e-06 viol_noise= -0.009740245596726356 lagrange= -0.0007881844139256938 penalty= 50.625
+constraint 15 3 3 real viol= 8.997868496729566e-06 viol_noise= 0.009251684846561858 lagrange= 0.3512831229488383 penalty= 50.625
+Augmented Lagrangian: unconstrained subproblem
+minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS
+rdmf_obj_eval= 460 L= 0.1843637096655992 W= 0.18432320143854397 sum(c^2)= 4.17444649078979e-09 t= 0.2502472400665283 exact= L= 0.1843637096655992 W= 0.18432320143854397 sum(c^2)= 4.17444649078979e-09
+rdmf_obj_eval= 461 L= 0.18436370966559915 W= 0.18432320143854403 sum(c^2)= 4.174446491054812e-09 t= 0.08575272560119629 exact= L= 0.18436370966559915 W= 0.18432320143854403 sum(c^2)= 4.174446491054812e-09
+rdmf_obj_eval= 462 L= 0.18436370967864107 W= 0.18432319902622504 sum(c^2)= 4.1745975708123184e-09 t= 0.12952542304992676 exact= L= 0.18436370967864107 W= 0.18432319902622504 sum(c^2)= 4.1745975708123184e-09
+rdmf_obj_eval= 463 L= 0.18436370966370963 W= 0.18432320143854405 sum(c^2)= 4.174446371230596e-09 t= 0.1400470733642578 exact= L= 0.18436370966370963 W= 0.18432320143854405 sum(c^2)= 4.174446371230596e-09
+rdmf_obj_eval= 464 L= 0.18436370966559917 W= 0.18432320143854403 sum(c^2)= 4.174446490960789e-09 t= 0.18018102645874023 exact= L= 0.18436370966559917 W= 0.18432320143854403 sum(c^2)= 4.174446490960789e-09
+rdmf_obj_eval= 465 L= 0.18436370966559906 W= 0.18432320143854403 sum(c^2)= 4.174446490252996e-09 t= 0.09602499008178711 exact= L= 0.18436370966559906 W= 0.18432320143854403 sum(c^2)= 4.174446490252996e-09
+rdmf_obj_eval= 466 L= 0.1843637096674849 W= 0.184323201438544 sum(c^2)= 4.174446608542721e-09 t= 0.16086983680725098 exact= L= 0.1843637096674849 W= 0.184323201438544 sum(c^2)= 4.174446608542721e-09
+rdmf_obj_eval= 467 L= 0.18436370966559917 W= 0.18432320143854405 sum(c^2)= 4.1744464906279964e-09 t= 0.16267895698547363 exact= L= 0.18436370966559917 W= 0.18432320143854405 sum(c^2)= 4.1744464906279964e-09
+rdmf_obj_eval= 468 L= 0.1843637096655991 W= 0.18432320143854403 sum(c^2)= 4.1744464912771e-09 t= 0.2210984230041504 exact= L= 0.1843637096655991 W= 0.18432320143854403 sum(c^2)= 4.1744464912771e-09
+rdmf_obj_eval= 469 L= 0.1843637096655991 W= 0.18432320143854403 sum(c^2)= 4.1744464912771e-09 t= 0.21111249923706055 exact= L= 0.1843637096655991 W= 0.18432320143854403 sum(c^2)= 4.1744464912771e-09
+rdmf_obj_eval= 470 L= 0.18436370966559903 W= 0.18432320143854403 sum(c^2)= 4.174446491134528e-09 t= 0.15182065963745117 exact= L= 0.18436370966559903 W= 0.18432320143854403 sum(c^2)= 4.174446491134528e-09
+rdmf_obj_eval= 471 L= 0.18436370966547316 W= 0.18432320143854405 sum(c^2)= 4.174446485774892e-09 t= 0.16987109184265137 exact= L= 0.18436370966547316 W= 0.18432320143854405 sum(c^2)= 4.174446485774892e-09
+rdmf_obj_eval= 472 L= 0.18436370969170104 W= 0.18432320328164792 sum(c^2)= 4.175178718398186e-09 t= 0.21458911895751953 exact= L= 0.18436370969170104 W= 0.18432320328164792 sum(c^2)= 4.175178718398186e-09
+rdmf_obj_eval= 473 L= 0.18436370966930923 W= 0.18432320143853673 sum(c^2)= 4.174420443714009e-09 t= 0.31861424446105957 exact= L= 0.18436370966930923 W= 0.18432320143853673 sum(c^2)= 4.174420443714009e-09
+rdmf_obj_eval= 474 L= 0.18436370966332036 W= 0.1843232014380248 sum(c^2)= 4.174446382171711e-09 t= 0.3292098045349121 exact= L= 0.18436370966332036 W= 0.1843232014380248 sum(c^2)= 4.174446382171711e-09
+rdmf_obj_eval= 475 L= 0.18436370966547333 W= 0.18432320143854408 sum(c^2)= 4.1744464867939225e-09 t= 0.13623428344726562 exact= L= 0.18436370966547333 W= 0.18432320143854408 sum(c^2)= 4.1744464867939225e-09
+rdmf_obj_eval= 476 L= 0.18436370966759816 W= 0.18432320143854386 sum(c^2)= 4.17444661477598e-09 t= 0.2042531967163086 exact= L= 0.18436370966759816 W= 0.18432320143854386 sum(c^2)= 4.17444661477598e-09
+rdmf_obj_eval= 477 L= 8.829927256520351 W= 0.06946278180461771 sum(c^2)= 0.33127710846236846 t= 0.218641996383667 exact= L= 8.829927256520351 W= 0.06946278180461771 sum(c^2)= 0.33127710846236846
+rdmf_obj_eval= 478 L= 8.82992725652034 W= 0.06946278180461776 sum(c^2)= 0.33127710844511793 t= 0.11318659782409668 exact= L= 8.82992725652034 W= 0.06946278180461776 sum(c^2)= 0.33127710844511793
+rdmf_obj_eval= 479 L= 8.829927222870202 W= 0.06946278126066821 sum(c^2)= 0.33127710724993265 t= 0.0925147533416748 exact= L= 8.829927222870202 W= 0.06946278126066821 sum(c^2)= 0.33127710724993265
+rdmf_obj_eval= 480 L= 8.829927256508736 W= 0.06946278180461778 sum(c^2)= 0.3312771084612621 t= 0.2681570053100586 exact= L= 8.829927256508736 W= 0.06946278180461778 sum(c^2)= 0.3312771084612621
+rdmf_obj_eval= 481 L= 8.829927256520344 W= 0.06946278180461773 sum(c^2)= 0.3312771084440797 t= 0.09103274345397949 exact= L= 8.829927256520344 W= 0.06946278180461773 sum(c^2)= 0.3312771084440797
+rdmf_obj_eval= 482 L= 8.829927256520126 W= 0.06946278180461773 sum(c^2)= 0.33127710842333546 t= 0.1097555160522461 exact= L= 8.829927256520126 W= 0.06946278180461773 sum(c^2)= 0.33127710842333546
+rdmf_obj_eval= 483 L= 8.829927254502683 W= 0.06946278180461773 sum(c^2)= 0.3312771083667956 t= 0.12468194961547852 exact= L= 8.829927254502683 W= 0.06946278180461773 sum(c^2)= 0.3312771083667956
+rdmf_obj_eval= 484 L= 8.829927256520346 W= 0.06946278180461776 sum(c^2)= 0.3312771084468189 t= 0.06965851783752441 exact= L= 8.829927256520346 W= 0.06946278180461776 sum(c^2)= 0.3312771084468189
+rdmf_obj_eval= 485 L= 8.82992725652034 W= 0.06946278180461776 sum(c^2)= 0.33127710844511793 t= 0.12148284912109375 exact= L= 8.82992725652034 W= 0.06946278180461776 sum(c^2)= 0.33127710844511793
+rdmf_obj_eval= 486 L= 8.829927256520358 W= 0.06946278180461778 sum(c^2)= 0.3312771084064261 t= 0.09122562408447266 exact= L= 8.829927256520358 W= 0.06946278180461778 sum(c^2)= 0.3312771084064261
+rdmf_obj_eval= 487 L= 8.82992725652034 W= 0.06946278180461776 sum(c^2)= 0.33127710844511793 t= 0.11864542961120605 exact= L= 8.82992725652034 W= 0.06946278180461776 sum(c^2)= 0.33127710844511793
+rdmf_obj_eval= 488 L= 8.82992725062818 W= 0.06946278180461773 sum(c^2)= 0.3312771082106345 t= 0.11294245719909668 exact= L= 8.82992725062818 W= 0.06946278180461773 sum(c^2)= 0.3312771082106345
+rdmf_obj_eval= 489 L= 8.82992709474771 W= 0.06946278365330788 sum(c^2)= 0.33127710219891393 t= 0.07559323310852051 exact= L= 8.82992709474771 W= 0.06946278365330788 sum(c^2)= 0.33127710219891393
+rdmf_obj_eval= 490 L= 8.829927261127347 W= 0.06946278161945516 sum(c^2)= 0.33127710862690685 t= 0.07853937149047852 exact= L= 8.829927261127347 W= 0.06946278161945516 sum(c^2)= 0.33127710862690685
+rdmf_obj_eval= 491 L= 8.82992725215552 W= 0.06946278191679939 sum(c^2)= 0.33127710825054607 t= 0.0777597427368164 exact= L= 8.82992725215552 W= 0.06946278191679939 sum(c^2)= 0.33127710825054607
+rdmf_obj_eval= 492 L= 8.829927250628195 W= 0.06946278180461778 sum(c^2)= 0.3312771081898222 t= 0.23734092712402344 exact= L= 8.829927250628195 W= 0.06946278180461778 sum(c^2)= 0.3312771081898222
+rdmf_obj_eval= 493 L= 8.829927261046144 W= 0.0694627816561254 sum(c^2)= 0.3312771086049789 t= 0.15241074562072754 exact= L= 8.829927261046144 W= 0.0694627816561254 sum(c^2)= 0.3312771086049789
+rdmf_obj_eval= 494 L= 0.1843635089608219 W= 0.18431516149935306 sum(c^2)= 2.706240400059586e-09 t= 0.12719082832336426 exact= L= 0.1843635089608219 W= 0.18431516149935306 sum(c^2)= 2.706240400059586e-09
+rdmf_obj_eval= 495 L= 0.18436350896082151 W= 0.18431516149935306 sum(c^2)= 2.7062403984886327e-09 t= 0.1596829891204834 exact= L= 0.18436350896082151 W= 0.18431516149935306 sum(c^2)= 2.7062403984886327e-09
+rdmf_obj_eval= 496 L= 0.18436350897216053 W= 0.18431515908729662 sum(c^2)= 2.706347959838184e-09 t= 0.1603858470916748 exact= L= 0.18436350897216053 W= 0.18431515908729662 sum(c^2)= 2.706347959838184e-09
+rdmf_obj_eval= 497 L= 0.18436350895895356 W= 0.18431516149935295 sum(c^2)= 2.7062403145189604e-09 t= 0.22127294540405273 exact= L= 0.18436350895895356 W= 0.18431516149935295 sum(c^2)= 2.7062403145189604e-09
+rdmf_obj_eval= 498 L= 0.18436350896082163 W= 0.184315161499353 sum(c^2)= 2.706240398394326e-09 t= 0.15331506729125977 exact= L= 0.18436350896082163 W= 0.184315161499353 sum(c^2)= 2.706240398394326e-09
+rdmf_obj_eval= 499 L= 0.18436350896082151 W= 0.1843151614993531 sum(c^2)= 2.7062403970658995e-09 t= 0.1592397689819336 exact= L= 0.18436350896082151 W= 0.1843151614993531 sum(c^2)= 2.7062403970658995e-09
+rdmf_obj_eval= 500 L= 0.18436350896262563 W= 0.184315161499353 sum(c^2)= 2.7062404794055975e-09 t= 0.16980218887329102 exact= L= 0.18436350896262563 W= 0.184315161499353 sum(c^2)= 2.7062404794055975e-09
+rdmf_obj_eval= 501 L= 0.18436350896082176 W= 0.18431516149935306 sum(c^2)= 2.706240399323928e-09 t= 0.32573580741882324 exact= L= 0.18436350896082176 W= 0.18431516149935306 sum(c^2)= 2.706240399323928e-09
+rdmf_obj_eval= 502 L= 0.18436350896082168 W= 0.18431516149935304 sum(c^2)= 2.7062403975946374e-09 t= 0.3286623954772949 exact= L= 0.18436350896082168 W= 0.18431516149935304 sum(c^2)= 2.7062403975946374e-09
+rdmf_obj_eval= 503 L= 0.18436350896082163 W= 0.184315161499353 sum(c^2)= 2.7062403981382663e-09 t= 0.24431347846984863 exact= L= 0.18436350896082163 W= 0.184315161499353 sum(c^2)= 2.7062403981382663e-09
+rdmf_obj_eval= 504 L= 0.18436350896082163 W= 0.184315161499353 sum(c^2)= 2.7062403981382663e-09 t= 0.2425987720489502 exact= L= 0.18436350896082163 W= 0.184315161499353 sum(c^2)= 2.7062403981382663e-09
+rdmf_obj_eval= 505 L= 0.1843635089606681 W= 0.184315161499353 sum(c^2)= 2.7062403902134348e-09 t= 0.29228925704956055 exact= L= 0.1843635089606681 W= 0.184315161499353 sum(c^2)= 2.7062403902134348e-09
+rdmf_obj_eval= 506 L= 0.18436350895226045 W= 0.18431516334260917 sum(c^2)= 2.7056253551563487e-09 t= 0.18650269508361816 exact= L= 0.18436350895226045 W= 0.18431516334260917 sum(c^2)= 2.7056253551563487e-09
+rdmf_obj_eval= 507 L= 0.1843635089633869 W= 0.18431516149933388 sum(c^2)= 2.7061726471215297e-09 t= 0.24116182327270508 exact= L= 0.1843635089633869 W= 0.18431516149933388 sum(c^2)= 2.7061726471215297e-09
+rdmf_obj_eval= 508 L= 0.18436350895857534 W= 0.18431516149884092 sum(c^2)= 2.706240321250672e-09 t= 0.12585711479187012 exact= L= 0.18436350895857534 W= 0.18431516149884092 sum(c^2)= 2.706240321250672e-09
+rdmf_obj_eval= 509 L= 0.18436350896066797 W= 0.18431516149935306 sum(c^2)= 2.7062403898586723e-09 t= 0.12847518920898438 exact= L= 0.18436350896066797 W= 0.18431516149935306 sum(c^2)= 2.7062403898586723e-09
+rdmf_obj_eval= 510 L= 0.18436350896279866 W= 0.18431516149935318 sum(c^2)= 2.7062404865742946e-09 t= 0.20595359802246094 exact= L= 0.18436350896279866 W= 0.18431516149935318 sum(c^2)= 2.7062404865742946e-09
+rdmf_obj_eval= 511 L= 0.18436343898226765 W= 0.18432908665116768 sum(c^2)= 1.7958474852355161e-09 t= 0.21943974494934082 exact= L= 0.18436343898226765 W= 0.18432908665116768 sum(c^2)= 1.7958474852355161e-09
+rdmf_obj_eval= 512 L= 0.18436343898226734 W= 0.18432908665116768 sum(c^2)= 1.7958474842647365e-09 t= 0.15634870529174805 exact= L= 0.18436343898226734 W= 0.18432908665116768 sum(c^2)= 1.7958474842647365e-09
+rdmf_obj_eval= 513 L= 0.18436343899224963 W= 0.1843290842390546 sum(c^2)= 1.7959203775246905e-09 t= 0.18126606941223145 exact= L= 0.18436343899224963 W= 0.1843290842390546 sum(c^2)= 1.7959203775246905e-09
+rdmf_obj_eval= 514 L= 0.18436343898041788 W= 0.18432908665116765 sum(c^2)= 1.7958474293510814e-09 t= 0.18535518646240234 exact= L= 0.18436343898041788 W= 0.18432908665116765 sum(c^2)= 1.7958474293510814e-09
+rdmf_obj_eval= 515 L= 0.18436343898226756 W= 0.1843290866511677 sum(c^2)= 1.7958474858623211e-09 t= 0.21633625030517578 exact= L= 0.18436343898226756 W= 0.1843290866511677 sum(c^2)= 1.7958474858623211e-09
+rdmf_obj_eval= 516 L= 0.1843634389822676 W= 0.18432908665116776 sum(c^2)= 1.795847486194986e-09 t= 0.21048927307128906 exact= L= 0.1843634389822676 W= 0.18432908665116776 sum(c^2)= 1.795847486194986e-09
+rdmf_obj_eval= 517 L= 0.18436343898400098 W= 0.1843290866511677 sum(c^2)= 1.7958475370052265e-09 t= 0.11758947372436523 exact= L= 0.18436343898400098 W= 0.1843290866511677 sum(c^2)= 1.7958475370052265e-09
+rdmf_obj_eval= 518 L= 0.18436343898226754 W= 0.1843290866511677 sum(c^2)= 1.7958474860441195e-09 t= 0.21948814392089844 exact= L= 0.18436343898226754 W= 0.1843290866511677 sum(c^2)= 1.7958474860441195e-09
+rdmf_obj_eval= 519 L= 0.18436343898226734 W= 0.18432908665116768 sum(c^2)= 1.7958474842647365e-09 t= 0.14527392387390137 exact= L= 0.18436343898226734 W= 0.18432908665116768 sum(c^2)= 1.7958474842647365e-09
+rdmf_obj_eval= 520 L= 0.18436343898226748 W= 0.1843290866511677 sum(c^2)= 1.7958474842925385e-09 t= 0.36884546279907227 exact= L= 0.18436343898226748 W= 0.1843290866511677 sum(c^2)= 1.7958474842925385e-09
+rdmf_obj_eval= 521 L= 0.18436343898226734 W= 0.18432908665116768 sum(c^2)= 1.7958474842647365e-09 t= 0.13587689399719238 exact= L= 0.18436343898226734 W= 0.18432908665116768 sum(c^2)= 1.7958474842647365e-09
+rdmf_obj_eval= 522 L= 0.18436343898209642 W= 0.1843290866511678 sum(c^2)= 1.7958474772861268e-09 t= 0.1618638038635254 exact= L= 0.18436343898209642 W= 0.1843290866511678 sum(c^2)= 1.7958474772861268e-09
+rdmf_obj_eval= 523 L= 0.18436343897642038 W= 0.18432908849454457 sum(c^2)= 1.795337940154961e-09 t= 0.22387170791625977 exact= L= 0.18436343897642038 W= 0.18432908849454457 sum(c^2)= 1.795337940154961e-09
+rdmf_obj_eval= 524 L= 0.18436343898407037 W= 0.18432908665114073 sum(c^2)= 1.7957519274140614e-09 t= 0.22227025032043457 exact= L= 0.18436343898407037 W= 0.18432908665114073 sum(c^2)= 1.7957519274140614e-09
+rdmf_obj_eval= 525 L= 0.18436343898004973 W= 0.18432908665066208 sum(c^2)= 1.7958474347623181e-09 t= 0.31337571144104004 exact= L= 0.18436343898004973 W= 0.18432908665066208 sum(c^2)= 1.7958474347623181e-09
+rdmf_obj_eval= 526 L= 0.1843634389820965 W= 0.1843290866511678 sum(c^2)= 1.7958474793495644e-09 t= 0.07674312591552734 exact= L= 0.1843634389820965 W= 0.1843290866511678 sum(c^2)= 1.7958474793495644e-09
+rdmf_obj_eval= 527 L= 0.18436343898422478 W= 0.18432908665116776 sum(c^2)= 1.7958475443522962e-09 t= 0.22401714324951172 exact= L= 0.18436343898422478 W= 0.18432908665116776 sum(c^2)= 1.7958475443522962e-09
+point= [ 2.56444226  3.40735879  1.56996455  5.90891086  2.57432065 -1.57060153
+ -0.62658913 -1.39132961 -0.90555287  0.85861475 -0.2955037  -3.14164032
+  1.57075527  1.57002637  0.29545812  1.57167644]
+value= 0.18436343898226765
+nfev= 68
+stddev W= 0.004922018011225557
+stddev c[ 0 ]= 0.0038952673060568344
+stddev c[ 1 ]= 0.005662552862573233
+stddev c[ 2 ]= 0.0007043877494863154
+stddev c[ 3 ]= 0.0028287532499916748
+stddev c[ 4 ]= 1.0580946738588787e-07
+stddev c[ 5 ]= 0.003373249259117404
+stddev c[ 6 ]= 0.0026958351794284774
+stddev c[ 7 ]= 0.0039027913994775544
+stddev c[ 8 ]= 0.003245396954397532
+stddev c[ 9 ]= 0.0026465752079984544
+stddev c[ 10 ]= 0.0022917468845262425
+stddev c[ 11 ]= 1.0514726504099085e-07
+stddev c[ 12 ]= 0.006798840293926607
+stddev c[ 13 ]= 0.002668551833807876
+stddev c[ 14 ]= 0.002319678416059276
+stddev c[ 15 ]= 0.003978563493889363
+rdmf_obj_eval= 528 L= 0.18436343898226765 W= 0.18432908665116768 sum(c^2)= 1.7958474852355161e-09 t= 0.24289631843566895 exact= L= 0.18436343898226765 W= 0.18432908665116768 sum(c^2)= 1.7958474852355161e-09
+W= 0.18432908665116768 W_noise= 0.1908111572265625
+constraint violation sum(c^2)= 1.7958474852355161e-09
+Augmented Lagrangian: penalty and multiplier update
+constraint 0 0 0 real viol= -2.3835202082822526e-05 viol_noise= -0.018249511719114805 lagrange= -0.14942315074858653 penalty= 75.9375
+constraint 1 0 1 real viol= -5.310481819882821e-06 viol_noise= 0.010162353515625 lagrange= 0.00023329327473728032 penalty= 75.9375
+constraint 2 0 1 imag viol= -8.35969831845923e-06 viol_noise= 0.0132598876953125 lagrange= 0.0003649767723445318 penalty= 75.9375
+constraint 3 0 2 real viol= 1.386260135255446e-05 viol_noise= 0.0947101975127031 lagrange= 0.9222288228269021 penalty= 75.9375
+constraint 4 0 2 imag viol= 1.521034020957046e-09 viol_noise= 5.003457584293325e-07 lagrange= 1.8773608528865893e-07 penalty= 75.9375
+constraint 5 0 3 real viol= -6.80699250084105e-08 viol_noise= 0.0027397337192630634 lagrange= -1.8183876466063035e-05 penalty= 75.9375
+constraint 6 0 3 imag viol= 4.338912180883018e-08 viol_noise= 0.0004991492948377398 lagrange= 1.1833591441671107e-05 penalty= 75.9375
+constraint 7 1 1 real viol= 6.260283341941175e-06 viol_noise= 0.00027465820268281205 lagrange= -0.1487576491689515 penalty= 75.9375
+constraint 8 1 2 real viol= -6.675971231539135e-08 viol_noise= 0.002238923787112363 lagrange= -1.8198246705123514e-05 penalty= 75.9375
+constraint 9 1 2 imag viol= -4.294640024016922e-08 viol_noise= -0.0010304286488051083 lagrange= -1.1424896852088438e-05 penalty= 75.9375
+constraint 10 1 3 real viol= 1.388737210689106e-05 viol_noise= 0.0702627460955302 lagrange= 0.9222212003446161 penalty= 75.9375
+constraint 11 1 3 imag viol= 8.692217223771337e-10 viol_noise= -4.992657422070446e-07 lagrange= 1.8061065415811428e-07 penalty= 75.9375
+constraint 12 2 2 real viol= 2.3835663944982155e-05 viol_noise= -0.016880906013217012 lagrange= 0.3516313685148013 penalty= 75.9375
+constraint 13 2 3 real viol= 5.310477370786524e-06 viol_noise= 0.009934576932229213 lagrange= -0.0002332931362286452 penalty= 75.9375
+constraint 14 2 3 imag viol= 8.359700583895685e-06 viol_noise= -0.009715725632405494 lagrange= -0.0003649745718659747 penalty= 75.9375
+constraint 15 3 3 real viol= -6.259826359156229e-06 viol_noise= 0.009343064217140151 lagrange= 0.350966219239406 penalty= 75.9375
+Augmented Lagrangian: unconstrained subproblem
+minimizing over parametrized qc-programs with augmented Lagrangian and LBFGS
+rdmf_obj_eval= 529 L= 0.1843635526257419 W= 0.18432908665116768 sum(c^2)= 1.7958474889753554e-09 t= 0.19928455352783203 exact= L= 0.1843635526257419 W= 0.18432908665116768 sum(c^2)= 1.7958474889753554e-09
+rdmf_obj_eval= 530 L= 0.18436355262574167 W= 0.18432908665116768 sum(c^2)= 1.7958474885477973e-09 t= 0.22162461280822754 exact= L= 0.18436355262574167 W= 0.18432908665116768 sum(c^2)= 1.7958474885477973e-09
+rdmf_obj_eval= 531 L= 0.18436355263849152 W= 0.1843290842390546 sum(c^2)= 1.795920381608104e-09 t= 0.2287890911102295 exact= L= 0.18436355263849152 W= 0.1843290842390546 sum(c^2)= 1.795920381608104e-09
+rdmf_obj_eval= 532 L= 0.18436355262389004 W= 0.18432908665116765 sum(c^2)= 1.795847433235864e-09 t= 0.23979783058166504 exact= L= 0.18436355262389004 W= 0.18432908665116765 sum(c^2)= 1.795847433235864e-09
+rdmf_obj_eval= 533 L= 0.18436355262574175 W= 0.1843290866511677 sum(c^2)= 1.7958474879627192e-09 t= 0.23561596870422363 exact= L= 0.18436355262574175 W= 0.1843290866511677 sum(c^2)= 1.7958474879627192e-09
+rdmf_obj_eval= 534 L= 0.1843635526257416 W= 0.18432908665116776 sum(c^2)= 1.7958474872217968e-09 t= 0.19452285766601562 exact= L= 0.1843635526257416 W= 0.18432908665116776 sum(c^2)= 1.7958474872217968e-09
+rdmf_obj_eval= 535 L= 0.18436355262747708 W= 0.1843290866511677 sum(c^2)= 1.7958475397512866e-09 t= 0.24144196510314941 exact= L= 0.18436355262747708 W= 0.1843290866511677 sum(c^2)= 1.7958475397512866e-09
+rdmf_obj_eval= 536 L= 0.1843635526257417 W= 0.1843290866511677 sum(c^2)= 1.7958474881848811e-09 t= 0.21375298500061035 exact= L= 0.1843635526257417 W= 0.1843290866511677 sum(c^2)= 1.7958474881848811e-09
+rdmf_obj_eval= 537 L= 0.18436355262574167 W= 0.18432908665116768 sum(c^2)= 1.7958474885477973e-09 t= 0.2297971248626709 exact= L= 0.18436355262574167 W= 0.18432908665116768 sum(c^2)= 1.7958474885477973e-09
+rdmf_obj_eval= 538 L= 0.18436355262574183 W= 0.1843290866511677 sum(c^2)= 1.7958474892963914e-09 t= 0.13556146621704102 exact= L= 0.18436355262574183 W= 0.1843290866511677 sum(c^2)= 1.7958474892963914e-09
+rdmf_obj_eval= 539 L= 0.18436355262574167 W= 0.18432908665116768 sum(c^2)= 1.7958474885477973e-09 t= 0.22940301895141602 exact= L= 0.18436355262574167 W= 0.18432908665116768 sum(c^2)= 1.7958474885477973e-09
+rdmf_obj_eval= 540 L= 0.18436355262557041 W= 0.1843290866511678 sum(c^2)= 1.795847481461605e-09 t= 0.1404106616973877 exact= L= 0.18436355262557041 W= 0.1843290866511678 sum(c^2)= 1.795847481461605e-09
+rdmf_obj_eval= 541 L= 0.18436355260054643 W= 0.18432908849454457 sum(c^2)= 1.7953379434419927e-09 t= 0.3191688060760498 exact= L= 0.18436355260054643 W= 0.18432908849454457 sum(c^2)= 1.7953379434419927e-09
+rdmf_obj_eval= 542 L= 0.18436355262391602 W= 0.18432908665114073 sum(c^2)= 1.7957519301757492e-09 t= 0.19333887100219727 exact= L= 0.18436355262391602 W= 0.18432908665114073 sum(c^2)= 1.7957519301757492e-09
+rdmf_obj_eval= 543 L= 0.18436355262352191 W= 0.18432908665066208 sum(c^2)= 1.7958474361373006e-09 t= 0.3277926445007324 exact= L= 0.18436355262352191 W= 0.18432908665066208 sum(c^2)= 1.7958474361373006e-09
+rdmf_obj_eval= 544 L= 0.18436355262557047 W= 0.1843290866511678 sum(c^2)= 1.7958474823833612e-09 t= 0.17548012733459473 exact= L= 0.18436355262557047 W= 0.1843290866511678 sum(c^2)= 1.7958474823833612e-09
+rdmf_obj_eval= 545 L= 0.1843635526277012 W= 0.18432908665116776 sum(c^2)= 1.7958475476054968e-09 t= 0.14617657661437988 exact= L= 0.1843635526277012 W= 0.18432908665116776 sum(c^2)= 1.7958475476054968e-09
+rdmf_obj_eval= 546 L= 13.15725127918829 W= 0.5208527623421468 sum(c^2)= 0.33482656074604544 t= 0.07686495780944824 exact= L= 13.15725127918829 W= 0.5208527623421468 sum(c^2)= 0.33482656074604544
+rdmf_obj_eval= 547 L= 13.157251279188296 W= 0.5208527623421468 sum(c^2)= 0.33482656074788014 t= 0.15323734283447266 exact= L= 13.157251279188296 W= 0.5208527623421468 sum(c^2)= 0.33482656074788014
+rdmf_obj_eval= 548 L= 13.15725122864572 W= 0.52085275800079 sum(c^2)= 0.334826559520691 t= 0.08551406860351562 exact= L= 13.15725122864572 W= 0.52085275800079 sum(c^2)= 0.334826559520691
+rdmf_obj_eval= 549 L= 13.157251279100372 W= 0.5208527623421472 sum(c^2)= 0.3348265607382359 t= 0.0952005386352539 exact= L= 13.157251279100372 W= 0.5208527623421472 sum(c^2)= 0.3348265607382359
+rdmf_obj_eval= 550 L= 13.157251279188298 W= 0.5208527623421471 sum(c^2)= 0.33482656074559936 t= 0.1030416488647461 exact= L= 13.157251279188298 W= 0.5208527623421471 sum(c^2)= 0.33482656074559936
+rdmf_obj_eval= 551 L= 13.157251279188422 W= 0.5208527623421473 sum(c^2)= 0.33482656074662287 t= 0.11165618896484375 exact= L= 13.157251279188422 W= 0.5208527623421473 sum(c^2)= 0.33482656074662287
+rdmf_obj_eval= 552 L= 13.157251276580245 W= 0.5208527623421474 sum(c^2)= 0.33482656068253813 t= 0.1718888282775879 exact= L= 13.157251276580245 W= 0.5208527623421474 sum(c^2)= 0.33482656068253813
+rdmf_obj_eval= 553 L= 13.157251279188298 W= 0.5208527623421471 sum(c^2)= 0.3348265607474502 t= 0.09248542785644531 exact= L= 13.157251279188298 W= 0.5208527623421471 sum(c^2)= 0.3348265607474502
+rdmf_obj_eval= 554 L= 13.157251279188303 W= 0.5208527623421471 sum(c^2)= 0.33482656075009976 t= 0.07715249061584473 exact= L= 13.157251279188303 W= 0.5208527623421471 sum(c^2)= 0.33482656075009976
+rdmf_obj_eval= 555 L= 13.157251279188303 W= 0.5208527623421471 sum(c^2)= 0.33482656075009976 t= 0.08217430114746094 exact= L= 13.157251279188303 W= 0.5208527623421471 sum(c^2)= 0.33482656075009976
+rdmf_obj_eval= 556 L= 13.157251279188303 W= 0.5208527623421471 sum(c^2)= 0.33482656075009976 t= 0.07774925231933594 exact= L= 13.157251279188303 W= 0.5208527623421471 sum(c^2)= 0.33482656075009976
+rdmf_obj_eval= 557 L= 13.157251274273262 W= 0.520852762342147 sum(c^2)= 0.334826560615313 t= 0.07648944854736328 exact= L= 13.157251274273262 W= 0.520852762342147 sum(c^2)= 0.334826560615313
+rdmf_obj_eval= 558 L= 13.157251522443318 W= 0.5208527642043556 sum(c^2)= 0.3348265670612361 t= 0.08719801902770996 exact= L= 13.157251522443318 W= 0.5208527642043556 sum(c^2)= 0.3348265670612361
+rdmf_obj_eval= 559 L= 13.15725127470325 W= 0.5208527621910145 sum(c^2)= 0.33482656062804395 t= 0.08878540992736816 exact= L= 13.15725127470325 W= 0.5208527621910145 sum(c^2)= 0.33482656062804395
+rdmf_obj_eval= 560 L= 13.157251272161295 W= 0.5208527621599853 sum(c^2)= 0.3348265605601606 t= 0.17551255226135254 exact= L= 13.157251272161295 W= 0.5208527621599853 sum(c^2)= 0.3348265605601606
+rdmf_obj_eval= 561 L= 13.15725127427327 W= 0.520852762342147 sum(c^2)= 0.3348265606168144 t= 0.10196852684020996 exact= L= 13.15725127427327 W= 0.520852762342147 sum(c^2)= 0.3348265606168144
+rdmf_obj_eval= 562 L= 13.157251286740582 W= 0.5208527624955306 sum(c^2)= 0.3348265609480583 t= 0.08292770385742188 exact= L= 13.157251286740582 W= 0.5208527624955306 sum(c^2)= 0.3348265609480583
+rdmf_obj_eval= 563 L= 0.1843634283103316 W= 0.1843542530606766 sum(c^2)= 9.198832717308174e-10 t= 0.17142748832702637 exact= L= 0.1843634283103316 W= 0.1843542530606766 sum(c^2)= 9.198832717308174e-10
+rdmf_obj_eval= 564 L= 0.18436342831033162 W= 0.18435425306067657 sum(c^2)= 9.198832718882263e-10 t= 0.272824764251709 exact= L= 0.18436342831033162 W= 0.18435425306067657 sum(c^2)= 9.198832718882263e-10
+rdmf_obj_eval= 565 L= 0.18436342832159458 W= 0.184354250648338 sum(c^2)= 9.199274690268164e-10 t= 0.1648414134979248 exact= L= 0.18436342832159458 W= 0.184354250648338 sum(c^2)= 9.199274690268164e-10
+rdmf_obj_eval= 566 L= 0.18436342830849414 W= 0.1843542530606766 sum(c^2)= 9.198832375888908e-10 t= 0.2151808738708496 exact= L= 0.18436342830849414 W= 0.1843542530606766 sum(c^2)= 9.198832375888908e-10
+rdmf_obj_eval= 567 L= 0.18436342831033184 W= 0.18435425306067657 sum(c^2)= 9.198832716101003e-10 t= 0.15656232833862305 exact= L= 0.18436342831033184 W= 0.18435425306067657 sum(c^2)= 9.198832716101003e-10
+rdmf_obj_eval= 568 L= 0.18436342831033153 W= 0.18435425306067657 sum(c^2)= 9.198832709220376e-10 t= 0.17496776580810547 exact= L= 0.18436342831033153 W= 0.18435425306067657 sum(c^2)= 9.198832709220376e-10
+rdmf_obj_eval= 569 L= 0.18436342831201588 W= 0.18435425306067665 sum(c^2)= 9.198833013533768e-10 t= 0.08326983451843262 exact= L= 0.18436342831201588 W= 0.18435425306067665 sum(c^2)= 9.198833013533768e-10
+rdmf_obj_eval= 570 L= 0.18436342831033165 W= 0.18435425306067657 sum(c^2)= 9.19883271551556e-10 t= 0.19563841819763184 exact= L= 0.18436342831033165 W= 0.18435425306067657 sum(c^2)= 9.19883271551556e-10
+rdmf_obj_eval= 571 L= 0.18436342831033165 W= 0.18435425306067643 sum(c^2)= 9.198832715923051e-10 t= 0.2542102336883545 exact= L= 0.18436342831033165 W= 0.18435425306067643 sum(c^2)= 9.198832715923051e-10
+rdmf_obj_eval= 572 L= 0.18436342831033162 W= 0.18435425306067657 sum(c^2)= 9.198832718882263e-10 t= 0.27123475074768066 exact= L= 0.18436342831033162 W= 0.18435425306067657 sum(c^2)= 9.198832718882263e-10
+rdmf_obj_eval= 573 L= 0.18436342831033173 W= 0.18435425306067663 sum(c^2)= 9.198832710236709e-10 t= 0.17452788352966309 exact= L= 0.18436342831033173 W= 0.18435425306067663 sum(c^2)= 9.198832710236709e-10
+rdmf_obj_eval= 574 L= 0.1843634283101733 W= 0.18435425306067654 sum(c^2)= 9.198832715701499e-10 t= 0.2501089572906494 exact= L= 0.1843634283101733 W= 0.18435425306067654 sum(c^2)= 9.198832715701499e-10
+rdmf_obj_eval= 575 L= 0.18436342831883873 W= 0.18435425490415375 sum(c^2)= 9.202517364183996e-10 t= 0.19584941864013672 exact= L= 0.18436342831883873 W= 0.18435425490415375 sum(c^2)= 9.202517364183996e-10
+rdmf_obj_eval= 576 L= 0.18436342830906438 W= 0.1843542530606535 sum(c^2)= 9.198015736703685e-10 t= 0.2765934467315674 exact= L= 0.18436342830906438 W= 0.1843542530606535 sum(c^2)= 9.198015736703685e-10
+rdmf_obj_eval= 577 L= 0.18436342830813374 W= 0.18435425306017592 sum(c^2)= 9.198832387552598e-10 t= 0.2340865135192871 exact= L= 0.18436342830813374 W= 0.18435425306017592 sum(c^2)= 9.198832387552598e-10
+rdmf_obj_eval= 578 L= 0.18436342831017327 W= 0.18435425306067657 sum(c^2)= 9.198832708448875e-10 t= 0.2868649959564209 exact= L= 0.18436342831017327 W= 0.18435425306067657 sum(c^2)= 9.198832708448875e-10
+rdmf_obj_eval= 579 L= 0.18436342831227617 W= 0.1843542530606765 sum(c^2)= 9.198833076631213e-10 t= 0.16646051406860352 exact= L= 0.18436342831227617 W= 0.1843542530606765 sum(c^2)= 9.198833076631213e-10
+rdmf_obj_eval= 580 L= 0.1843633836622012 W= 0.1843609755010382 sum(c^2)= 5.58598133051857e-10 t= 0.0885915756225586 exact= L= 0.1843633836622012 W= 0.1843609755010382 sum(c^2)= 5.58598133051857e-10
+rdmf_obj_eval= 581 L= 0.18436338366220092 W= 0.1843609755010382 sum(c^2)= 5.585981330912532e-10 t= 0.18868231773376465 exact= L= 0.18436338366220092 W= 0.1843609755010382 sum(c^2)= 5.585981330912532e-10
+rdmf_obj_eval= 582 L= 0.18436338367228497 W= 0.18436097308869417 sum(c^2)= 5.586195710255492e-10 t= 0.2860884666442871 exact= L= 0.18436338367228497 W= 0.18436097308869417 sum(c^2)= 5.586195710255492e-10
+rdmf_obj_eval= 583 L= 0.18436338366037588 W= 0.18436097550103828 sum(c^2)= 5.585981173756814e-10 t= 0.18221616744995117 exact= L= 0.18436338366037588 W= 0.18436097550103828 sum(c^2)= 5.585981173756814e-10
+rdmf_obj_eval= 584 L= 0.18436338366220115 W= 0.1843609755010382 sum(c^2)= 5.585981335256469e-10 t= 0.1596829891204834 exact= L= 0.18436338366220115 W= 0.1843609755010382 sum(c^2)= 5.585981335256469e-10
+rdmf_obj_eval= 585 L= 0.18436338366220098 W= 0.1843609755010383 sum(c^2)= 5.585981328655233e-10 t= 0.19359588623046875 exact= L= 0.18436338366220098 W= 0.1843609755010383 sum(c^2)= 5.585981328655233e-10
+rdmf_obj_eval= 586 L= 0.18436338366384192 W= 0.18436097550103822 sum(c^2)= 5.585981484290456e-10 t= 0.18801403045654297 exact= L= 0.18436338366384192 W= 0.18436097550103822 sum(c^2)= 5.585981484290456e-10
+rdmf_obj_eval= 587 L= 0.18436338366220112 W= 0.1843609755010382 sum(c^2)= 5.585981339530811e-10 t= 0.16673827171325684 exact= L= 0.18436338366220112 W= 0.1843609755010382 sum(c^2)= 5.585981339530811e-10
+rdmf_obj_eval= 588 L= 0.18436338366220098 W= 0.18436097550103822 sum(c^2)= 5.585981327800226e-10 t= 0.1974480152130127 exact= L= 0.18436338366220098 W= 0.18436097550103822 sum(c^2)= 5.585981327800226e-10
+rdmf_obj_eval= 589 L= 0.18436338366220098 W= 0.18436097550103822 sum(c^2)= 5.585981327800226e-10 t= 0.1681370735168457 exact= L= 0.18436338366220098 W= 0.18436097550103822 sum(c^2)= 5.585981327800226e-10
+rdmf_obj_eval= 590 L= 0.18436338366220112 W= 0.1843609755010382 sum(c^2)= 5.585981343777091e-10 t= 0.3406636714935303 exact= L= 0.18436338366220112 W= 0.1843609755010382 sum(c^2)= 5.585981343777091e-10
+rdmf_obj_eval= 591 L= 0.18436338366205138 W= 0.18436097550103825 sum(c^2)= 5.585981340124026e-10 t= 0.16407012939453125 exact= L= 0.18436338366205138 W= 0.18436097550103825 sum(c^2)= 5.585981340124026e-10
+rdmf_obj_eval= 592 L= 0.18436338366795996 W= 0.184360977344595 sum(c^2)= 5.588949970790407e-10 t= 0.24133086204528809 exact= L= 0.18436338366795996 W= 0.184360977344595 sum(c^2)= 5.588949970790407e-10
+rdmf_obj_eval= 593 L= 0.18436338366130137 W= 0.1843609755010178 sum(c^2)= 5.585255506186661e-10 t= 0.22122740745544434 exact= L= 0.18436338366130137 W= 0.1843609755010178 sum(c^2)= 5.585255506186661e-10
+rdmf_obj_eval= 594 L= 0.18436338366002203 W= 0.18436097550054167 sum(c^2)= 5.585981167202927e-10 t= 0.17690610885620117 exact= L= 0.18436338366002203 W= 0.18436097550054167 sum(c^2)= 5.585981167202927e-10
+rdmf_obj_eval= 595 L= 0.18436338366205113 W= 0.18436097550103825 sum(c^2)= 5.585981331318926e-10 t= 0.1458287239074707 exact= L= 0.18436338366205113 W= 0.18436097550103825 sum(c^2)= 5.585981331318926e-10
+rdmf_obj_eval= 596 L= 0.18436338366413207 W= 0.1843609755010382 sum(c^2)= 5.585981502408326e-10 t= 0.16581225395202637 exact= L= 0.18436338366413207 W= 0.1843609755010382 sum(c^2)= 5.585981502408326e-10
+rdmf_obj_eval= 597 L= 0.1843631958232604 W= 0.1844290893368663 sum(c^2)= 2.487382092170938e-09 t= 0.18496251106262207 exact= L= 0.1843631958232604 W= 0.1844290893368663 sum(c^2)= 2.487382092170938e-09
+rdmf_obj_eval= 598 L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09 t= 0.16434669494628906 exact= L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09
+rdmf_obj_eval= 599 L= 0.18436319582273364 W= 0.18442908692437388 sum(c^2)= 2.487198852957306e-09 t= 0.24030590057373047 exact= L= 0.18436319582273364 W= 0.18442908692437388 sum(c^2)= 2.487198852957306e-09
+rdmf_obj_eval= 600 L= 0.18436319582156813 W= 0.1844290893368662 sum(c^2)= 2.487382223086576e-09 t= 0.30504655838012695 exact= L= 0.18436319582156813 W= 0.1844290893368662 sum(c^2)= 2.487382223086576e-09
+rdmf_obj_eval= 601 L= 0.18436319582326063 W= 0.18442908933686622 sum(c^2)= 2.4873820935835935e-09 t= 0.31099629402160645 exact= L= 0.18436319582326063 W= 0.18442908933686622 sum(c^2)= 2.4873820935835935e-09
+rdmf_obj_eval= 602 L= 0.18436319582326058 W= 0.18442908933686628 sum(c^2)= 2.4873820940954665e-09 t= 0.2648963928222656 exact= L= 0.18436319582326058 W= 0.18442908933686628 sum(c^2)= 2.4873820940954665e-09
+rdmf_obj_eval= 603 L= 0.1843631958244447 W= 0.18442908933686636 sum(c^2)= 2.487382004028114e-09 t= 0.18615269660949707 exact= L= 0.1843631958244447 W= 0.18442908933686636 sum(c^2)= 2.487382004028114e-09
+rdmf_obj_eval= 604 L= 0.18436319582326066 W= 0.18442908933686622 sum(c^2)= 2.487382093803461e-09 t= 0.2953495979309082 exact= L= 0.18436319582326066 W= 0.18442908933686622 sum(c^2)= 2.487382093803461e-09
+rdmf_obj_eval= 605 L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09 t= 0.15983295440673828 exact= L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09
+rdmf_obj_eval= 606 L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09 t= 0.1637415885925293 exact= L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09
+rdmf_obj_eval= 607 L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09 t= 0.16645288467407227 exact= L= 0.18436319582326047 W= 0.18442908933686622 sum(c^2)= 2.4873820921401373e-09
+rdmf_obj_eval= 608 L= 0.18436319582316937 W= 0.18442908933686625 sum(c^2)= 2.487382098566537e-09 t= 0.07918119430541992 exact= L= 0.18436319582316937 W= 0.18442908933686625 sum(c^2)= 2.487382098566537e-09
+rdmf_obj_eval= 609 L= 0.18436319582107974 W= 0.18442909118114031 sum(c^2)= 2.4874720967107297e-09 t= 0.12722301483154297 exact= L= 0.18436319582107974 W= 0.18442909118114031 sum(c^2)= 2.4874720967107297e-09
+rdmf_obj_eval= 610 L= 0.1843631958244654 W= 0.18442908933686042 sum(c^2)= 2.4873615082434376e-09 t= 0.17351984977722168 exact= L= 0.1843631958244654 W= 0.18442908933686042 sum(c^2)= 2.4873615082434376e-09
+rdmf_obj_eval= 611 L= 0.18436319582128344 W= 0.184429089336415 sum(c^2)= 2.4873822093974075e-09 t= 0.2504284381866455 exact= L= 0.18436319582128344 W= 0.184429089336415 sum(c^2)= 2.4873822093974075e-09
+rdmf_obj_eval= 612 L= 0.18436319582316937 W= 0.1844290893368663 sum(c^2)= 2.4873820989740504e-09 t= 0.15772390365600586 exact= L= 0.18436319582316937 W= 0.1844290893368663 sum(c^2)= 2.4873820989740504e-09
+rdmf_obj_eval= 613 L= 0.18436319582505176 W= 0.18442908933686628 sum(c^2)= 2.487381957056015e-09 t= 0.1655423641204834 exact= L= 0.18436319582505176 W= 0.18442908933686628 sum(c^2)= 2.487381957056015e-09
+point= [ 2.56444228  3.40698709  1.57003307  5.90891086  2.57432067 -1.57066289
+ -0.62658912 -1.3913296  -0.90555285  0.85861476 -0.29549811 -3.14158424
+  1.57078748  1.57010815  0.29546373  1.57160398]
+value= 0.1843631958232604
+nfev= 85
