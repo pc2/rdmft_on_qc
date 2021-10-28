@@ -972,6 +972,7 @@ print(ansatz)
 
 
 
+ansatz.draw(output='latex',filename="ansatz.pdf")
 
 #define registers
 q = QuantumRegister(nq)
