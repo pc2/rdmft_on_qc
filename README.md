@@ -1,5 +1,8 @@
 # RDMF_on_QC
 
+[![DOI](https://zenodo.org/badge/434230783.svg)](https://zenodo.org/badge/latestdoi/434230783)
+
+
 *Reduced density matrix functional evaluation on a quantum computer.*
 
 ## Installation
