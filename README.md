@@ -42,9 +42,3 @@ python3 rdmft.py hubbard_chain.cfg
     * simulation of the quantum programs on a quantum computer (tsim=False, tsampling=True, tnoise=True, tsimcons=False)
       * currently without convergence criterion fou outer iterations of augmented Lagrangian
 
-## What is Currently  Missing:
-* Pulse mode https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/rdmf_on_qc/-/issues/10
-* hardware-efficient placement of cnots in measurements https://git.uni-paderborn.de/pc2/quantum-computing/nhr-qc/rdmf_on_qc/-/issues/13: partially done
-  * for measurement circuits that measure only a single qubit
-  * implicitly for construction of measurement circuits of commuting measurements
-* testing
